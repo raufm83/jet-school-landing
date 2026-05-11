@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  /* overflow-x: clip html/body-da sticky pozisiyanı pozur; üfüqi məhdudiyyət üçün max-width */
+  html {
+    max-width: 100%;
+  }
+
+  body {
+    max-width: 100%;
+  }
+
+  /* Tailwind `container.center` ilə üst-üstə düşsə də, blok həmişə üfüqi mərkəzdə qalsın */
+  .container {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .place-card {
+    display: none !important;
+  }
+
+
+  html,
+  body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  input,
+  textarea {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+
+  body.dashboard-admin,
+  body.dashboard-admin * {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+}
+
+.nprogress {
+}
+
+
+@keyframes scroll-tags {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.scrolling-tags {
+  animation: scroll-tags 15s linear infinite;
+  will-change: transform;
+  contain: layout style;
+}
+.scrolling-tags:hover {
+  animation-play-state: paused;
+}
+
+.ql-editor img {
+  width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  max-width: 100% !important;
+}
+
+.prose img,
+.post-content img {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-width: 100%;
+}
+
+.prose p:empty,
+.prose p:has(> br:only-child),
+.prose p:has(> br:first-child:last-child) {
+  display: none;
+}
+.prose br + br {
+  display: none;
+}

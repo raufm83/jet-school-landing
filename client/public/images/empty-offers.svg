@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240" viewBox="0 0 320 240" fill="none">
+  <rect width="320" height="240" rx="16" fill="#FEF7EB"/>
+  <path d="M80 140h160v8H80v-8zm0-24h120v8H80v-8zm0-24h140v8H80v-8z" fill="#FCD34D" opacity=".35"/>
+  <circle cx="160" cy="88" r="36" fill="#FDE68A" opacity=".6"/>
+  <path d="M148 82h24v24h-24z" fill="#B45309" opacity=".25"/>
+  <text x="160" y="188" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#78716C">Aktiv kampaniya yoxdur</text>
+</svg>

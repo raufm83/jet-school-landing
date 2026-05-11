@@ -1,0 +1,4 @@
+src/app/[locale]/(main)/about-us/page.tsx(149,9): error TS2322: Type '{ teamMembers: any; title: string; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'teamMembers' does not exist on type 'IntrinsicAttributes'.
+src/app/[locale]/course/[slug]/page.tsx(112,13): error TS2322: Type '{ title: string; teamMembers: any; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'title' does not exist on type 'IntrinsicAttributes'.

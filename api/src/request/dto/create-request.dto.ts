@@ -1,0 +1,51 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsInt, IsEnum, IsOptional } from 'class-validator';
+import { Language } from '@prisma/client';
+
+export class CreateRequestDto {
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsString()
+  surname: string;
+
+  @ApiProperty()
+  @IsString()
+  number: string;
+
+  @ApiProperty()
+  @IsInt()
+  childAge: number;
+
+  @ApiProperty({ enum: Language, default: Language.AZ })
+  @IsEnum(Language)
+  childLanguage: Language;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  additionalInfo?: any;
+
+  /** Honeypot: if filled, request is spam – do not send from client */
+  @ApiProperty({ required: false, description: 'Leave empty (anti-spam)' })
+  @IsOptional()
+  @IsString()
+  website?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Riyazi captcha tokeni (guard tərəfindən yoxlanılır)',
+  })
+  @IsOptional()
+  @IsString()
+  mathCaptchaToken?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Riyazi captcha cavabı (guard tərəfindən yoxlanılır)',
+  })
+  @IsOptional()
+  @IsString()
+  mathCaptchaAnswer?: string;
+}

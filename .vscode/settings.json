@@ -1,0 +1,15 @@
+{
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": true,
+    "markdown": true,
+    "scminput": true,
+    "css": false,
+    "html": false,
+    "php": false,
+    "python": false,
+    "typescript": true,
+    "typescriptreact": true
+  },
+  "prisma.pinToPrisma6": true
+}

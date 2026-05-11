@@ -1,0 +1,108 @@
+import type { Viewport } from "next";
+import { Manrope } from "next/font/google";
+import "./globals.css";
+import Script from "next/script";
+import dynamic from "next/dynamic";
+
+const ContentProtection = dynamic(
+  () => import("@/components/content-protection"),
+  { ssr: false }
+);
+
+const Toaster = dynamic(
+  () => import("sonner").then((m) => ({ default: m.Toaster })),
+  { ssr: false }
+);
+
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+};
+
+const manrope = Manrope({
+  display: "swap",
+  preload: true,
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "700"],
+  adjustFontFallback: true,
+});
+
+/**
+ * Root layout `headers()`/`cookies()` çağırmır — bütün sayt statik qabığı router önbellekində daha yaxşı işləyir,
+ * keçidlər daha tez RSC faylı əldə edir. `lang` URL-dən `beforeInteractive` skriptdə (və HtmlLangSync-də) təyin olunur.
+ */
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="az" suppressHydrationWarning>
+      <head>
+        {/* Yalnız API — üçüncü tərəf skriptlər lazyOnload; əlavə preconnect LCP ilə şəbəkə yarışı yaradır */}
+        <link rel="preconnect" href="https://api.jetschool.az" />
+        <link rel="dns-prefetch" href="https://api.jetschool.az" />
+        <link rel="dns-prefetch" href="https://img.youtube.com" />
+      </head>
+      <body
+        className={`${manrope.className} scroll-smooth antialiased max-w-full bg-white`}
+      >
+        <Script
+          id="sync-html-lang-from-path"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var p=location.pathname.split('/').filter(Boolean);var l=p[0]==='ru'?'ru':'az';document.documentElement.setAttribute('lang',l);}catch(e){}})();",
+          }}
+        />
+        <ContentProtection />
+        {children}
+        <Toaster />
+        <Script
+          id="meta-pixel"
+          strategy="lazyOnload"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '24501015369551397');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
+        <noscript>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            height="1"
+            width="1"
+            alt=""
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=24501015369551397&ev=PageView&noscript=1"
+          />
+        </noscript>
+        <Script
+          id="ga-gtag"
+          strategy="lazyOnload"
+          src="https://www.googletagmanager.com/gtag/js?id=G-8PKPCDFDSF"
+        />
+        <Script
+          id="ga-init"
+          strategy="lazyOnload"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer=window.dataLayer||[];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js',new Date());
+              gtag('config','G-8PKPCDFDSF');
+            `,
+          }}
+        />
+      </body>
+    </html>
+  );
+}
