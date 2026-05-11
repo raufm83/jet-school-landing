@@ -27,6 +27,7 @@ interface ISingleCoursePageProps {
   };
 }
 
+
 const getTeamMembers = cache(async () => {
   try {
     const res = await fetch(
