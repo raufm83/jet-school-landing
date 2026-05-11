@@ -27,12 +27,6 @@ interface ISingleCoursePageProps {
   };
 }
 
-/**
- * Course səhifəsində göstərilən təlimçilər siyahısı — hər səhifə açıldıqda
- * eyni istəyi təkrar etməmək üçün `fetch` + ISR (`revalidate`) + React `cache`
- * kombinasiyası. Bu dəyişiklik tək başına səhifə TTFB-ni kəskin azaldır, çünki
- * əvvəl axios hər request-də backend-ə getirdi.
- */
 const getTeamMembers = cache(async () => {
   try {
     const res = await fetch(
