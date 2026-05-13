@@ -1,7 +1,12 @@
 import { Locale } from "@/i18n/request";
 import { Post } from "@/types/post";
 import { formatDate, formatTime } from "@/utils/formatters/formatDate";
-import { getTextContent, getPostImageUrl, resolvePostSlugForLocale } from "@/utils/helpers/post";
+import {
+  getTextContent,
+  getPostImageUrl,
+  resolvePostSlugForLocale,
+  stripHtmlEntitiesToPlain,
+} from "@/utils/helpers/post";
 import { buildImageUrl } from "@/utils/imageUrl";
 import { BLUR_PLACEHOLDER_SVG } from "@/utils/imagePlaceholder";
 import Image from "next/image";
@@ -24,10 +29,21 @@ export default function PostCard({ post, locale, t, loadEager = false }: PostCar
   const datePart = formatDate(rawDate);
   const timePart =
     post.postType === "OFFERS" ? null : formatTime(rawDate);
-  const title = post.title[locale];
+  const titleRaw =
+    typeof post.title[locale] === "string"
+      ? post.title[locale]
+      : (post.title[locale] as { ["title[az]"]?: string } | undefined)?.[
+          "title[az]"
+        ] ?? "";
+  const title = stripHtmlEntitiesToPlain(titleRaw, { stripHtmlTags: false });
   const slug = resolvePostSlugForLocale(post, locale) ?? post.id;
 
-  const displayTags = Array.isArray(post.tags) ? post.tags : (post.tags?.[locale] ?? []);
+  const displayTagsRaw = Array.isArray(post.tags)
+    ? post.tags
+    : (post.tags?.[locale] ?? []);
+  const displayTags = displayTagsRaw.map((tag) =>
+    stripHtmlEntitiesToPlain(tag, { stripHtmlTags: false }),
+  );
 
   const content = getTextContent(post.content, locale);
   const contentPreview =
@@ -63,7 +79,12 @@ export default function PostCard({ post, locale, t, loadEager = false }: PostCar
     >
       <Image
         src={imageSrc}
-        alt={post.imageAlt?.[locale] || (typeof title === "string" ? title : "Post image")}
+        alt={
+          stripHtmlEntitiesToPlain(
+            post.imageAlt?.[locale] ?? (title || "Post image"),
+            { stripHtmlTags: false },
+          ) || "Post image"
+        }
         fill
         priority={loadEager}
         loading={loadEager ? undefined : "lazy"}
@@ -102,7 +123,7 @@ export default function PostCard({ post, locale, t, loadEager = false }: PostCar
     </div>
 
     <h2 className="text-xl font-bold mb-3 [@media(min-width:3500px)]:!text-4xl line-clamp-2">
-      {typeof title === "string" ? title : title?.["title[az]"] || ""}
+      {title}
     </h2>
 
     <p className="text-gray-600 [@media(min-width:3500px)]:!text-2xl mb-4 line-clamp-3 flex-grow">

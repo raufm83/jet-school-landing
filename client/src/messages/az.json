@@ -395,7 +395,7 @@
     "eventDateLabel": "Tədbir tarixi",
     "expiryDateLabel": "Son tarix",
     "eventDescription": "JET School-da keçirilən və gələcək bütün maraqlı tədbirlər burada",
-    "noEventsFound": "Tədbir tapılmadı"
+    "noEventsFound": "Yaxın günlərdə heç bir tədbir gözlənilmir."
   },
   "blogPage": {
     "pageTitle": "Bloq",
@@ -488,7 +488,11 @@
     "metaDescription": "JET School və JET Academy üzrə karyera imkanları və açıq vakansiyalar.",
     "emptyTitle": "Hazırda aktiv vakansiya yoxdur",
     "emptyLine1": "Yeni vakansiyalar açılanda burada görünəcək.",
-    "emptyLine2": "Yeniliklərdən xəbərdar olmaq üçün bizi izləyin!"
+    "emptyLine2": "Yeniliklərdən xəbərdar olmaq üçün bizi izləyin!",
+    "deadlineCountdown": "Bitməsinə {count} gün qalıb",
+    "deadlineCountdownToday": "Bitməsinə bugün son gündür",
+    "deadlineBadgeDays": "{count} gün qalıb",
+    "deadlineBadgeToday": "Son gün"
   },
   "vacancyDetail": {
     "cvCta": "Əgər öz namizədliyinizi bu vakansiya üçün uyğun hesab edirsinizsə, zəhmət olmasa CV-nizi və əlavə məlumatları ",
