@@ -26,6 +26,7 @@ export default async function SiteLayout({
         aria-hidden="true"
       >
         <TopCircle />
+        
       </div>
       <div className="relative z-10 flex min-h-0 min-w-0 w-full flex-1 flex-col">
         <DeferredScrollItems />
