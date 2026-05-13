@@ -4,6 +4,11 @@ import type { Locale } from "@/i18n/request";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { employmentLabel, experienceLabel } from "@/utils/vacancy-labels";
 import {
+  daysUntilVacancyDeadline,
+  formatVacancyDaysRemaining,
+  isVacancyDeadlineExpired,
+} from "@/utils/vacancy-deadline";
+import {
   MdArrowForward,
   MdOutlineCalendarToday,
   MdOutlineTrendingUp,
@@ -33,15 +38,20 @@ export default function VacancyCard({
   const applyLabel = locale === "ru" ? "Подробнее" : "Daha ətraflı";
   const vacancyLabel = locale === "ru" ? "Вакансия" : "Vakansiya";
 
-  const isExpired =
-    vacancy.deadline && !Number.isNaN(new Date(vacancy.deadline).getTime())
-      ? new Date(vacancy.deadline) < new Date()
-      : false;
+  const daysRemaining = daysUntilVacancyDeadline(vacancy.deadline);
+  const isExpired = isVacancyDeadlineExpired(vacancy.deadline);
 
   const deadlineText =
-    vacancy.deadline && !Number.isNaN(new Date(vacancy.deadline).getTime())
-      ? formatDate(vacancy.deadline)
+    daysRemaining !== null ? formatDate(vacancy.deadline!) : null;
+
+  const daysRemainingText =
+    daysRemaining !== null
+      ? formatVacancyDaysRemaining(locale, daysRemaining)
       : null;
+
+  const isUrgent =
+    daysRemaining !== null && daysRemaining >= 0 && daysRemaining < 7;
+  const urgentDaysText = isUrgent ? daysRemainingText : null;
 
   const expiredLabel = locale === "ru" ? "Срок истек" : "Müraciət müddəti bitib";
   const regimeText = employmentLabel(locale, vacancy.employmentType);
@@ -74,11 +84,15 @@ export default function VacancyCard({
           <span className="inline-flex items-center rounded-full bg-white/25 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white ring-1 ring-white/30">
             {vacancyLabel}
           </span>
-          {isExpired && (
+          {isExpired ? (
             <span className="inline-flex items-center rounded-full bg-black/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
               {expiredLabel}
             </span>
-          )}
+          ) : urgentDaysText ? (
+            <span className="inline-flex items-center rounded-full bg-red-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white ring-1 ring-red-700/40">
+              {urgentDaysText}
+            </span>
+          ) : null}
         </div>
         <h2 className="mt-3 text-pretty text-xl font-bold leading-snug text-white break-words sm:text-2xl sm:leading-tight">
           {title}
@@ -97,19 +111,29 @@ export default function VacancyCard({
 
         <div className="flex flex-col gap-2.5">
           <div
-            className={`flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2.5 sm:py-3 ${
-              isExpired ? "opacity-70" : ""
+            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 sm:py-3 ${
+              isExpired
+                ? "bg-gray-100 opacity-70"
+                : isUrgent
+                  ? "bg-red-50 ring-1 ring-red-200"
+                  : "bg-gray-100"
             }`}
-            title={deadlineText ?? L.noData}
+            title={
+              urgentDaysText && deadlineText
+                ? `${deadlineText} · ${urgentDaysText}`
+                : deadlineText ?? L.noData
+            }
           >
             <MdOutlineCalendarToday
               className={`size-5 shrink-0 sm:size-[22px] ${
-                isExpired ? "text-gray-400" : "text-jsyellow"
+                isExpired ? "text-gray-400" : isUrgent ? "text-red-600" : "text-jsyellow"
               }`}
               aria-hidden
             />
             <span className="min-w-0 text-sm font-medium leading-snug text-jsblack">
-              {deadlineText ?? L.noData}
+              {deadlineText && urgentDaysText
+                ? `${deadlineText} · ${urgentDaysText}`
+                : deadlineText ?? L.noData}
             </span>
           </div>
 
