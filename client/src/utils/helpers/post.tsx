@@ -52,16 +52,49 @@ export const getPostTypeName = (postType: PostType, t: any) => {
   }
 };
 
+/** Kart və önbaxış üçün: entity və (əksər halda) təqləri təmizləyib boşluqları normallaşdırır. */
+export function stripHtmlEntitiesToPlain(
+  raw: string,
+  opts?: { stripHtmlTags?: boolean },
+): string {
+  if (raw == null || typeof raw !== "string") return "";
+  let s =
+    opts?.stripHtmlTags === false ? raw : raw.replace(/<[^>]*>/g, "");
+  /* Boş/abzas placeholder-ləri (WYSIWYG-dən) */
+  s = s.replace(/&(?:nbsp|nsbp);/gi, " ");
+  s = s.replace(/&#0*160;|&#x0*A0;/gi, " ");
+  /* Qalan nömrəli referanslar */
+  s = s.replace(/&#(\d+);/g, (_, n) => {
+    const c = Number.parseInt(n, 10);
+    return Number.isFinite(c) ? String.fromCodePoint(c) : _;
+  });
+  s = s.replace(/&#x([\da-fA-F]+);/gi, (_, h) => {
+    const c = Number.parseInt(h, 16);
+    return Number.isFinite(c) ? String.fromCodePoint(c) : _;
+  });
+  s = s
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&apos;/gi, "'");
+  /* İkinci pass: &amp;nbsp; kimi ikiqat kodlama */
+  s = s.replace(/&(?:nbsp|nsbp);/gi, " ").replace(/\u00a0/g, " ");
+  return s.replace(/\s+/g, " ").trim();
+}
+
 export const getTextContent = (content: any, locale: string) => {
   let textContent = "";
   try {
     if (typeof content[locale] === "string") {
-      textContent = content[locale].replace(/<[^>]*>/g, "");
+      textContent = stripHtmlEntitiesToPlain(content[locale]);
     } else if (content[locale]?.["content[az]"]) {
-      textContent =
+      const inner =
         locale === "az"
           ? content[locale]["content[az]"]
           : content[locale]["content[ru]"];
+      textContent =
+        typeof inner === "string" ? stripHtmlEntitiesToPlain(inner) : "";
     }
   } catch (error) {
     console.error("Error parsing content:", error);

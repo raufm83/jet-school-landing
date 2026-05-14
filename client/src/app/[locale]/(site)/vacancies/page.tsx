@@ -16,6 +16,8 @@ import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
+import { vacancyCardDeadlineCountdownText } from "@/utils/vacancy-deadline-countdown";
+import { vacancyPageHeading } from "@/utils/vacancy-display";
 
 export async function generateMetadata({
   params,
@@ -92,7 +94,7 @@ export default async function VacanciesPage({
   const base = locale === "az" ? baseUrl : `${baseUrl}/${locale}`;
 
   const itemList = vacancies.map((v) => ({
-    name: locale === "ru" ? v.title.ru : v.title.az,
+    name: vacancyPageHeading(locale, v.title),
     url: ensureTrailingSlash(
       `${base}/vacancies/${locale === "ru" ? v.slug.ru : v.slug.az}`
     ),
@@ -143,7 +145,18 @@ export default async function VacanciesPage({
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-5 md:gap-6 items-stretch">
             {vacancies.map((v) => (
               <li key={v.id} className="flex min-h-0 min-w-0">
-                <VacancyCard vacancy={v} locale={locale} />
+                <VacancyCard
+                  vacancy={v}
+                  locale={locale}
+                  deadlineBadgeLabel={vacancyCardDeadlineCountdownText(
+                    v,
+                    {
+                      countdown: (c) => t("deadlineBadgeDays", { count: c }),
+                      today: () => t("deadlineBadgeToday"),
+                    },
+                    { onlyWhenDaysRemainBelow: 7 },
+                  )}
+                />
               </li>
             ))}
           </ul>

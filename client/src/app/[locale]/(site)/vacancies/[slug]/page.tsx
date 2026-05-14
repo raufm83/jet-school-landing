@@ -17,6 +17,8 @@ import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { employmentLabel, experienceLabel } from "@/utils/vacancy-labels";
+import { vacancyPageHeading } from "@/utils/vacancy-display";
+import { vacancyCardDeadlineCountdownText } from "@/utils/vacancy-deadline-countdown";
 import {
   MdOutlineCalendarToday,
   MdOutlineTrendingUp,
@@ -31,14 +33,6 @@ function excerpt(text: string, max = 165): string {
   const t = stripHtml(text.replace(/\s+/g, " ").trim());
   if (t.length <= max) return t;
   return `${t.slice(0, max - 1).trim()}…`;
-}
-
-function vacancyPageHeading(locale: Locale, titleAz: string, titleRu: string): string {
-  const raw = (locale === "ru" ? titleRu : titleAz).trim();
-  if (locale === "ru") {
-    return `Вакансия ${raw}`.trim();
-  }
-  return `${raw} vakansiyası`.trim();
 }
 
 export async function generateMetadata({
@@ -65,11 +59,7 @@ export async function generateMetadata({
 
   const descText =
     locale === "ru" ? vacancy.description.ru : vacancy.description.az;
-  const titleText = vacancyPageHeading(
-    locale,
-    vacancy.title.az,
-    vacancy.title.ru
-  );
+  const titleText = vacancyPageHeading(locale, vacancy.title);
   const title = trimMetaTitle(`${titleText} | JET School`);
   const description = trimMetaDescription(excerpt(descText));
 
@@ -138,11 +128,7 @@ export default async function VacancyDetailPage({
     const listPath = ensureTrailingSlash(`${base}/vacancies`);
     const pageUrl = ensureTrailingSlash(`${base}/vacancies/${params.slug}`);
 
-    const title = vacancyPageHeading(
-      locale,
-      vacancy.title.az,
-      vacancy.title.ru
-    );
+    const title = vacancyPageHeading(locale, vacancy.title);
     const description =
       locale === "ru" ? vacancy.description.ru : vacancy.description.az;
     const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
@@ -176,6 +162,22 @@ export default async function VacancyDetailPage({
           };
     const a11y = (label: string, value: string) => `${label}: ${value}`;
     const listTitle = tList("title");
+
+    /** Başlıq panelində qırmızı pill (< 7 gün), kartlarla eyni məntiqlə. */
+    const deadlineHeaderBadge = vacancyCardDeadlineCountdownText(
+      vacancy,
+      {
+        countdown: (c) => tList("deadlineBadgeDays", { count: c }),
+        today: () => tList("deadlineBadgeToday"),
+      },
+      { onlyWhenDaysRemainBelow: 7 },
+    );
+
+    const expiredShortLabel =
+      locale === "ru" ? "Срок истек" : "Müraciət müddəti bitib";
+
+    const metaCellClass =
+      "flex flex-1 items-center justify-center gap-3 px-6 py-4 sm:py-6";
 
     const schemaGraph = buildHomePageGraph({
       name: title,
@@ -215,55 +217,72 @@ export default async function VacancyDetailPage({
                 <Breadcrumbs dynamicTitle={title} />
               </div>
 
-              <div className="overflow-hidden rounded-2xl border border-black/[0.06] bg-white shadow-[0_10px_40px_-12px_rgba(28,28,28,0.12)]">
-                {/* Banner — brend rəngi */}
-                <div className={`px-6 py-8 sm:px-8 sm:py-10 ${headerBg}`}>
-                  <span className="inline-flex items-center rounded-full bg-white/25 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white ring-1 ring-white/30 sm:text-[11px]">
-                    {vacancyBadge}
-                  </span>
-                  <h1 className="mt-4 text-3xl font-bold leading-tight text-white sm:text-4xl md:text-[2.5rem] md:leading-[1.2]">
+              <div className="overflow-hidden rounded-[22px] border border-black/[0.06] bg-white shadow-[0_10px_40px_-12px_rgba(28,28,28,0.14)]">
+                {/* Banner — brend rəngi, badge + başlıq */}
+                <div className={`px-6 pb-8 pt-7 sm:px-8 sm:pb-10 sm:pt-8 ${headerBg}`}>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white ring-1 ring-white/35">
+                      {vacancyBadge}
+                    </span>
+                    {!isExpired && deadlineHeaderBadge ? (
+                      <span className="inline-flex items-center rounded-full bg-red-500 px-2.5 py-1 text-[11px] font-bold leading-none text-white shadow-sm ring-1 ring-red-600/40">
+                        {deadlineHeaderBadge}
+                      </span>
+                    ) : null}
+                    {isExpired ? (
+                      <span className="inline-flex items-center rounded-full bg-black/25 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white ring-1 ring-black/15">
+                        {expiredShortLabel}
+                      </span>
+                    ) : null}
+                  </div>
+                  <h1 className="mt-3.5 text-pretty text-3xl font-bold leading-[1.15] text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.12)] sm:text-4xl md:text-[2.5rem] md:leading-[1.2]">
                     {title}
                   </h1>
                 </div>
 
-                {/* Meta sətri — üfüqi, ayırıcı xətt */}
+                {/* Qısa məlumat: üç sütun, ayırıcı xətlər */}
                 <div
-                  className="flex flex-col gap-4 border-b border-gray-200 bg-white px-5 py-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-6 sm:px-8 sm:py-6"
+                  className="grid grid-cols-1 divide-y divide-gray-200 border-b border-gray-200 bg-white sm:grid-cols-3 sm:divide-x sm:divide-y-0"
                   aria-label={locale === "az" ? "Vakansiya qısa məlumat" : "Кратко о вакансии"}
                 >
                   <div
-                    className="flex min-w-0 items-center gap-3"
-                    title={a11y(metaL.deadline, deadlineText ?? metaL.dash)}
+                    className={metaCellClass}
+                    role="group"
+                    aria-label={a11y(metaL.deadline, deadlineText ?? metaL.dash)}
                   >
                     <MdOutlineCalendarToday
-                      className={`size-6 shrink-0 sm:size-7 ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
+                      className={`size-7 shrink-0 ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
                       aria-hidden
                     />
-                    <span className="text-sm font-medium text-jsblack sm:text-base">
+                    <span
+                      className={`text-center text-sm font-semibold leading-snug sm:text-base ${isExpired ? "text-gray-500 line-through decoration-gray-400/70" : "text-gray-900"}`}
+                    >
                       {deadlineText ?? metaL.dash}
                     </span>
                   </div>
                   <div
-                    className="flex min-w-0 items-center gap-3"
-                    title={a11y(metaL.regime, regimeText ?? metaL.dash)}
+                    className={metaCellClass}
+                    role="group"
+                    aria-label={a11y(metaL.regime, regimeText ?? metaL.dash)}
                   >
                     <MdOutlineWorkOutline
-                      className={`size-6 shrink-0 sm:size-7 ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
+                      className={`size-7 shrink-0 ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
                       aria-hidden
                     />
-                    <span className="text-sm font-medium text-jsblack sm:text-base">
+                    <span className="text-center text-sm font-semibold text-gray-900 sm:text-base">
                       {regimeText ?? metaL.dash}
                     </span>
                   </div>
                   <div
-                    className="flex min-w-0 items-center gap-3"
-                    title={a11y(metaL.exp, expText ?? metaL.dash)}
+                    className={metaCellClass}
+                    role="group"
+                    aria-label={a11y(metaL.exp, expText ?? metaL.dash)}
                   >
                     <MdOutlineTrendingUp
-                      className={`size-6 shrink-0 sm:size-7 ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
+                      className={`size-7 shrink-0 ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
                       aria-hidden
                     />
-                    <span className="text-sm font-medium text-jsblack sm:text-base">
+                    <span className="text-center text-sm font-semibold text-gray-900 sm:text-base">
                       {expText ?? metaL.dash}
                     </span>
                   </div>
