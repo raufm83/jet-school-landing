@@ -410,7 +410,9 @@
     "event": "Мероприятия",
     "readMore": "Читать далее",
     "noPostsFound": "Посты не найдены",
-    "tryDifferentFilters": "Скоро появятся!"
+    "tryDifferentFilters": "Скоро появятся!",
+    "searchPlaceholder": "Поиск по заголовку блога...",
+    "noSearchResults": "По вашему запросу статьи не найдены"
   },
   "tagSearchPage": {
     "pageTitle": "Публикации по теме «{tag}»",

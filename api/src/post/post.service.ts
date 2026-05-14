@@ -67,6 +67,21 @@ export class PostService {
     return az.some(match) || ru.some(match);
   }
 
+  /** Başlıqda axtarış (az/ru, case-insensitive substring) */
+  private postTitleMatches(rawTitle: unknown, needle: string): boolean {
+    const n = needle.trim().toLowerCase();
+    if (!n) return true;
+    const titles: string[] = [];
+    if (rawTitle && typeof rawTitle === 'object' && !Array.isArray(rawTitle)) {
+      const o = rawTitle as Record<string, unknown>;
+      if (typeof o.az === 'string') titles.push(o.az);
+      if (typeof o.ru === 'string') titles.push(o.ru);
+    } else if (typeof rawTitle === 'string') {
+      titles.push(rawTitle);
+    }
+    return titles.some((t) => t.toLowerCase().includes(n));
+  }
+
   /** Normalize imageUrl from DB (string legacy or Json) to { az?, ru? } for API response */
   private normalizeImageUrl(raw: unknown): { az?: string; ru?: string } | null {
     if (raw == null) return null;
@@ -317,6 +332,7 @@ export class PostService {
     userRole?: Role,
     tag?: string,
     excludeOffers = false,
+    search?: string,
   ) {
     try {
       const skip = (page - 1) * limit;
@@ -373,15 +389,29 @@ export class PostService {
       this.updateEventStatuses().catch(() => {});
 
       const tagTrim = typeof tag === 'string' ? tag.trim() : '';
-      if (tagTrim) {
+      const searchTrim = typeof search === 'string' ? search.trim() : '';
+      if (tagTrim || searchTrim) {
         const candidates = await this.prisma.post.findMany({
           where: whereClause,
-          select: { id: true, tags: true, createdAt: true },
-          orderBy: { createdAt: 'desc' },
+          select: {
+            id: true,
+            tags: true,
+            title: true,
+            createdAt: true,
+            eventDate: true,
+          },
+          orderBy:
+            postType === PostType.EVENT
+              ? { eventDate: 'desc' }
+              : { createdAt: 'desc' },
         });
-        const matched = candidates.filter((p) =>
-          this.postHasTag(p.tags, tagTrim),
-        );
+        const matched = candidates.filter((p) => {
+          if (tagTrim && !this.postHasTag(p.tags, tagTrim)) return false;
+          if (searchTrim && !this.postTitleMatches(p.title, searchTrim)) {
+            return false;
+          }
+          return true;
+        });
         const total = matched.length;
         const slice = matched.slice(skip, skip + +limit);
         const pageIds = slice.map((p) => p.id);
@@ -771,6 +801,7 @@ export class PostService {
     authorId?: string,
     userRole?: Role,
     tag?: string,
+    search?: string,
   ) {
     // AUTHOR can only request BLOG type
     if (userRole === Role.AUTHOR && type !== PostType.BLOG) {
@@ -787,6 +818,7 @@ export class PostService {
       userRole,
       tag,
       false,
+      search,
     );
   }
 

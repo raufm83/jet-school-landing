@@ -1,4 +1,5 @@
 import PostFilters from "@/components/views/landing/post/filters";
+import BlogSearch from "@/components/views/landing/post/blog-search";
 import PostGrid from "@/components/views/landing/post/grid";
 import JsonLd from "@/components/seo/json-ld";
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
@@ -21,6 +22,7 @@ interface BlogPageProps {
     page?: string;
     limit?: string;
     type?: PostType;
+    q?: string;
   };
 }
 
@@ -39,7 +41,8 @@ export async function generateMetadata({
     page && page !== "1" ? `${baseUrl}${basePath}?page=${page}` : `${baseUrl}${basePath}`
   );
 
-  const isIndexable = !searchParams.page || searchParams.page === "1";
+  const isIndexable =
+    (!searchParams.page || searchParams.page === "1") && !searchParams.q?.trim();
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)
@@ -97,12 +100,14 @@ export default async function BlogPage({
   const page = Number(searchParams.page) || 1;
   const limit = Number(searchParams.limit) || 12;
   const type = PostType.BLOG;
+  const searchQuery = searchParams.q?.trim() ?? "";
 
   const [postsData, t, faqItems] = await Promise.all([
     getAllPosts({
       page,
       limit,
       postType: type,
+      search: searchQuery || undefined,
     }),
     getTranslations({ locale, namespace: "blogPage" }),
     getFaqByPage("blog"),
@@ -156,12 +161,20 @@ export default async function BlogPage({
       </div>
       <PostFilters type={type} t={t} />
 
+      <BlogSearch
+        placeholderText={t("searchPlaceholder")}
+        initialQuery={searchQuery}
+      />
+
       <PostGrid
         posts={posts}
         locale={locale}
         t={t}
         meta={transformedMeta}
         type={type}
+        emptyStateTitle={
+          searchQuery ? t("noSearchResults") : undefined
+        }
       />
 
       {faqItems.length > 0 && (
