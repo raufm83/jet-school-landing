@@ -186,6 +186,7 @@ export class PostController {
     @Query('tag') tag?: string,
     @Query('excludeOffers', new ParseBoolPipe({ optional: true }))
     excludeOffers = false,
+    @Query('search') search?: string,
     @Request() req?: { user?: { id: string; role: string } },
   ) {
     const user = req?.user;
@@ -200,6 +201,7 @@ export class PostController {
       user?.role as Role,
       tag,
       excludeOffers,
+      search,
     );
   }
 
@@ -284,6 +286,7 @@ export class PostController {
     @Query('includeUnpublished') includeUnpublished = false,
     @Query('eventStatus') eventStatus?: string,
     @Query('tag') tag?: string,
+    @Query('search') search?: string,
     @Request() req?: { user?: { id: string; role: string } },
   ) {
     const user = req?.user;
@@ -296,6 +299,7 @@ export class PostController {
       user?.id,
       user?.role as Role,
       tag,
+      search,
     );
   }
 

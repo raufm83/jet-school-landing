@@ -409,7 +409,9 @@
     "metaDescription": "Ən son yazdığımız bloq və məqalələrimizlə tanış olun.ləri tərəfindən yazılmış məqalələr ilə tanış olun.",
     "readMore": "Daha çox oxu",
     "noPostsFound": "Post tapılmadı",
-    "tryDifferentFilters": "Amma olacaqlar!"
+    "tryDifferentFilters": "Amma olacaqlar!",
+    "searchPlaceholder": "Bloq başlığına görə axtar...",
+    "noSearchResults": "Axtarışınıza uyğun bloq tapılmadı"
   },
   "tagSearchPage": {
     "pageTitle": "«{tag}» mövzusu ilə əlaqəli məqalələr",
