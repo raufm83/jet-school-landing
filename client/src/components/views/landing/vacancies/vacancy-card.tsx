@@ -4,6 +4,7 @@ import type { Locale } from "@/i18n/request";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { vacancyPageHeading } from "@/utils/vacancy-display";
 import { employmentLabel, experienceLabel } from "@/utils/vacancy-labels";
+import { isVacancyDeadlineExpired } from "@/utils/vacancy-deadline";
 import {
   MdArrowForward,
   MdOutlineCalendarToday,
@@ -37,7 +38,7 @@ export default function VacancyCard({
 }: {
   vacancy: Vacancy;
   locale: Locale;
-  /** Aktiv möhlətlər üçün: başlıqda qırmızı pill badge */
+  /** Siyahı səhifəsindən: <7 gün üçün qısa tərcüməli badge mətni */
   deadlineBadgeLabel?: string | null;
 }) {
   const title = vacancyPageHeading(locale, vacancy.title);
@@ -45,10 +46,7 @@ export default function VacancyCard({
   const applyLabel = locale === "ru" ? "Подробнее" : "Daha ətraflı";
   const vacancyLabel = locale === "ru" ? "Вакансия" : "Vakansiya";
 
-  const isExpired =
-    vacancy.deadline && !Number.isNaN(new Date(vacancy.deadline).getTime())
-      ? new Date(vacancy.deadline) < new Date()
-      : false;
+  const isExpired = isVacancyDeadlineExpired(vacancy.deadline);
 
   const deadlineText =
     vacancy.deadline && !Number.isNaN(new Date(vacancy.deadline).getTime())
@@ -72,6 +70,16 @@ export default function VacancyCard({
 
   const headerTone = isExpired ? "bg-gray-500" : CARD_ACCENT.hero;
 
+  const calendarRowTitle = (() => {
+    const parts = [
+      deadlineText,
+      !isExpired && deadlineBadgeLabel ? deadlineBadgeLabel : null,
+    ].filter((v): v is string => typeof v === "string" && v.length > 0);
+    const j = parts.join(" — ");
+    if (j) return j;
+    return deadlineText ?? L.noData;
+  })();
+
   return (
     <Link
       href={(isExpired ? "#" : `/vacancies/${slug}`) as never}
@@ -93,11 +101,11 @@ export default function VacancyCard({
               {deadlineBadgeLabel}
             </span>
           ) : null}
-          {isExpired && (
+          {isExpired ? (
             <span className="inline-flex items-center rounded-full bg-black/25 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white ring-1 ring-black/15">
               {expiredLabel}
             </span>
-          )}
+          ) : null}
         </div>
         <h2 className="mt-3.5 text-pretty text-xl font-bold leading-snug text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.12)] break-words sm:text-2xl sm:leading-[1.2] [@media(min-width:3500px)]:text-4xl [@media(min-width:3500px)]:leading-tight">
           {title}
@@ -119,7 +127,7 @@ export default function VacancyCard({
             className={`flex items-center gap-3 rounded-xl bg-neutral-100/90 px-3 py-2.5 sm:py-3 ${
               isExpired ? "opacity-70" : ""
             }`}
-            title={deadlineText ?? L.noData}
+            title={calendarRowTitle}
           >
             <MdOutlineCalendarToday
               className={`size-5 shrink-0 sm:size-[22px] ${

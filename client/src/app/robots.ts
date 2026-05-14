@@ -7,6 +7,8 @@ export default function robots(): MetadataRoute.Robots {
       allow: ["/"],
       disallow: [
         "/dashboard",
+        "/az/registration",
+        "/ru/registration",
         "/az/glossary/terms?letter=",
         "/ru/glossary/terms?letter=",
         "/az/glossary/terms/?letter=",
