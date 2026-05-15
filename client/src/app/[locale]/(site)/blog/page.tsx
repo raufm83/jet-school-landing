@@ -14,6 +14,8 @@ import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 
+export const dynamic = "force-dynamic";
+
 interface BlogPageProps {
   params: {
     locale: string;
