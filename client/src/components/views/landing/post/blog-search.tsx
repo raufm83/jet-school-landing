@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useLocale } from "next-intl";
 import { FiSearch } from "react-icons/fi";
 
 interface BlogSearchProps {
@@ -15,23 +16,21 @@ export default function BlogSearch({
 }: BlogSearchProps) {
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const router = useRouter();
-  const pathname = usePathname();
+  const locale = useLocale();
   const searchParams = useSearchParams();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams();
+    searchParams.forEach((value, key) => {
+      if (key !== "q" && key !== "page") params.set(key, value);
+    });
     const q = searchQuery.trim();
+    if (q) params.set("q", q);
 
-    if (q) {
-      params.set("q", q);
-    } else {
-      params.delete("q");
-    }
-    params.delete("page");
-
-    const query = params.toString();
-    router.push(query ? `${pathname}?${query}` : pathname);
+    const qs = params.toString();
+    const href = `/${locale}/blog/${qs ? `?${qs}` : ""}`;
+    router.push(href);
   };
 
   return (

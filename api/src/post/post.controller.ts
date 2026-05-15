@@ -170,6 +170,12 @@ export class PostController {
     description:
       'When true (mixed feed, no postType): omit OFFERS (kampaniyalar). With includeBlogs=false, only NEWS+EVENT.',
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Başlıqda axtarış (az/ru)',
+  })
   @ApiResponse({
     status: 200,
     description: 'List of posts retrieved successfully',
@@ -216,15 +222,22 @@ export class PostController {
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @ApiQuery({ name: 'includeUnpublished', required: false, type: Boolean, example: true })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Başlıqda axtarış (az/ru)',
+  })
   @ApiResponse({ status: 200, description: 'Author\'s blog posts' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden - AUTHOR role required' })
   async findMyPosts(
+    @Request() req: { user: { id: string; role: string } },
     @Query('page', ParseIntPipe) page = 1,
     @Query('limit', ParseIntPipe) limit = 10,
     @Query('includeUnpublished', new ParseBoolPipe({ optional: true }))
     includeUnpublished = true,
-    @Request() req: { user: { id: string; role: string } },
+    @Query('search') search?: string,
   ) {
     return this.postService.findAll(
       page,
@@ -237,6 +250,7 @@ export class PostController {
       Role.AUTHOR,
       undefined,
       false,
+      search,
     );
   }
 
@@ -274,6 +288,12 @@ export class PostController {
     description:
       'Whether to include unpublished posts (requires admin/author role)',
     example: false,
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Başlıqda axtarış (az/ru)',
   })
   @ApiResponse({
     status: 200,
