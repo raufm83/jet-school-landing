@@ -4,7 +4,7 @@ import { Post } from "@/types/post";
 import { getAllPosts, getPostDetails, getPostsByType } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
 import SinglePostView from "@/components/views/landing/post/view";
@@ -15,6 +15,10 @@ interface ISinglePostPageProps {
   params: {
     slug: string;
     locale: string;
+  };
+  searchParams?: {
+    page?: string;
+    q?: string;
   };
 }
 
@@ -35,7 +39,20 @@ export async function generateStaticParams() {
   }
 }
 
-export default async function SinglePostPage({ params }: ISinglePostPageProps) {
+export default async function SinglePostPage({
+  params,
+  searchParams = {},
+}: ISinglePostPageProps) {
+  if (params.slug === "undefined") {
+    const qs = new URLSearchParams();
+    if (searchParams.page) qs.set("page", searchParams.page);
+    if (searchParams.q) qs.set("q", searchParams.q);
+    const tail = qs.toString();
+    redirect(
+      tail ? `/${params.locale}/blog/?${tail}` : `/${params.locale}/blog/`
+    );
+  }
+
   try {
     const [data, locale, t] = await Promise.all([
       getPostDetails(params.slug),

@@ -2,15 +2,12 @@
 import { useState, useCallback, useEffect } from "react";
 import {
   Button,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- NextUI: faylda `<Select>` qalıbsa import lazımdır
-  Select,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  SelectItem,
   Table,
   TableBody,
   TableCell,
@@ -24,7 +21,7 @@ import {
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
+import { MdAdd, MdClear, MdDelete, MdEdit, MdSearch } from "react-icons/md";
 import { toast } from "sonner";
 import api from "@/utils/api/axios";
 import { Post, PostsResponse } from "@/types/post";
@@ -45,6 +42,8 @@ export default function PostsPage() {
   const [selectedPostType, setSelectedPostType] = useState<PostType | null>(
     null
   );
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const {
     isOpen: isDeleteOpen,
@@ -54,22 +53,43 @@ export default function PostsPage() {
 
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchInput.trim());
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [searchInput]);
+
   const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: rowsPerPage.toString(),
+        includeUnpublished: "true",
+      });
+      if (debouncedSearch) {
+        params.set("search", debouncedSearch);
+      }
+
       // Müəllif üçün yalnız öz bloqlarını göstərən endpoint (mütləq JWT tələb olunur)
       if (isAuthor) {
         const { data } = await api.get<PostsResponse>(
-          `/posts/my?page=${page}&limit=${rowsPerPage}&includeUnpublished=true`
+          `/posts/my?${params.toString()}`
         );
         setPosts(data.items);
         setTotalPosts(data.meta.total);
         return;
       }
+
       const type = selectedPostType;
-      let url = `/posts?page=${page}&limit=${rowsPerPage}&includeUnpublished=true&includeBlogs=true`;
+      let url: string;
       if (type) {
-        url = `/posts/type/${type}?page=${page}&limit=${rowsPerPage}&includeUnpublished=true`;
+        url = `/posts/type/${type}?${params.toString()}`;
+      } else {
+        params.set("includeBlogs", "true");
+        url = `/posts?${params.toString()}`;
       }
       const { data } = await api.get<PostsResponse>(url);
       setPosts(data.items);
@@ -80,7 +100,7 @@ export default function PostsPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage, selectedPostType, isAuthor]);
+  }, [page, rowsPerPage, selectedPostType, isAuthor, debouncedSearch]);
 
   // Sessiya yüklənənə qədər göndərmə (xüsusən AUTHOR üçün JWT göndərilməsi üçün)
   useEffect(() => {
@@ -113,6 +133,17 @@ export default function PostsPage() {
     setSelectedPostType(type);
     setPage(1);
   };
+
+  const resetFilters = () => {
+    setSearchInput("");
+    setDebouncedSearch("");
+    if (!isAuthor) setSelectedPostType(null);
+    setPage(1);
+  };
+
+  const filtersDirty =
+    searchInput.trim().length > 0 ||
+    (!isAuthor && selectedPostType !== null);
 
   const postTypeFilters: { key: PostType | "all"; label: string }[] = [
     { key: "all", label: "Bütün postlar" },
@@ -306,38 +337,66 @@ export default function PostsPage() {
           </div>
         </div>
 
-        {!isAuthor && (
-          <div
-            className="mb-6 flex flex-wrap gap-2"
-            role="tablist"
-            aria-label="Post növü üzrə filtrasiya"
-          >
-            {postTypeFilters.map(({ key, label }) => {
-              const isActive =
-                key === "all"
-                  ? selectedPostType === null
-                  : selectedPostType === key;
-              return (
-                <button
-                  key={String(key)}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() =>
-                    handlePostTypeFilter(key === "all" ? null : key)
-                  }
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-jsyellow text-white shadow-sm"
-                      : "border border-gray-200 bg-gray-50 text-jsblack hover:border-jsyellow/40 hover:bg-jsyellow/5"
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        )}
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end">
+          {!isAuthor && (
+            <div
+              className="flex flex-wrap gap-2"
+              role="tablist"
+              aria-label="Post növü üzrə filtrasiya"
+            >
+              {postTypeFilters.map(({ key, label }) => {
+                const isActive =
+                  key === "all"
+                    ? selectedPostType === null
+                    : selectedPostType === key;
+                return (
+                  <button
+                    key={String(key)}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() =>
+                      handlePostTypeFilter(key === "all" ? null : key)
+                    }
+                    className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-jsyellow text-white shadow-sm"
+                        : "border border-gray-200 bg-gray-50 text-jsblack hover:border-jsyellow/40 hover:bg-jsyellow/5"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          <Input
+            label="Başlığa görə axtarış"
+            placeholder="AZ və ya RU başlıqda axtar..."
+            variant="bordered"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            startContent={<MdSearch className="text-default-400" />}
+            isClearable
+            onClear={() => setSearchInput("")}
+            className="min-w-[240px] flex-1 sm:max-w-md"
+            classNames={{
+              inputWrapper: "bg-white",
+            }}
+          />
+
+          {filtersDirty && (
+            <Button
+              variant="flat"
+              color="default"
+              startContent={<MdClear size={18} />}
+              onPress={resetFilters}
+            >
+              Filtrləri sıfırla
+            </Button>
+          )}
+        </div>
 
         <Table
           aria-label="Postlar cədvəli"

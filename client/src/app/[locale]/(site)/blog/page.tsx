@@ -1,4 +1,5 @@
 import PostFilters from "@/components/views/landing/post/filters";
+import BlogSearch from "@/components/views/landing/post/blog-search";
 import PostGrid from "@/components/views/landing/post/grid";
 import JsonLd from "@/components/seo/json-ld";
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
@@ -19,6 +20,8 @@ function isLikelyMongoObjectId(value: string): boolean {
   return /^[a-f\d]{24}$/i.test(value.trim());
 }
 
+export const dynamic = "force-dynamic";
+
 interface BlogPageProps {
   params: {
     locale: string;
@@ -28,6 +31,7 @@ interface BlogPageProps {
     limit?: string;
     type?: PostType;
     category?: string;
+    q?: string;
   };
 }
 
@@ -54,7 +58,8 @@ export async function generateMetadata({
     qs ? `${baseUrl}${basePath}?${qs}` : `${baseUrl}${basePath}`,
   );
 
-  const isIndexable = !pageParam || pageParam === "1";
+  const isIndexable =
+    (!pageParam || pageParam === "1") && !(searchParams.q?.trim());
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)
@@ -116,6 +121,7 @@ export default async function BlogPage({
   const blogCategoryFilter = isLikelyMongoObjectId(categoryRaw)
     ? categoryRaw
     : undefined;
+  const searchQuery = searchParams.q?.trim() ?? "";
 
   const [postsData, t, faqItems, blogCategories] = await Promise.all([
     getAllPosts({
@@ -123,6 +129,7 @@ export default async function BlogPage({
       limit,
       postType: type,
       ...(blogCategoryFilter ? { blogCategoryId: blogCategoryFilter } : {}),
+      ...(searchQuery ? { search: searchQuery } : {}),
     }),
     getTranslations({ locale, namespace: "blogPage" }),
     getFaqByPage("blog"),
@@ -177,6 +184,11 @@ export default async function BlogPage({
       </div>
       <PostFilters type={type} t={t} />
 
+      <BlogSearch
+        placeholderText={t("searchPlaceholder")}
+        initialQuery={searchQuery}
+      />
+
       <BlogCategoryChips
         locale={locale}
         categories={blogCategories}
@@ -192,7 +204,11 @@ export default async function BlogPage({
         meta={transformedMeta}
         type={type}
         emptyStateTitle={
-          blogCategoryFilter ? t("noPostsInCategory") : undefined
+          searchQuery
+            ? t("noSearchResults")
+            : blogCategoryFilter
+              ? t("noPostsInCategory")
+              : undefined
         }
       />
 

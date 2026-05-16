@@ -176,6 +176,12 @@ export class PostController {
     description: 'When listing BLOG posts only, filter by category id',
     type: String,
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Başlıqda axtarış (az/ru)',
+  })
   @ApiResponse({
     status: 200,
     description: 'List of posts retrieved successfully',
@@ -193,6 +199,7 @@ export class PostController {
     @Query('excludeOffers', new ParseBoolPipe({ optional: true }))
     excludeOffers = false,
     @Query('blogCategoryId') blogCategoryId?: string,
+    @Query('search') search?: string,
     @Request() req?: { user?: { id: string; role: string } },
   ) {
     const user = req?.user;
@@ -208,6 +215,7 @@ export class PostController {
       tag,
       excludeOffers,
       blogCategoryId,
+      search,
     );
   }
 
@@ -228,6 +236,12 @@ export class PostController {
     description: 'Filter author blogs by category',
     type: String,
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Başlıqda axtarış (az/ru)',
+  })
   @ApiResponse({ status: 200, description: 'Author\'s blog posts' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden - AUTHOR role required' })
@@ -238,6 +252,7 @@ export class PostController {
     @Query('includeUnpublished', new ParseBoolPipe({ optional: true }))
     includeUnpublished = true,
     @Query('blogCategoryId') blogCategoryId?: string,
+    @Query('search') search?: string,
   ) {
     return this.postService.findAll(
       page,
@@ -251,6 +266,7 @@ export class PostController {
       undefined,
       false,
       blogCategoryId,
+      search,
     );
   }
 
@@ -295,6 +311,12 @@ export class PostController {
     description: 'For BLOG type: filter by blog category id',
     type: String,
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Başlıqda axtarış (az/ru)',
+  })
   @ApiResponse({
     status: 200,
     description: 'List of posts retrieved successfully',
@@ -307,6 +329,7 @@ export class PostController {
     @Query('eventStatus') eventStatus?: string,
     @Query('tag') tag?: string,
     @Query('blogCategoryId') blogCategoryId?: string,
+    @Query('search') search?: string,
     @Request() req?: { user?: { id: string; role: string } },
   ) {
     const user = req?.user;
@@ -320,6 +343,7 @@ export class PostController {
       user?.role as Role,
       tag,
       blogCategoryId,
+      search,
     );
   }
 

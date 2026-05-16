@@ -65,18 +65,11 @@ export default function PostGrid({
         {meta && meta.totalPages > 1 && (
         <div className="mt-12 flex justify-center">
           <Pagination
+            locale={locale}
             currentPage={meta.page!}
             totalPages={meta.totalPages!}
-            baseUrl={
-              paginationBasePath ??
-              (type === "BLOG"
-                ? "/blog"
-                : type === "OFFERS"
-                  ? "/offers"
-                  : type === "EVENT"
-                    ? "/events"
-                    : "/news")
-            }
+            listingType={type}
+            paginationBasePath={paginationBasePath}
           />
         </div>
       )}

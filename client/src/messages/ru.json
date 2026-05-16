@@ -412,7 +412,9 @@
     "noPostsFound": "Посты не найдены",
     "categoriesTitle": "Категории",
     "noPostsInCategory": "В этой категории пока нет записей.",
-    "tryDifferentFilters": "Скоро появятся!"
+    "tryDifferentFilters": "Скоро появятся!",
+    "searchPlaceholder": "Поиск по заголовку блога...",
+    "noSearchResults": "По вашему запросу статьи не найдены"
   },
   "tagSearchPage": {
     "pageTitle": "Публикации по теме «{tag}»",

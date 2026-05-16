@@ -1,22 +1,41 @@
 "use client";
 
-import { Link } from "@/i18n/routing";
+import Link from "next/link";
+import { Suspense } from "react";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { useSearchParams } from "next/navigation";
+import { Locale } from "@/i18n/request";
+import { PostType } from "@/types/enums";
+import {
+  buildPostListingPageUrl,
+  getPostListingPaginationTarget,
+  type PostListingPaginationTarget,
+} from "@/utils/post-listing-pagination";
 
 interface PaginationProps {
+  locale: Locale;
   currentPage: number;
   totalPages: number;
-  baseUrl: string;
+  listingType?: PostType;
+  paginationBasePath?: string;
+  target?: PostListingPaginationTarget;
 }
 
-export default function Pagination({
+function PaginationInner({
+  locale,
   currentPage,
   totalPages,
-  baseUrl,
+  listingType,
+  paginationBasePath,
+  target: targetProp,
 }: PaginationProps) {
   const searchParams = useSearchParams();
-  if (totalPages <= 1) return null;
+  const target =
+    targetProp ??
+    getPostListingPaginationTarget(listingType, paginationBasePath);
+
+  const pageUrl = (page: number) =>
+    buildPostListingPageUrl(locale, target, page, searchParams);
 
   const getPageNumbers = (): (number | string)[] => {
     const delta = 2;
@@ -56,23 +75,15 @@ export default function Pagination({
   };
 
   const pages = getPageNumbers();
-
-  const getPageUrl = (page: number): string => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", page.toString());
-    return `${baseUrl}?${params.toString()}`;
-  };
-
-  const prevPageUrl = currentPage > 1 ? getPageUrl(currentPage - 1) : null;
+  const prevPageUrl = currentPage > 1 ? pageUrl(currentPage - 1) : null;
   const nextPageUrl =
-    currentPage < totalPages ? getPageUrl(currentPage + 1) : null;
+    currentPage < totalPages ? pageUrl(currentPage + 1) : null;
 
   return (
     <div className="flex items-center justify-center space-x-2">
-      {/* Previous page button */}
       {prevPageUrl ? (
         <Link
-          href={prevPageUrl as never}
+          href={prevPageUrl}
           className="flex items-center justify-center h-10 w-10 rounded-full border border-jsyellow text-jsblack hover:bg-jsyellow/10 transition-colors"
           aria-label="Previous page"
         >
@@ -84,7 +95,6 @@ export default function Pagination({
         </span>
       )}
 
-      {/* Page numbers */}
       {pages.map((page, index) => {
         if (page === "dots1" || page === "dots2") {
           return (
@@ -100,7 +110,7 @@ export default function Pagination({
         return (
           <Link
             key={`page-${page}`}
-            href={getPageUrl(page as number) as never}
+            href={pageUrl(page as number)}
             className={`flex items-center justify-center h-10 w-10 rounded-full transition-colors ${
               currentPage === page
                 ? "bg-jsyellow text-white"
@@ -112,10 +122,9 @@ export default function Pagination({
         );
       })}
 
-      {/* Next page button */}
       {nextPageUrl ? (
         <Link
-          href={nextPageUrl as never}
+          href={nextPageUrl}
           className="flex items-center justify-center h-10 w-10 rounded-full border border-jsyellow text-jsblack hover:bg-jsyellow/10 transition-colors"
           aria-label="Next page"
         >
@@ -127,5 +136,19 @@ export default function Pagination({
         </span>
       )}
     </div>
+  );
+}
+
+export default function Pagination(props: PaginationProps) {
+  if (props.totalPages <= 1) return null;
+
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-10 items-center justify-center" aria-hidden />
+      }
+    >
+      <PaginationInner {...props} />
+    </Suspense>
   );
 }
