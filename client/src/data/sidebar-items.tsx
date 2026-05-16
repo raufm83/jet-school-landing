@@ -2,11 +2,11 @@ import { Role } from "@/types/enums";
 import { Session } from "next-auth";
 import {
   MdBook,
-  MdDashboard,
   MdHome,
   MdOutlineMessage,
   MdPeople,
   MdPeopleAlt,
+  MdPerson,
   MdSettings,
   MdPhoto,
   MdVideoChat,
@@ -17,6 +17,7 @@ import {
   MdSearch,
   MdHelpOutline,
   MdWork,
+  MdCategory,
   MdInfo,
 } from "react-icons/md";
 
@@ -26,13 +27,47 @@ export interface MenuItem {
   path: string;
 }
 
+function getPrimarySidebarItem(role: Role | undefined): MenuItem {
+  switch (role) {
+    case Role.ADMIN:
+    case Role.STAFF:
+    case Role.CRMOPERATOR:
+      return {
+        name: "Sorğular",
+        icon: <MdOutlineMessage size={24} />,
+        path: "/dashboard/requests",
+      };
+    case Role.AUTHOR:
+      return {
+        name: "Bloq",
+        icon: <MdPostAdd size={24} />,
+        path: "/dashboard/posts",
+      };
+    case Role.CONTENTMANAGER:
+      return {
+        name: "Tələbə Layihələri",
+        icon: <MdBook size={24} />,
+        path: "/dashboard/student-projects",
+      };
+    case Role.HRMANAGER:
+      return {
+        name: "Vakansiyalar",
+        icon: <MdWork size={24} />,
+        path: "/dashboard/vacancies",
+      };
+    default:
+      return {
+        name: "Profil",
+        icon: <MdPerson size={24} />,
+        path: "/dashboard/profile",
+      };
+  }
+}
+
 export function getMenuItems(session: Session | null): MenuItem[] {
+  const role = session?.user?.role as Role | undefined;
   const baseMenuItemsStart: MenuItem[] = [
-    {
-      name: "İdarə paneli",
-      icon: <MdDashboard size={24} />,
-      path: "/dashboard",
-    },
+    getPrimarySidebarItem(role),
     {
       name: "Haqqımızda giriş hissəsi",
       icon: <MdInfo size={24} />,
@@ -56,11 +91,6 @@ export function getMenuItems(session: Session | null): MenuItem[] {
       name: "Rəylər",
       icon: <MdOutlineMessage size={24} />,
       path: "/dashboard/student-reviews",
-    },
-    {
-      name: "Sorğular",
-      icon: <MdOutlineMessage size={24} />,
-      path: "/dashboard/requests",
     },
     {
       name: "Ana səhifə Hero",
@@ -127,6 +157,11 @@ export function getMenuItems(session: Session | null): MenuItem[] {
       path: "/dashboard/posts",
     },
     {
+      name: "Bloq kateqoriyaları",
+      icon: <MdCategory size={24} />,
+      path: "/dashboard/blog-categories",
+    },
+    {
       name: "Tələblər",
       icon: <MdShield size={24} />,
       path: "/dashboard/eligibilities",
@@ -135,11 +170,6 @@ export function getMenuItems(session: Session | null): MenuItem[] {
       name: "Modullar",
       icon: <MdViewModule size={24} />,
       path: "/dashboard/modules",
-    },
-    {
-      name: "Sorğular",
-      icon: <MdOutlineMessage size={24} />,
-      path: "/dashboard/requests",
     },
     {
       name: "Qalereya",
@@ -188,11 +218,6 @@ export function getMenuItems(session: Session | null): MenuItem[] {
 
   const CRMOperatorMenuItems: MenuItem[] = [
     {
-      name: "Sorğular",
-      icon: <MdOutlineMessage size={24} />,
-      path: "/dashboard/requests",
-    },
-    {
       name: "İmtahanlar",
       icon: <MdBook size={24} />,
       path: "/dashboard/exams",
@@ -228,6 +253,11 @@ export function getMenuItems(session: Session | null): MenuItem[] {
       name:"Xəbərlər",
       icon: <MdPostAdd size={24} />,
       path: "/dashboard/posts",
+    },
+    {
+      name: "Bloq kateqoriyaları",
+      icon: <MdCategory size={24} />,
+      path: "/dashboard/blog-categories",
     },
     {
       name: "Qalereya",

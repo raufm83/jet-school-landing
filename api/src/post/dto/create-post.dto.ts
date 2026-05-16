@@ -100,6 +100,14 @@ export class CreatePostDto {
   postType?: PostType;
 
   @ApiProperty({
+    description: 'Blog category Mongo ObjectId (only for postType BLOG; optional)',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  blogCategoryId?: string;
+
+  @ApiProperty({
     description: 'Event date (only for EVENT post type)',
     required: false,
     type: String,

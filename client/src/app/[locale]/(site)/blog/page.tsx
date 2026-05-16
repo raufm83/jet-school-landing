@@ -12,6 +12,12 @@ import { getPageMeta } from "@/utils/api/page-meta";
 import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
+import { getPublicBlogCategories } from "@/utils/api/blog-category";
+import BlogCategoryChips from "@/components/views/landing/blog/blog-category-chips";
+
+function isLikelyMongoObjectId(value: string): boolean {
+  return /^[a-f\d]{24}$/i.test(value.trim());
+}
 
 interface BlogPageProps {
   params: {
@@ -21,6 +27,7 @@ interface BlogPageProps {
     page?: string;
     limit?: string;
     type?: PostType;
+    category?: string;
   };
 }
 
@@ -34,12 +41,20 @@ export async function generateMetadata({
   const meta = await getPageMeta("blog", locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
   const basePath = `/${locale}/blog`;
-  const page = searchParams.page;
+  const pageParam = searchParams.page;
+  const categoryParam = searchParams.category?.trim() ?? "";
+
+  const query = new URLSearchParams();
+  if (pageParam && pageParam !== "1") query.set("page", pageParam);
+  if (categoryParam && isLikelyMongoObjectId(categoryParam)) {
+    query.set("category", categoryParam);
+  }
+  const qs = query.toString();
   const canonicalUrl = ensureTrailingSlash(
-    page && page !== "1" ? `${baseUrl}${basePath}?page=${page}` : `${baseUrl}${basePath}`
+    qs ? `${baseUrl}${basePath}?${qs}` : `${baseUrl}${basePath}`,
   );
 
-  const isIndexable = !searchParams.page || searchParams.page === "1";
+  const isIndexable = !pageParam || pageParam === "1";
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)
@@ -97,15 +112,21 @@ export default async function BlogPage({
   const page = Number(searchParams.page) || 1;
   const limit = Number(searchParams.limit) || 12;
   const type = PostType.BLOG;
+  const categoryRaw = searchParams.category?.trim() ?? "";
+  const blogCategoryFilter = isLikelyMongoObjectId(categoryRaw)
+    ? categoryRaw
+    : undefined;
 
-  const [postsData, t, faqItems] = await Promise.all([
+  const [postsData, t, faqItems, blogCategories] = await Promise.all([
     getAllPosts({
       page,
       limit,
       postType: type,
+      ...(blogCategoryFilter ? { blogCategoryId: blogCategoryFilter } : {}),
     }),
     getTranslations({ locale, namespace: "blogPage" }),
     getFaqByPage("blog"),
+    getPublicBlogCategories(),
   ]);
 
   const { items: posts, meta } = postsData;
@@ -156,12 +177,23 @@ export default async function BlogPage({
       </div>
       <PostFilters type={type} t={t} />
 
+      <BlogCategoryChips
+        locale={locale}
+        categories={blogCategories}
+        selectedCategoryId={blogCategoryFilter}
+        sectionTitle={t("categoriesTitle")}
+        allLabel={t("allPosts")}
+      />
+
       <PostGrid
         posts={posts}
         locale={locale}
         t={t}
         meta={transformedMeta}
         type={type}
+        emptyStateTitle={
+          blogCategoryFilter ? t("noPostsInCategory") : undefined
+        }
       />
 
       {faqItems.length > 0 && (

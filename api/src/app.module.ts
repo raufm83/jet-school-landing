@@ -26,6 +26,7 @@ import { VacancyModule } from './vacancy/vacancy.module';
 import { CaptchaModule } from './captcha/captcha.module';
 import { HomeHeroModule } from './home-hero/home-hero.module';
 import { AboutHeroModule } from './about-hero/about-hero.module';
+import { BlogCategoryModule } from './blog-category/blog-category.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { AboutHeroModule } from './about-hero/about-hero.module';
     CourseModuleModule,
     CourseTeacherModule,
     PostModule,
+    BlogCategoryModule,
     GlossaryModule,
     PageMetaModule,
     PageSchemaModule,

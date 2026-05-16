@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
@@ -165,16 +166,8 @@ export class VacancyService {
   }
 
   /**
-   * Publik siyahı: Mongo-də yalnız açıq şəkildə `isActive: false` olanları istisna et.
-   * (`NOT false` köhnə sənədlərdə sahə yoxdursa da uyğun gələ bilər.)
-   */
-  private publicVisibilityWhere(): { NOT: { isActive: false } } {
-    return { NOT: { isActive: false } };
-  }
-
-  /**
-   * Köhnə avtomatik deaktivasiya və ya toplu `isActive: false` sonrası: bütün deaktiv
-   * vakansiyaları yenidən aktiv edir (admin bir dəfə çağıra bilər; lazım olmayanları sonra söndürün).
+   * Köhnə deaktivasiya sonrası: bütün deaktiv sənədləri yenidən aktiv edir (admin tərəfindən çox nadir işlədilir).
+   * Diqqət: müddəti bitmiş vakansiya növbəti publik sorğuda yenidən `isActive: false` olunacaq.
    */
   async repairLegacyDeactivatedVacancies() {
     return this.prisma.vacancy.updateMany({
@@ -183,21 +176,54 @@ export class VacancyService {
     });
   }
 
-  /** Sayt üçün — aktiv və ya köhnə “sahəsi yox” vakansiyalar */
+  /**
+   * Möhlət tarixi cari zamandan əvvəl olan vakansiyaları bazada `isActive: false` edir.
+   * Publik cavablar həm aktiv, həm möhlət filtrindən keçirilməlidir (`publicSiteWhere`).
+   */
+  private async deactivateVacanciesPastDeadline(): Promise<void> {
+    const now = new Date();
+    await this.prisma.vacancy.updateMany({
+      where: {
+        deadline: { not: null, lt: now },
+        isActive: true,
+      },
+      data: { isActive: false },
+    });
+  }
+
+  /**
+   * Sayt üçün: `isActive` deyil və/və ya möhləti keçmiş rekordlar çıxarılır.
+   */
+  private publicSiteWhere(now: Date = new Date()): Prisma.VacancyWhereInput {
+    return {
+      AND: [
+        { NOT: { isActive: false } },
+        {
+          OR: [{ deadline: null }, { deadline: { gte: now } }],
+        },
+      ],
+    };
+  }
+
+  /** Sayt üçün — aktiv və möhləti keçməmiş */
   async findAllPublic() {
+    await this.deactivateVacanciesPastDeadline();
+    const now = new Date();
     return this.prisma.vacancy.findMany({
-      where: this.publicVisibilityWhere(),
+      where: this.publicSiteWhere(now),
       orderBy: [{ order: 'desc' }, { createdAt: 'desc' }],
     });
   }
 
   /** Sayt üçün tək vakansiya */
   async findBySlugPublic(slug: string) {
+    await this.deactivateVacanciesPastDeadline();
+    const now = new Date();
     const trimmed = slug.trim();
     const row = await this.prisma.vacancy.findFirst({
       where: {
         AND: [
-          this.publicVisibilityWhere(),
+          this.publicSiteWhere(now),
           {
             OR: [
               { slug: { is: { az: { equals: trimmed } } } },

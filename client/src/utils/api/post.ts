@@ -168,6 +168,7 @@ export async function getAllPosts({
   eventStatus,
   tag,
   excludeOffers = false,
+  blogCategoryId,
 }: any): Promise<PostsResponse> {
   const fallback: PostsResponse = {
     items: [],
@@ -191,6 +192,11 @@ export async function getAllPosts({
 
     if (tag && String(tag).trim()) {
       url += `&tag=${encodeURIComponent(String(tag).trim())}`;
+    }
+
+    const bc = typeof blogCategoryId === "string" ? blogCategoryId.trim() : "";
+    if (bc) {
+      url += `&blogCategoryId=${encodeURIComponent(bc)}`;
     }
 
     if (typeof window === "undefined") {

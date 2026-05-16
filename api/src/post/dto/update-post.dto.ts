@@ -97,6 +97,14 @@ export class UpdatePostDto {
   postType?: PostType;
 
   @ApiProperty({
+    description: 'Blog category id; empty clears (BLOG only)',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  blogCategoryId?: string;
+
+  @ApiProperty({
     description: 'Event date (only for EVENT post type)',
     required: false,
     type: String,

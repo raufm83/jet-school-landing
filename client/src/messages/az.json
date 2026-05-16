@@ -409,6 +409,8 @@
     "metaDescription": "Ən son yazdığımız bloq və məqalələrimizlə tanış olun.ləri tərəfindən yazılmış məqalələr ilə tanış olun.",
     "readMore": "Daha çox oxu",
     "noPostsFound": "Post tapılmadı",
+    "categoriesTitle": "Kateqoriyalar",
+    "noPostsInCategory": "Bu kateqoriyada hələ yazı yoxdur.",
     "tryDifferentFilters": "Amma olacaqlar!"
   },
   "tagSearchPage": {
@@ -495,6 +497,7 @@
     "deadlineBadgeToday": "Son gün"
   },
   "vacancyDetail": {
+    "experiencePrefix": "Təcrübə :",
     "cvCta": "Əgər öz namizədliyinizi bu vakansiya üçün uyğun hesab edirsinizsə, zəhmət olmasa CV-nizi və əlavə məlumatları ",
     "cvCtaa":" ünvanına göndərin və məktubun başlığında \"{vacancyName}\" yazmağı unutmayın."
   },
