@@ -170,7 +170,6 @@ export async function getAllPosts({
   excludeOffers = false,
   blogCategoryId,
   search,
-  blogCategoryId,
 }: any): Promise<PostsResponse> {
   const fallback: PostsResponse = {
     items: [],
@@ -204,10 +203,6 @@ export async function getAllPosts({
     const sq = typeof search === "string" ? search.trim() : "";
     if (sq) {
       url += `&search=${encodeURIComponent(sq)}`;
-    }
-
-    if (blogCategoryId && String(blogCategoryId).trim()) {
-      url += `&blogCategoryId=${encodeURIComponent(String(blogCategoryId).trim())}`;
     }
 
     if (typeof window === "undefined") {
