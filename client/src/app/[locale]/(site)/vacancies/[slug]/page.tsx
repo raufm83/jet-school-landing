@@ -261,7 +261,7 @@ export default async function VacancyDetailPage({
                         aria-hidden
                       />
                       <p
-                        className={`text-center text-sm font-semibold leading-snug text-[#1F2937] sm:text-base ${isExpired ? "line-through decoration-gray-400/70" : ""}`}
+                        className={`text-center text-sm font-normal leading-snug text-[#1F2937] sm:text-base ${isExpired ? "line-through decoration-gray-400/70" : ""}`}
                       >
                         {deadlineText ?? metaL.dash}
                       </p>
@@ -275,7 +275,7 @@ export default async function VacancyDetailPage({
                         className={`shrink-0 text-2xl ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
                         aria-hidden
                       />
-                      <p className="text-center text-sm font-semibold leading-snug text-[#1F2937] sm:text-base">
+                      <p className="text-center text-sm font-normal leading-snug text-[#1F2937] sm:text-base">
                         {regimeText ?? metaL.dash}
                       </p>
                     </div>
@@ -288,7 +288,7 @@ export default async function VacancyDetailPage({
                         className={`shrink-0 text-2xl ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
                         aria-hidden
                       />
-                      <p className="text-center text-sm font-semibold leading-snug text-[#1F2937] sm:text-base">
+                      <p className="text-center text-sm font-normal leading-snug text-[#1F2937] sm:text-base">
                         {experienceInline}
                       </p>
                     </div>
