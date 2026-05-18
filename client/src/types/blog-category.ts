@@ -1,9 +1,14 @@
 export interface BlogCategory {
   id: string;
-  name: { az: string; ru: string };
-  _count?: { posts?: number };
+  name: {
+    az: string;
+    ru: string;
+  };
+  _count?: {
+    posts: number;
+  };
 }
 
-export interface BlogCategoryListResponse {
+export interface BlogCategoriesResponse {
   items: BlogCategory[];
 }

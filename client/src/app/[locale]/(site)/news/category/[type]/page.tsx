@@ -61,7 +61,12 @@ export async function generateMetadata({
         break;
       case PostType.EVENT:
         const eventStatus = searchParams.eventStatus;
-        const statusText = eventStatus === "PAST" ? t("past") : eventStatus === "ALL" ? t("all") : t("upcoming");
+        const statusText =
+          eventStatus === "PAST"
+            ? t("past")
+            : eventStatus === "UPCOMING"
+              ? t("upcoming")
+              : t("all");
         title = `${t("eventMetaTitle") || "Tədbirlər"} - ${statusText}`;
         description =
           t("eventMetaDescription") ||
@@ -130,7 +135,12 @@ export default async function AllPostsPage({
       page,
       limit,
       postType: type,
-      eventStatus: type === PostType.EVENT ? (eventStatus === "ALL" ? undefined : (eventStatus || "UPCOMING")) : undefined,
+      eventStatus:
+        type === PostType.EVENT
+          ? eventStatus && eventStatus !== "ALL"
+            ? eventStatus
+            : undefined
+          : undefined,
     }),
     getTranslations({ locale, namespace: "postsPage" }),
   ]);

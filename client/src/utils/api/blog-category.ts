@@ -1,28 +1,26 @@
-import type { BlogCategory } from "@/types/blog-category";
+import { cache } from "react";
 import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 import { CONTENT_ISR_SECONDS } from "@/constants/content-isr";
+import {
+  BlogCategoriesResponse,
+  BlogCategory,
+} from "@/types/blog-category";
 
 const REVALIDATE = CONTENT_ISR_SECONDS;
 
-async function fetchServer<T>(path: string, fallback: T): Promise<T> {
-  try {
-    const res = await fetch(`${PUBLIC_API_BASE}${path}`, {
-      next: { revalidate: REVALIDATE },
-      headers: { Accept: "application/json" },
-    });
-    if (!res.ok) return fallback;
-    return (await res.json()) as T;
-  } catch {
-    return fallback;
+export const getBlogCategories = cache(
+  async function getBlogCategories(): Promise<BlogCategory[]> {
+    try {
+      const res = await fetch(`${PUBLIC_API_BASE}/blog-categories`, {
+        next: { revalidate: REVALIDATE },
+        headers: { Accept: "application/json" },
+      });
+      if (!res.ok) return [];
+      const data = (await res.json()) as BlogCategoriesResponse;
+      return Array.isArray(data?.items) ? data.items : [];
+    } catch (error) {
+      console.error("Failed to fetch blog categories:", error);
+      return [];
+    }
   }
-}
-
-export async function getPublicBlogCategories(limit = 200): Promise<BlogCategory[]> {
-  const cap = Math.min(Math.max(limit, 1), 500);
-  const fallback = { items: [] as BlogCategory[] };
-  const data = await fetchServer<{ items?: BlogCategory[] }>(
-    `/blog-categories?limit=${cap}`,
-    fallback,
-  );
-  return Array.isArray(data?.items) ? data.items : [];
-}
+);

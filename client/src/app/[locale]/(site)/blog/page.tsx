@@ -1,6 +1,8 @@
 import PostFilters from "@/components/views/landing/post/filters";
 import BlogSearch from "@/components/views/landing/post/blog-search";
+import BlogCategoryFilters from "@/components/views/landing/post/blog-category-filters";
 import PostGrid from "@/components/views/landing/post/grid";
+import { getBlogCategories } from "@/utils/api/blog-category";
 import JsonLd from "@/components/seo/json-ld";
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
 import { buildCollectionPageGraph } from "@/data/site-schema";
@@ -32,6 +34,7 @@ interface BlogPageProps {
     type?: PostType;
     category?: string;
     q?: string;
+    category?: string;
   };
 }
 
@@ -122,18 +125,19 @@ export default async function BlogPage({
     ? categoryRaw
     : undefined;
   const searchQuery = searchParams.q?.trim() ?? "";
+  const categoryId = searchParams.category?.trim() ?? "";
 
   const [postsData, t, faqItems, blogCategories] = await Promise.all([
     getAllPosts({
       page,
       limit,
       postType: type,
-      ...(blogCategoryFilter ? { blogCategoryId: blogCategoryFilter } : {}),
-      ...(searchQuery ? { search: searchQuery } : {}),
+      search: searchQuery || undefined,
+      blogCategoryId: categoryId || undefined,
     }),
     getTranslations({ locale, namespace: "blogPage" }),
     getFaqByPage("blog"),
-    getPublicBlogCategories(),
+    getBlogCategories(),
   ]);
 
   const { items: posts, meta } = postsData;
@@ -189,12 +193,12 @@ export default async function BlogPage({
         initialQuery={searchQuery}
       />
 
-      <BlogCategoryChips
-        locale={locale}
+      <BlogCategoryFilters
         categories={blogCategories}
-        selectedCategoryId={blogCategoryFilter}
-        sectionTitle={t("categoriesTitle")}
+        locale={locale}
+        title={t("categoriesTitle")}
         allLabel={t("allPosts")}
+        activeCategoryId={categoryId || undefined}
       />
 
       <PostGrid
@@ -206,7 +210,7 @@ export default async function BlogPage({
         emptyStateTitle={
           searchQuery
             ? t("noSearchResults")
-            : blogCategoryFilter
+            : categoryId
               ? t("noPostsInCategory")
               : undefined
         }
