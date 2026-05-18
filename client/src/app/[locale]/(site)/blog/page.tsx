@@ -15,8 +15,6 @@ import { getPageMeta } from "@/utils/api/page-meta";
 import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
-import { getPublicBlogCategories } from "@/utils/api/blog-category";
-import BlogCategoryChips from "@/components/views/landing/blog/blog-category-chips";
 
 function isLikelyMongoObjectId(value: string): boolean {
   return /^[a-f\d]{24}$/i.test(value.trim());
@@ -34,7 +32,6 @@ interface BlogPageProps {
     type?: PostType;
     category?: string;
     q?: string;
-    category?: string;
   };
 }
 
@@ -121,11 +118,10 @@ export default async function BlogPage({
   const limit = Number(searchParams.limit) || 12;
   const type = PostType.BLOG;
   const categoryRaw = searchParams.category?.trim() ?? "";
+  const searchQuery = searchParams.q?.trim() ?? "";
   const blogCategoryFilter = isLikelyMongoObjectId(categoryRaw)
     ? categoryRaw
     : undefined;
-  const searchQuery = searchParams.q?.trim() ?? "";
-  const categoryId = searchParams.category?.trim() ?? "";
 
   const [postsData, t, faqItems, blogCategories] = await Promise.all([
     getAllPosts({
@@ -133,7 +129,7 @@ export default async function BlogPage({
       limit,
       postType: type,
       search: searchQuery || undefined,
-      blogCategoryId: categoryId || undefined,
+      blogCategoryId: blogCategoryFilter,
     }),
     getTranslations({ locale, namespace: "blogPage" }),
     getFaqByPage("blog"),
@@ -198,7 +194,7 @@ export default async function BlogPage({
         locale={locale}
         title={t("categoriesTitle")}
         allLabel={t("allPosts")}
-        activeCategoryId={categoryId || undefined}
+        activeCategoryId={blogCategoryFilter}
       />
 
       <PostGrid
@@ -210,7 +206,7 @@ export default async function BlogPage({
         emptyStateTitle={
           searchQuery
             ? t("noSearchResults")
-            : categoryId
+            : blogCategoryFilter
               ? t("noPostsInCategory")
               : undefined
         }

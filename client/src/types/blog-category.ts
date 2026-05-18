@@ -12,3 +12,5 @@ export interface BlogCategory {
 export interface BlogCategoriesResponse {
   items: BlogCategory[];
 }
+
+export type BlogCategoryListResponse = BlogCategoriesResponse;
