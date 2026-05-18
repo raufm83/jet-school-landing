@@ -1,6 +1,8 @@
 import PostFilters from "@/components/views/landing/post/filters";
 import BlogSearch from "@/components/views/landing/post/blog-search";
+import BlogCategoryFilters from "@/components/views/landing/post/blog-category-filters";
 import PostGrid from "@/components/views/landing/post/grid";
+import { getBlogCategories } from "@/utils/api/blog-category";
 import JsonLd from "@/components/seo/json-ld";
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
 import { buildCollectionPageGraph } from "@/data/site-schema";
@@ -13,8 +15,6 @@ import { getPageMeta } from "@/utils/api/page-meta";
 import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
-import { getPublicBlogCategories } from "@/utils/api/blog-category";
-import BlogCategoryChips from "@/components/views/landing/blog/blog-category-chips";
 
 function isLikelyMongoObjectId(value: string): boolean {
   return /^[a-f\d]{24}$/i.test(value.trim());
@@ -118,22 +118,22 @@ export default async function BlogPage({
   const limit = Number(searchParams.limit) || 12;
   const type = PostType.BLOG;
   const categoryRaw = searchParams.category?.trim() ?? "";
+  const searchQuery = searchParams.q?.trim() ?? "";
   const blogCategoryFilter = isLikelyMongoObjectId(categoryRaw)
     ? categoryRaw
     : undefined;
-  const searchQuery = searchParams.q?.trim() ?? "";
 
   const [postsData, t, faqItems, blogCategories] = await Promise.all([
     getAllPosts({
       page,
       limit,
       postType: type,
-      ...(blogCategoryFilter ? { blogCategoryId: blogCategoryFilter } : {}),
-      ...(searchQuery ? { search: searchQuery } : {}),
+      search: searchQuery || undefined,
+      blogCategoryId: blogCategoryFilter,
     }),
     getTranslations({ locale, namespace: "blogPage" }),
     getFaqByPage("blog"),
-    getPublicBlogCategories(),
+    getBlogCategories(),
   ]);
 
   const { items: posts, meta } = postsData;
@@ -189,12 +189,12 @@ export default async function BlogPage({
         initialQuery={searchQuery}
       />
 
-      <BlogCategoryChips
-        locale={locale}
+      <BlogCategoryFilters
         categories={blogCategories}
-        selectedCategoryId={blogCategoryFilter}
-        sectionTitle={t("categoriesTitle")}
+        locale={locale}
+        title={t("categoriesTitle")}
         allLabel={t("allPosts")}
+        activeCategoryId={blogCategoryFilter}
       />
 
       <PostGrid

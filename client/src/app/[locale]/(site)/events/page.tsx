@@ -108,7 +108,8 @@ export default async function EventsPage({
       limit,
       postType: type,
       includeBlogs: true,
-      eventStatus: !eventStatus || eventStatus === "ALL" ? (eventStatus === "ALL" ? undefined : "UPCOMING") : eventStatus,
+      eventStatus:
+        eventStatus && eventStatus !== "ALL" ? eventStatus : undefined,
     }),
     getTranslations({ locale, namespace: "postsPage" }),
     getFaqByPage("events"),
