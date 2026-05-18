@@ -9,9 +9,14 @@ export default function EventFilters() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations("postsPage");
-  const currentStatus = searchParams.get("eventStatus") || "UPCOMING";
+  const currentStatus = searchParams.get("eventStatus") || "ALL";
 
   const filters = [
+    {
+      id: "ALL",
+      label: t("all"),
+      icon: <MdEventAvailable className="text-xl" />,
+    },
     {
       id: "UPCOMING",
       label: t("upcoming"),
@@ -21,11 +26,6 @@ export default function EventFilters() {
       id: "PAST",
       label: t("past"),
       icon: <MdHistory className="text-xl" />,
-    },
-    {
-      id: "ALL",
-      label: t("all"),
-      icon: <MdEventAvailable className="text-xl" />,
     },
   ];
 
