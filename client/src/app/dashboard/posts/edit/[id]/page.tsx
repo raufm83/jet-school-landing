@@ -38,6 +38,7 @@ export default function EditPostPage({ params }: { params: { id: string } }) {
       imageUrl: { az: "", ru: "" },
       imageAlt: { az: "", ru: "" },
       tags: { az: [], ru: [] },
+      blogCategoryId: "",
       postType: PostType.BLOG,
       published: false,
       eventDate: undefined,
@@ -72,6 +73,7 @@ export default function EditPostPage({ params }: { params: { id: string } }) {
           imageUrl,
           imageAlt,
           tags,
+          blogCategoryId: data.blogCategory?.id ?? "",
           postType: data.postType,
           published: data.published,
           eventDate: data.eventDate ? new Date(data.eventDate).toISOString() : undefined,
@@ -136,6 +138,11 @@ export default function EditPostPage({ params }: { params: { id: string } }) {
         if (data.offerEndDate) {
            formData.append("offerEndDate", new Date(data.offerEndDate).toISOString());
         }
+      }
+
+      const effectiveType = isAuthor ? PostType.BLOG : data.postType;
+      if (effectiveType === PostType.BLOG) {
+        formData.append("blogCategoryId", (data.blogCategoryId ?? "").trim());
       }
 
       if (data.imageAlt?.az !== undefined) formData.append("imageAlt[az]", data.imageAlt.az ?? "");

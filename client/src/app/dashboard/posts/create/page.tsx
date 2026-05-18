@@ -28,6 +28,7 @@ export default function CreatePostPage() {
       imageUrl: { az: "", ru: "" },
       imageAlt: { az: "", ru: "" },
       tags: { az: [], ru: [] },
+      blogCategoryId: "",
       postType: PostType.BLOG,
       published: false,
       eventDate: undefined,
@@ -87,6 +88,11 @@ export default function CreatePostPage() {
         if (data.offerEndDate) {
           formData.append("offerEndDate", data.offerEndDate);
         }
+      }
+
+      const effectiveType = isAuthor ? PostType.BLOG : data.postType;
+      if (effectiveType === PostType.BLOG) {
+        formData.append("blogCategoryId", (data.blogCategoryId ?? "").trim());
       }
 
       if (data.imageAlt?.az !== undefined) formData.append("imageAlt[az]", data.imageAlt.az ?? "");

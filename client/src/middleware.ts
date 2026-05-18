@@ -74,6 +74,7 @@ const ROUTE_PERMISSIONS = {
     "/dashboard/posts",
     "/dashboard/posts/create",
     "/dashboard/posts/edit",
+    "/dashboard/blog-categories",
     "/dashboard/team",
     "/dashboard/team/create",
     "/dashboard/team/edit",

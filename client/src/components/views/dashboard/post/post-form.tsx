@@ -1,5 +1,6 @@
 "use client";
-import { EventStatus, PostType } from "@/types/enums";
+import { EventStatus, PostType, Role } from "@/types/enums";
+import Link from "next/link";
 import api from "@/utils/api/axios";
 import { formatApiError } from "@/utils/api/formatApiError";
 import { slugifyText } from "@/utils/slugify";
@@ -20,6 +21,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useWatch } from "react-hook-form";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 import {
   MdAccessTime,
   MdCalendarMonth,
@@ -66,6 +68,8 @@ const COVER_IMAGE_HINT =
 
 const CONTENT_IMAGE_HINT =
   "Məzmuna şəkil əlavə: maksimum 2 MB; avtomatik təxminən 1024 px uzun tərəfə qədər kiçildilir və WebP/JPEG kimi saxlanılır.";
+
+const BLOG_CAT_NONE_KEY = "__blog_cat_none__";
 
 const SLUG_HINT =
   "Saxlananda ə, ü, ö və s. avtomatik latın transliterasiyasına çevrilir (məs. məktəb → mekteb). URL üçün yalnız a–z, 0–9 və tire.";
@@ -115,6 +119,11 @@ export default function PostForm({
   previewUrlAz: initialPreviewUrlAz = null,
   previewUrlRu: initialPreviewUrlRu = null,
 }: any) {
+  const { data: session } = useSession();
+  const [blogCategories, setBlogCategories] = useState<
+    { id: string; name: { az: string; ru: string } }[]
+  >([]);
+
   const [contentAz, setContentAz] = useState("");
   const [contentRu, setContentRu] = useState("");
   const [tagInputAz, setTagInputAz] = useState("");
@@ -138,6 +147,21 @@ export default function PostForm({
     }),
     []
   );
+
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .get<{ items: { id: string; name: { az: string; ru: string } }[] }>(
+        `/blog-categories?limit=500`
+      )
+      .then(({ data }) => {
+        if (!cancelled && data?.items) setBlogCategories(data.items);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const uploadContentImage = useCallback(async (file: File): Promise<string | null> => {
     try {
@@ -319,6 +343,11 @@ export default function PostForm({
   const watchedEventDate = useWatch({ control, name: "eventDate" });
   const watchedEventStatus = useWatch({ control, name: "eventStatus", defaultValue: EventStatus.UPCOMING });
   const watchedPublished = useWatch({ control, name: "published", defaultValue: false });
+  const watchedBlogCategoryId = useWatch({
+    control,
+    name: "blogCategoryId",
+    defaultValue: "",
+  }) as string;
   const watchedOfferStartDate = useWatch({ control, name: "offerStartDate" });
   const watchedOfferEndDate = useWatch({ control, name: "offerEndDate" });
   const watchedImageAltAz = useWatch({ control, name: "imageAlt.az", defaultValue: "" });
@@ -340,6 +369,16 @@ export default function PostForm({
 
   const isEvent = watchedPostType === PostType.EVENT;
   const isOffer = watchedPostType === PostType.OFFERS;
+  const isBlogUi = isAuthor || watchedPostType === PostType.BLOG;
+  const canManageBlogCategories =
+    session?.user?.role === Role.ADMIN ||
+    session?.user?.role === Role.CONTENTMANAGER;
+
+  useEffect(() => {
+    if (!isBlogUi) {
+      setValue("blogCategoryId", "", { shouldDirty: false });
+    }
+  }, [isBlogUi, setValue]);
 
   // No need for useEffects to sync local state if we use watched values directly in render
   // or if we rely on RHF's internal state via controller/register.
@@ -682,6 +721,56 @@ export default function PostForm({
             )}
             {isAuthor && mode === "create" && (
               <p className="text-sm text-default-500">Post növü: Bloq (müəllif yalnız bloq yaza bilər)</p>
+            )}
+
+            {isBlogUi && (
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-end justify-between gap-2">
+                  <span className="text-sm font-medium">Bloq kateqoriyası</span>
+                  {canManageBlogCategories ? (
+                    <Link
+                      href="/dashboard/blog-categories"
+                      className="text-xs font-medium text-jsyellow hover:underline"
+                    >
+                      Kateqoriyaları idarə et
+                    </Link>
+                  ) : null}
+                </div>
+                <Select
+                  label="Kateqoriya"
+                  variant="bordered"
+                  startContent={<MdCategory className="text-gray-400" />}
+                  disallowEmptySelection
+                  selectedKeys={
+                    new Set([
+                      watchedBlogCategoryId?.trim()
+                        ? watchedBlogCategoryId.trim()
+                        : BLOG_CAT_NONE_KEY,
+                    ])
+                  }
+                  onSelectionChange={(keys: any) => {
+                    const k = Array.from(keys)[0] as string;
+                    setValue(
+                      "blogCategoryId",
+                      k === BLOG_CAT_NONE_KEY ? "" : k,
+                      { shouldDirty: true }
+                    );
+                  }}
+                >
+                  {[
+                    <SelectItem key={BLOG_CAT_NONE_KEY}>Seçilməyib</SelectItem>,
+                    ...blogCategories.map((c) => (
+                      <SelectItem
+                        key={c.id}
+                        textValue={`${c.name.az} · ${c.name.ru}`}
+                      >
+                        {c.name.az}
+                        {c.name.ru ? ` · ${c.name.ru}` : ""}
+                      </SelectItem>
+                    )),
+                  ]}
+                </Select>
+              </div>
             )}
 
             {isEvent && (

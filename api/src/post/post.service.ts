@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { Prisma, PostType, EventStatus, Role } from '@prisma/client';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -6,6 +6,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import * as path from 'path';
 import { startOfDay } from 'date-fns';
 import { slugifyText } from 'src/utils/slugify';
+import { serializeBlogCategoryName } from 'src/blog-category/blog-category-name.util';
 
 @Injectable()
 export class PostService {
@@ -96,6 +97,54 @@ export class PostService {
       return { ...(az && { az }), ...(ru && { ru }) };
     }
     return null;
+  }
+
+  private normalizeBlogCategory(
+    raw: unknown,
+  ): { id: string; name: { az: string; ru: string } } | null {
+    if (!raw || typeof raw !== 'object') return null;
+    const o = raw as { id?: string; name?: unknown };
+    if (typeof o.id !== 'string') return null;
+    return {
+      id: o.id,
+      name: serializeBlogCategoryName(o.name as Prisma.JsonValue),
+    };
+  }
+
+  /** API cavabına blogCategory + imageUrl/tags normalizə edilmiş post */
+  private mapPostRow<T extends { tags?: unknown; imageUrl?: unknown; blogCategory?: unknown }>(
+    row: T,
+  ): Omit<T, 'tags' | 'imageUrl'> & {
+    imageUrl: ReturnType<PostService['normalizeImageUrl']>;
+    tags: ReturnType<PostService['normalizeTags']>;
+    blogCategory: { id: string; name: { az: string; ru: string } } | null;
+  } {
+    const { blogCategory, ...rest } = row as T & { blogCategory?: unknown };
+    return {
+      ...(rest as object),
+      blogCategory: this.normalizeBlogCategory(blogCategory),
+      imageUrl: this.normalizeImageUrl(row.imageUrl),
+      tags: this.normalizeTags(row.tags),
+    } as Omit<T, 'tags' | 'imageUrl'> & {
+      imageUrl: ReturnType<PostService['normalizeImageUrl']>;
+      tags: ReturnType<PostService['normalizeTags']>;
+      blogCategory: { id: string; name: { az: string; ru: string } } | null;
+    };
+  }
+
+  private parseBlogCategoryPayload(value: unknown): string | null | undefined {
+    if (value === undefined) return undefined;
+    if (value === null || value === '') return null;
+    const s = String(value).trim();
+    return s === '' ? null : s;
+  }
+
+  private async assertBlogCategoryExists(id: string): Promise<void> {
+    const row = await this.prisma.blogCategory.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+    if (!row) throw new BadRequestException('Blog category not found');
   }
 
   private getAbsoluteImagePath(filename: string): string {
@@ -278,10 +327,21 @@ export class PostService {
         if (azPath || ruPath) imageUrlJson = { ...(azPath && { az: azPath }), ...(ruPath && { ru: ruPath }) };
       }
       const processedData = this.processMultilingualFields(createPostDto);
+      const incomingBlogCat = processedData.blogCategoryId as unknown;
+      delete processedData.blogCategoryId;
+
+      let blogCategoryId: string | null = null;
+      if (effectivePostType === PostType.BLOG) {
+        const cid = this.parseBlogCategoryPayload(incomingBlogCat);
+        if (cid) {
+          await this.assertBlogCategoryExists(cid);
+          blogCategoryId = cid;
+        }
+      }
 
       let eventStatus = createPostDto.eventStatus;
 
-      if (createPostDto.postType === PostType.OFFERS && (createPostDto.offerEndDate || createPostDto.eventDate)) {
+      if (effectivePostType === PostType.OFFERS && (createPostDto.offerEndDate || createPostDto.eventDate)) {
         eventStatus = this.determineOfferStatus(
           createPostDto.offerStartDate as any,
           createPostDto.offerEndDate as any,
@@ -292,7 +352,7 @@ export class PostService {
       }
 
       let isPublished = String(createPostDto.published) === 'true';
-      if (createPostDto.postType === PostType.OFFERS && eventStatus === EventStatus.PAST) {
+      if (effectivePostType === PostType.OFFERS && eventStatus === EventStatus.PAST) {
         isPublished = false;
       }
 
@@ -303,16 +363,22 @@ export class PostService {
           ...(imageUrlJson && { imageUrl: imageUrlJson }),
           published: isPublished,
           eventStatus: eventStatus,
+          blogCategoryId,
           author: {
             connect: { id: authorId },
           },
         },
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          blogCategory: true,
+        },
       });
-      return {
-        ...created,
-        imageUrl: this.normalizeImageUrl(created.imageUrl),
-        tags: this.normalizeTags(created.tags),
-      };
+      return this.mapPostRow(created);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         throw new Error(`Failed to create post: ${error.message}`);
@@ -332,6 +398,7 @@ export class PostService {
     userRole?: Role,
     tag?: string,
     excludeOffers = false,
+    blogCategoryId?: string | null,
     search?: string,
   ) {
     try {
@@ -385,6 +452,21 @@ export class PostService {
         }
       }
 
+      const blogCatFilter =
+        typeof blogCategoryId === 'string' ? blogCategoryId.trim() : '';
+      const appliesBlogCategory =
+        blogCatFilter.length > 0 &&
+        (postType === PostType.BLOG ||
+          (userRole === Role.AUTHOR && authorId));
+
+      let effectiveWhereClause: any = whereClause;
+      if (appliesBlogCategory) {
+        effectiveWhereClause = {
+          ...whereClause,
+          blogCategoryId: blogCatFilter,
+        };
+      }
+
       this.updateOfferStatuses().catch(() => {});
       this.updateEventStatuses().catch(() => {});
 
@@ -392,7 +474,7 @@ export class PostService {
       const searchTrim = typeof search === 'string' ? search.trim() : '';
       if (tagTrim || searchTrim) {
         const candidates = await this.prisma.post.findMany({
-          where: whereClause,
+          where: effectiveWhereClause,
           select: {
             id: true,
             tags: true,
@@ -435,17 +517,14 @@ export class PostService {
                 name: true,
               },
             },
+            blogCategory: true,
           },
         });
         const orderMap = new Map(pageIds.map((id, i) => [id, i]));
         items.sort(
           (a, b) => (orderMap.get(a.id) ?? 0) - (orderMap.get(b.id) ?? 0),
         );
-        const normalizedItems = items.map((p) => ({
-          ...p,
-          imageUrl: this.normalizeImageUrl(p.imageUrl),
-          tags: this.normalizeTags(p.tags),
-        }));
+        const normalizedItems = items.map((p) => this.mapPostRow(p));
         return {
           items: normalizedItems,
           meta: {
@@ -459,10 +538,10 @@ export class PostService {
 
       const [total, items] = await Promise.all([
         this.prisma.post.count({
-          where: whereClause,
+          where: effectiveWhereClause,
         }),
         this.prisma.post.findMany({
-          where: whereClause,
+          where: effectiveWhereClause,
           skip,
           take: +limit,
           orderBy: postType === PostType.EVENT
@@ -475,15 +554,12 @@ export class PostService {
                 name: true,
               },
             },
+            blogCategory: true,
           },
         }),
       ]);
 
-      const normalizedItems = items.map((p) => ({
-        ...p,
-        imageUrl: this.normalizeImageUrl(p.imageUrl),
-        tags: this.normalizeTags(p.tags),
-      }));
+      const normalizedItems = items.map((p) => this.mapPostRow(p));
       return {
         items: normalizedItems,
         meta: {
@@ -525,6 +601,7 @@ export class PostService {
             },
           },
         },
+        blogCategory: true,
       },
     });
 
@@ -543,21 +620,27 @@ export class PostService {
         const updated = await this.prisma.post.update({
           where: { id },
           data: { eventStatus: newStatus },
-          include: { author: { select: { id: true, name: true } } }
+          include: {
+            author: {
+              select: {
+                id: true,
+                name: true,
+                firstName: true,
+                lastName: true,
+                role: true,
+                profile: {
+                  select: { avatarUrl: true, profession: true },
+                },
+              },
+            },
+            blogCategory: true,
+          },
         });
-        return {
-          ...updated,
-          imageUrl: this.normalizeImageUrl(updated.imageUrl),
-          tags: this.normalizeTags(updated.tags),
-        };
+        return this.mapPostRow(updated as any);
       }
     }
 
-    return {
-      ...post,
-      imageUrl: this.normalizeImageUrl(post.imageUrl),
-      tags: this.normalizeTags(post.tags),
-    };
+    return this.mapPostRow(post);
   }
 
   async update(id: string, updatePostDto: UpdatePostDto, userId?: string, userRole?: Role) {
@@ -574,6 +657,8 @@ export class PostService {
         }
       }
       const processedData = this.processMultilingualFields(updatePostDto);
+      const incomingBlogCat = processedData.blogCategoryId as unknown;
+      delete processedData.blogCategoryId;
 
       ['title', 'content', 'slug'].forEach((field) => {
         if (processedData[field]) {
@@ -630,6 +715,24 @@ export class PostService {
         eventStatus: eventStatus,
       };
 
+      const mergedPostType = (
+        processedData.postType !== undefined && processedData.postType !== null
+          ? processedData.postType
+          : existingPost.postType
+      ) as PostType;
+
+      if (mergedPostType !== PostType.BLOG) {
+        updateData.blogCategoryId = null;
+      } else if (incomingBlogCat !== undefined) {
+        const cid = this.parseBlogCategoryPayload(incomingBlogCat);
+        if (cid === null) {
+          updateData.blogCategoryId = null;
+        } else if (cid) {
+          await this.assertBlogCategoryExists(cid);
+          updateData.blogCategoryId = cid;
+        }
+      }
+
       const updated = await this.prisma.post.update({
         where: { id },
         data: updateData,
@@ -640,13 +743,10 @@ export class PostService {
               name: true,
             },
           },
+          blogCategory: true,
         },
       });
-      return {
-        ...updated,
-        imageUrl: this.normalizeImageUrl(updated.imageUrl),
-        tags: this.normalizeTags(updated.tags),
-      };
+      return this.mapPostRow(updated);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         throw new Error(`Failed to update post: ${error.message}`);
@@ -698,6 +798,7 @@ export class PostService {
                     },
                   },
                 },
+                blogCategory: true,
               },
             })
           : null;
@@ -718,6 +819,7 @@ export class PostService {
                 },
               },
             },
+            blogCategory: true,
           },
         });
       }
@@ -743,14 +845,11 @@ export class PostService {
                 },
               },
             },
+            blogCategory: true,
           },
         });
         const offerPost = refreshed ?? post;
-        return {
-          ...offerPost,
-          imageUrl: this.normalizeImageUrl(offerPost.imageUrl),
-          tags: this.normalizeTags(offerPost.tags),
-        };
+        return this.mapPostRow(offerPost as any);
       }
 
       if (post.postType === PostType.EVENT && post.eventDate) {
@@ -772,21 +871,14 @@ export class PostService {
                   },
                 },
               },
+              blogCategory: true,
             },
           });
-          return {
-            ...updated,
-            imageUrl: this.normalizeImageUrl(updated.imageUrl),
-            tags: this.normalizeTags(updated.tags),
-          };
+          return this.mapPostRow(updated as any);
         }
       }
 
-      return {
-        ...post,
-        imageUrl: this.normalizeImageUrl(post.imageUrl),
-        tags: this.normalizeTags(post.tags),
-      };
+      return this.mapPostRow(post as any);
     } catch (error) {
       throw error;
     }
@@ -801,6 +893,7 @@ export class PostService {
     authorId?: string,
     userRole?: Role,
     tag?: string,
+    blogCategoryId?: string | null,
     search?: string,
   ) {
     // AUTHOR can only request BLOG type
@@ -818,6 +911,7 @@ export class PostService {
       userRole,
       tag,
       false,
+      blogCategoryId,
       search,
     );
   }

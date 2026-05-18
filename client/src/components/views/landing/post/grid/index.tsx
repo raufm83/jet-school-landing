@@ -36,10 +36,14 @@ export default function PostGrid({
       (type === "EVENT" ? t("noEventsFound") : t("noPostsFound"));
     return (
       <div className="text-center py-12">
-        <h3 className="text-xl font-medium text-gray-600 mb-2">
+        <h3
+          className={`text-xl font-medium text-gray-600 ${type === "EVENT" ? "" : "mb-2"}`}
+        >
           {emptyTitle}
         </h3>
-        <p className="text-gray-500">{t("tryDifferentFilters")}</p>
+        {type !== "EVENT" && !emptyStateTitle ? (
+          <p className="text-gray-500">{t("tryDifferentFilters")}</p>
+        ) : null}
       </div>
     );
   }

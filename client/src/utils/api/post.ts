@@ -168,6 +168,7 @@ export async function getAllPosts({
   eventStatus,
   tag,
   excludeOffers = false,
+  blogCategoryId,
   search,
   blogCategoryId,
 }: any): Promise<PostsResponse> {
@@ -195,8 +196,14 @@ export async function getAllPosts({
       url += `&tag=${encodeURIComponent(String(tag).trim())}`;
     }
 
-    if (search && String(search).trim()) {
-      url += `&search=${encodeURIComponent(String(search).trim())}`;
+    const bc = typeof blogCategoryId === "string" ? blogCategoryId.trim() : "";
+    if (bc) {
+      url += `&blogCategoryId=${encodeURIComponent(bc)}`;
+    }
+
+    const sq = typeof search === "string" ? search.trim() : "";
+    if (sq) {
+      url += `&search=${encodeURIComponent(sq)}`;
     }
 
     if (blogCategoryId && String(blogCategoryId).trim()) {

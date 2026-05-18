@@ -59,6 +59,17 @@ model Request {
   viewedAt       DateTime?
 }
 
+model BlogCategory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  /// { "az": string, "ru": string }
+  name      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+
+  @@map("BlogCategory")
+}
+
 model Post {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   title     Json
@@ -71,6 +82,9 @@ model Post {
   authorId  String   @db.ObjectId
   author    User     @relation(fields: [authorId], references: [id])
   postType  PostType @default(BLOG)
+
+  blogCategoryId String?       @db.ObjectId
+  blogCategory   BlogCategory? @relation(fields: [blogCategoryId], references: [id], onDelete: SetNull)
 
   eventDate   DateTime?
   eventStatus EventStatus?
@@ -85,6 +99,7 @@ model Post {
   @@index([authorId])
   @@index([postType])
   @@index([eventStatus])
+  @@index([blogCategoryId])
 }
 
 model StudentProjectsCategory {

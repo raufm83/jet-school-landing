@@ -171,6 +171,12 @@ export class PostController {
       'When true (mixed feed, no postType): omit OFFERS (kampaniyalar). With includeBlogs=false, only NEWS+EVENT.',
   })
   @ApiQuery({
+    name: 'blogCategoryId',
+    required: false,
+    description: 'When listing BLOG posts only, filter by category id',
+    type: String,
+  })
+  @ApiQuery({
     name: 'search',
     required: false,
     type: String,
@@ -192,6 +198,7 @@ export class PostController {
     @Query('tag') tag?: string,
     @Query('excludeOffers', new ParseBoolPipe({ optional: true }))
     excludeOffers = false,
+    @Query('blogCategoryId') blogCategoryId?: string,
     @Query('search') search?: string,
     @Request() req?: { user?: { id: string; role: string } },
   ) {
@@ -207,6 +214,7 @@ export class PostController {
       user?.role as Role,
       tag,
       excludeOffers,
+      blogCategoryId,
       search,
     );
   }
@@ -223,6 +231,12 @@ export class PostController {
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @ApiQuery({ name: 'includeUnpublished', required: false, type: Boolean, example: true })
   @ApiQuery({
+    name: 'blogCategoryId',
+    required: false,
+    description: 'Filter author blogs by category',
+    type: String,
+  })
+  @ApiQuery({
     name: 'search',
     required: false,
     type: String,
@@ -237,6 +251,7 @@ export class PostController {
     @Query('limit', ParseIntPipe) limit = 10,
     @Query('includeUnpublished', new ParseBoolPipe({ optional: true }))
     includeUnpublished = true,
+    @Query('blogCategoryId') blogCategoryId?: string,
     @Query('search') search?: string,
   ) {
     return this.postService.findAll(
@@ -250,6 +265,7 @@ export class PostController {
       Role.AUTHOR,
       undefined,
       false,
+      blogCategoryId,
       search,
     );
   }
@@ -290,6 +306,12 @@ export class PostController {
     example: false,
   })
   @ApiQuery({
+    name: 'blogCategoryId',
+    required: false,
+    description: 'For BLOG type: filter by blog category id',
+    type: String,
+  })
+  @ApiQuery({
     name: 'search',
     required: false,
     type: String,
@@ -306,6 +328,7 @@ export class PostController {
     @Query('includeUnpublished') includeUnpublished = false,
     @Query('eventStatus') eventStatus?: string,
     @Query('tag') tag?: string,
+    @Query('blogCategoryId') blogCategoryId?: string,
     @Query('search') search?: string,
     @Request() req?: { user?: { id: string; role: string } },
   ) {
@@ -319,6 +342,7 @@ export class PostController {
       user?.id,
       user?.role as Role,
       tag,
+      blogCategoryId,
       search,
     );
   }

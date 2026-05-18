@@ -19,11 +19,7 @@ import { formatDate } from "@/utils/formatters/formatDate";
 import { employmentLabel, experienceLabel } from "@/utils/vacancy-labels";
 import { vacancyPageHeading } from "@/utils/vacancy-display";
 import { vacancyCardDeadlineCountdownText } from "@/utils/vacancy-deadline-countdown";
-import {
-  MdOutlineCalendarToday,
-  MdOutlineTrendingUp,
-  MdOutlineWorkOutline,
-} from "react-icons/md";
+import { MdCalendarToday, MdTrendingUp, MdWorkOutline } from "react-icons/md";
 
 function stripHtml(s: string): string {
   return s.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -176,8 +172,9 @@ export default async function VacancyDetailPage({
     const expiredShortLabel =
       locale === "ru" ? "Срок истек" : "Müraciət müddəti bitib";
 
-    const metaCellClass =
-      "flex flex-1 items-center justify-center gap-3 px-6 py-4 sm:py-6";
+    const experienceInline = `${t("experiencePrefix")} ${expText ?? metaL.dash}`
+      .replace(/\s+/g, " ")
+      .trim();
 
     const schemaGraph = buildHomePageGraph({
       name: title,
@@ -208,146 +205,155 @@ export default async function VacancyDetailPage({
 
     return (
       <BreadcrumbContextWrapper title={title}>
-        <section className="w-full min-w-0 bg-transparent pb-16 pt-6 sm:pb-20 sm:pt-8 md:pt-10">
+        <div className="w-full min-w-0 bg-transparent">
           <JsonLd data={schemaGraph} />
 
-          <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 [@media(min-width:2500px)]:px-24 [@media(min-width:3000px)]:px-28">
-            <div className="mx-auto max-w-4xl">
-              <div className="mb-6 text-sm text-gray-500 sm:mb-8 sm:text-base">
+          <section className="w-full min-w-0 pb-16 pt-6 sm:pb-20 sm:pt-8 md:pt-10">
+            <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 [@media(min-width:2500px)]:px-24 [@media(min-width:3000px)]:px-28">
+              <div className="mx-auto mb-6 w-full max-w-4xl text-sm text-gray-500 sm:mb-8 sm:text-base">
                 <Breadcrumbs dynamicTitle={title} />
               </div>
 
-              <div className="overflow-hidden rounded-[22px] border border-black/[0.06] bg-white shadow-[0_10px_40px_-12px_rgba(28,28,28,0.14)]">
-                {/* Banner — brend rəngi, badge + başlıq */}
-                <div className={`px-6 pb-8 pt-7 sm:px-8 sm:pb-10 sm:pt-8 ${headerBg}`}>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white ring-1 ring-white/35">
+              <article
+                className="
+                  mx-auto w-full max-w-4xl overflow-hidden rounded-3xl
+                  border border-slate-200/90 bg-white
+                  shadow-[0_12px_48px_rgba(21,96,189,0.12)]
+                "
+              >
+                <header className={`px-5 py-6 sm:px-8 sm:py-8 ${headerBg}`}>
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white ring-1 ring-white/35">
                       {vacancyBadge}
                     </span>
                     {!isExpired && deadlineHeaderBadge ? (
-                      <span className="inline-flex items-center rounded-full bg-red-500 px-2.5 py-1 text-[11px] font-bold leading-none text-white shadow-sm ring-1 ring-red-600/40">
+                      <span className="inline-flex items-center rounded-full bg-red-500/95 px-2.5 py-0.5 text-[10px] font-semibold leading-tight text-white ring-1 ring-red-700/40">
                         {deadlineHeaderBadge}
                       </span>
                     ) : null}
                     {isExpired ? (
-                      <span className="inline-flex items-center rounded-full bg-black/25 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white ring-1 ring-black/15">
+                      <span className="inline-flex items-center rounded-full bg-black/25 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white ring-1 ring-black/15">
                         {expiredShortLabel}
                       </span>
                     ) : null}
                   </div>
-                  <h1 className="mt-3.5 text-pretty text-3xl font-bold leading-[1.15] text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.12)] sm:text-4xl md:text-[2.5rem] md:leading-[1.2]">
+                  <h1 className="text-pretty text-2xl font-bold leading-tight text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.12)] sm:text-3xl md:text-[2rem] md:leading-[1.2]">
                     {title}
                   </h1>
-                </div>
+                </header>
 
-                {/* Qısa məlumat: üç sütun, ayırıcı xətlər */}
-                <div
-                  className="grid grid-cols-1 divide-y divide-gray-200 border-b border-gray-200 bg-white sm:grid-cols-3 sm:divide-x sm:divide-y-0"
-                  aria-label={locale === "az" ? "Vakansiya qısa məlumat" : "Кратко о вакансии"}
-                >
+                <div className="border-b border-neutral-200 bg-white">
                   <div
-                    className={metaCellClass}
-                    role="group"
-                    aria-label={a11y(metaL.deadline, deadlineText ?? metaL.dash)}
+                    className="
+                      grid min-h-[3.75rem] w-full grid-cols-1 divide-y divide-neutral-200
+                      px-5 py-4 sm:px-8 sm:py-5
+                      sm:grid-cols-3 sm:divide-x sm:divide-y-0
+                    "
+                    aria-label={locale === "az" ? "Vakansiya qısa məlumat" : "Кратко о вакансии"}
                   >
-                    <MdOutlineCalendarToday
-                      className={`size-7 shrink-0 ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
-                      aria-hidden
-                    />
-                    <span
-                      className={`text-center text-sm font-semibold leading-snug sm:text-base ${isExpired ? "text-gray-500 line-through decoration-gray-400/70" : "text-gray-900"}`}
+                    <div
+                      className="flex min-h-[3.25rem] items-center justify-center gap-3 px-3 sm:min-h-0 sm:px-4"
+                      role="group"
+                      aria-label={a11y(metaL.deadline, deadlineText ?? metaL.dash)}
                     >
-                      {deadlineText ?? metaL.dash}
-                    </span>
-                  </div>
-                  <div
-                    className={metaCellClass}
-                    role="group"
-                    aria-label={a11y(metaL.regime, regimeText ?? metaL.dash)}
-                  >
-                    <MdOutlineWorkOutline
-                      className={`size-7 shrink-0 ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
-                      aria-hidden
-                    />
-                    <span className="text-center text-sm font-semibold text-gray-900 sm:text-base">
-                      {regimeText ?? metaL.dash}
-                    </span>
-                  </div>
-                  <div
-                    className={metaCellClass}
-                    role="group"
-                    aria-label={a11y(metaL.exp, expText ?? metaL.dash)}
-                  >
-                    <MdOutlineTrendingUp
-                      className={`size-7 shrink-0 ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
-                      aria-hidden
-                    />
-                    <span className="text-center text-sm font-semibold text-gray-900 sm:text-base">
-                      {expText ?? metaL.dash}
-                    </span>
+                      <MdCalendarToday
+                        className={`shrink-0 text-2xl ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
+                        aria-hidden
+                      />
+                      <p
+                        className={`text-center text-sm font-semibold leading-snug text-[#1F2937] sm:text-base ${isExpired ? "line-through decoration-gray-400/70" : ""}`}
+                      >
+                        {deadlineText ?? metaL.dash}
+                      </p>
+                    </div>
+                    <div
+                      className="flex min-h-[3.25rem] items-center justify-center gap-3 px-3 sm:min-h-0 sm:px-4"
+                      role="group"
+                      aria-label={a11y(metaL.regime, regimeText ?? metaL.dash)}
+                    >
+                      <MdWorkOutline
+                        className={`shrink-0 text-2xl ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
+                        aria-hidden
+                      />
+                      <p className="text-center text-sm font-semibold leading-snug text-[#1F2937] sm:text-base">
+                        {regimeText ?? metaL.dash}
+                      </p>
+                    </div>
+                    <div
+                      className="flex min-h-[3.25rem] items-center justify-center gap-3 px-3 sm:min-h-0 sm:px-4"
+                      role="group"
+                      aria-label={experienceInline}
+                    >
+                      <MdTrendingUp
+                        className={`shrink-0 text-2xl ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
+                        aria-hidden
+                      />
+                      <p className="text-center text-sm font-semibold leading-snug text-[#1F2937] sm:text-base">
+                        {experienceInline}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <article className="px-5 pb-8 pt-8 sm:px-8 sm:pb-10 sm:pt-10">
+                <div className="border-b border-neutral-200 px-5 py-8 sm:px-8 sm:py-10">
                   {isExpired && (
                     <div className="mb-8 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-700 sm:text-[15px]">
                       {metaL.expired}
                     </div>
                   )}
 
-                  <div className="border-b border-gray-200 pb-8">
-                    <h2 className="mb-4 text-lg font-bold text-jsblack sm:text-xl">{headingAbout}</h2>
+                  <h2 className="mb-4 text-lg font-bold text-[#111827] sm:text-xl">{headingAbout}</h2>
+                  <div
+                    className="prose prose-neutral max-w-none text-base leading-relaxed text-neutral-700 prose-p:my-3 prose-headings:text-[#111827] prose-li:marker:text-jsyellow prose-a:text-jsyellow prose-ul:my-2 prose-ol:my-2"
+                    dangerouslySetInnerHTML={{ __html: description }}
+                  />
+                </div>
+
+                {isMeaningfulHtml(requirementsHtml) ? (
+                  <section className="border-b border-neutral-200 px-5 py-8 sm:px-8 sm:py-10">
+                    <h2 className="mb-4 text-lg font-bold text-[#111827] sm:text-xl">{headingReq}</h2>
                     <div
-                      className="prose prose-neutral max-w-none text-base leading-relaxed text-neutral-700 sm:text-[17px] prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0 prose-headings:text-jsblack"
-                      dangerouslySetInnerHTML={{ __html: description }}
+                      className="prose prose-neutral max-w-none text-base leading-relaxed text-neutral-700 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:marker:text-jsyellow prose-a:text-jsyellow prose-p:my-2"
+                      dangerouslySetInnerHTML={{ __html: requirementsHtml }}
                     />
-                  </div>
+                  </section>
+                ) : null}
 
-                  {isMeaningfulHtml(requirementsHtml) && (
-                    <div className="border-b border-gray-200 py-8">
-                      <h2 className="mb-4 text-lg font-bold text-jsblack sm:text-xl">{headingReq}</h2>
-                      <div
-                        className="prose prose-neutral max-w-none text-base leading-relaxed text-neutral-700 sm:text-[17px] prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0 prose-headings:text-jsblack"
-                        dangerouslySetInnerHTML={{ __html: requirementsHtml }}
-                      />
-                    </div>
-                  )}
+                {isMeaningfulHtml(workConditionsHtml) ? (
+                  <section className="border-b border-neutral-200 px-5 py-8 sm:px-8 sm:py-10">
+                    <h2 className="mb-4 text-lg font-bold text-[#111827] sm:text-xl">{headingWork}</h2>
+                    <div
+                      className="prose prose-neutral max-w-none text-base leading-relaxed text-neutral-700 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:marker:text-jsyellow prose-a:text-jsyellow prose-p:my-2"
+                      dangerouslySetInnerHTML={{ __html: workConditionsHtml }}
+                    />
+                  </section>
+                ) : null}
 
-                  {isMeaningfulHtml(workConditionsHtml) && (
-                    <div className="border-b border-gray-200 py-8">
-                      <h2 className="mb-4 text-lg font-bold text-jsblack sm:text-xl">{headingWork}</h2>
-                      <div
-                        className="prose prose-neutral max-w-none text-base leading-relaxed text-neutral-700 sm:text-[17px] prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0 prose-headings:text-jsblack"
-                        dangerouslySetInnerHTML={{ __html: workConditionsHtml }}
-                      />
-                    </div>
-                  )}
+                {!isExpired ? (
+                  <footer className="px-5 py-8 text-center sm:px-8 sm:py-10">
+                    <p className="mx-auto max-w-2xl text-[15px] leading-relaxed text-[#4B5563] sm:text-base">
+                      {t("cvCta")}
+                      {" "}
+                      <a
+                        href="mailto:career@jetacademy.az"
+                        className="font-semibold text-jsyellow underline decoration-jsyellow/50 underline-offset-[3px] hover:opacity-90"
+                      >
+                        career@jetacademy.az
+                      </a>
+                      {t("cvCtaa", { vacancyName: title })}
+                    </p>
+                  </footer>
+                ) : null}
+              </article>
 
-                  {!isExpired && (
-                    <footer className="pt-8 text-center">
-                      <p className="mx-auto max-w-2xl text-sm leading-relaxed text-neutral-700 sm:text-base">
-                        {t("cvCta")}{" "}
-                        <a
-                          href="mailto:career@jetacademy.az"
-                          className="font-semibold text-jsyellow underline decoration-jsyellow/40 underline-offset-2 transition hover:text-jsblack hover:decoration-jsblack/30"
-                        >
-                          career@jetacademy.az
-                        </a>
-                        {t("cvCtaa", { vacancyName: title })}
-                      </p>
-                    </footer>
-                  )}
-                </article>
-              </div>
-
-              {faqItems.length > 0 && (
-                <div className="mx-auto mt-14 max-w-4xl sm:mt-16">
+              {faqItems.length > 0 ? (
+                <div className="mx-auto mt-12 max-w-4xl sm:mt-16">
                   <FaqSection items={faqItems} locale={locale} />
                 </div>
-              )}
+              ) : null}
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </BreadcrumbContextWrapper>
     );
   } catch (error) {

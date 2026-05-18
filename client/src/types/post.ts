@@ -20,6 +20,8 @@ export interface Post {
   eventDate?: Date | string;
   eventStatus?: EventStatus;
   authorId: string;
+  /** Yalnız postType === BLOG üçün; əks halda backend null qaytarır */
+  blogCategory?: { id: string; name: { az: string; ru: string } } | null;
   author: {
     id: string;
     name: string;
@@ -53,6 +55,8 @@ export interface PostFormInputs {
   /** Legacy single image (kept for form compatibility) */
   image?: FileList | File;
   tags: { az: string[]; ru: string[] };
+  /** Bloq üçün kateqoriya ObjectId; boş saxlamaq olar */
+  blogCategoryId?: string;
   postType: PostType;
   eventDate?: string;
   eventStatus?: EventStatus;

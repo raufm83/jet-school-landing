@@ -499,6 +499,7 @@
     "deadlineBadgeToday": "Son gün"
   },
   "vacancyDetail": {
+    "experiencePrefix": "Təcrübə :",
     "cvCta": "Əgər öz namizədliyinizi bu vakansiya üçün uyğun hesab edirsinizsə, zəhmət olmasa CV-nizi və əlavə məlumatları ",
     "cvCtaa":" ünvanına göndərin və məktubun başlığında \"{vacancyName}\" yazmağı unutmayın."
   },
