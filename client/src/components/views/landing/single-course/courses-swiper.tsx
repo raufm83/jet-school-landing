@@ -31,8 +31,8 @@ export default function SwiperCourses({
         1400: { slidesPerView: 4, centeredSlides: false, spaceBetween: 24 },
       }}
       autoplay={{ delay: 2000, disableOnInteraction: false }}
-      className="swiper-courses max-w-full py-8 px-2"
-      style={{ overflow: "hidden", paddingLeft: "8px", paddingRight: "8px" }}
+      className="swiper-courses !overflow-visible max-w-full py-8 px-2"
+      style={{ overflow: "visible", paddingLeft: "8px", paddingRight: "8px" }}
     >
       {courses.map((course: Course, slideIndex: number) => {
         const tags =
@@ -49,7 +49,7 @@ export default function SwiperCourses({
             : "Сделай первый шаг в мир технологий!");
 
         return (
-          <SwiperSlide key={course.id} className="!h-auto box-border">
+          <SwiperSlide key={course.id} className="!h-auto box-border !overflow-visible">
             <Link
               href={`/${normalizedLocale}/course/${course.slug[normalizedLocale]}`}
               className="relative z-10 flex h-full w-full flex-col border-2 rounded-[28px] sm:rounded-[32px] overflow-hidden p-4 min-h-[220px] sm:p-6 sm:min-h-[380px] lg:min-h-[460px] transition-all duration-300 hover:shadow-lg hover:shadow-black/20 group transform hover:scale-[1.02] hover:z-[60]"
