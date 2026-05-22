@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, ValidateNested } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, ValidateNested, IsOptional, IsInt } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class BlogCategoryNameDto {
@@ -17,4 +17,10 @@ export class CreateBlogCategoryDto {
   @ValidateNested()
   @Type(() => BlogCategoryNameDto)
   name: BlogCategoryNameDto;
+
+  @ApiPropertyOptional({ description: 'Display order (0-based)', example: 0 })
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  order?: number;
 }

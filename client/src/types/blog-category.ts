@@ -4,6 +4,7 @@ export interface BlogCategory {
     az: string;
     ru: string;
   };
+  order?: number;
   _count?: {
     posts: number;
   };
