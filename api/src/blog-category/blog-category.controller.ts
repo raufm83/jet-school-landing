@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -56,6 +57,18 @@ export class BlogCategoryController {
   @ApiResponse({ status: 201 })
   create(@Body() dto: CreateBlogCategoryDto) {
     return this.blogCategoryService.create(dto);
+  }
+
+  @Patch('reorder')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.CONTENTMANAGER)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Reorder a blog category' })
+  async reorder(@Body() body: { id: string; order: number }) {
+    if (!body?.id || typeof body?.order !== 'number') {
+      throw new BadRequestException('id and order are required');
+    }
+    return this.blogCategoryService.reorder(body.id, body.order);
   }
 
   @Patch(':id')

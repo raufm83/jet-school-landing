@@ -7,7 +7,6 @@ export type HeroImageProps = {
 };
 
 export default function HeroImage({ src, alt }: HeroImageProps) {
-  const isLocal = src.startsWith("/");
 
   return (
     <div className="relative flex items-center justify-center">
@@ -63,7 +62,7 @@ export default function HeroImage({ src, alt }: HeroImageProps) {
         "
         />
 
-        <div className="relative w-full h-full overflow-hidden rounded-[40%_15%_50%_45%] group-hover:rounded-[45%_20%_55%_40%] transition-all duration-700">
+        <div className="relative w-full h-full overflow-hidden rounded-[40%_15%_50%_45%] group-hover:rounded-[45%_20%_55%_40%] transition-all duration-700 bg-jsyellow">
           <Image
             src={src}
             alt={alt}
@@ -72,8 +71,8 @@ export default function HeroImage({ src, alt }: HeroImageProps) {
             quality={82}
             fetchPriority="high"
             decoding="async"
-            placeholder={isLocal ? "blur" : "empty"}
-            blurDataURL={isLocal ? BLUR_PLACEHOLDER_YELLOW : undefined}
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER_YELLOW}
             className="
               object-cover object-center
               transition-transform duration-500 ease-out

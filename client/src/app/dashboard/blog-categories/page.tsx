@@ -24,6 +24,7 @@ import {
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { toast } from "sonner";
 
 const PAGE_SIZE = 20;
@@ -32,6 +33,7 @@ export default function BlogCategoriesAdminPage() {
   const [items, setItems] = useState<BlogCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [reordering, setReordering] = useState<string | null>(null);
 
   const {
     isOpen: isEditorOpen,
@@ -111,6 +113,18 @@ export default function BlogCategoriesAdminPage() {
     }
   };
 
+  const handleReorder = async (id: string, newOrder: number) => {
+    setReordering(id);
+    try {
+      await api.patch("/blog-categories/reorder", { id, order: newOrder });
+      await fetchList();
+    } catch (e) {
+      toast.error(formatApiError(e, "Sıra dəyişdirilmədi"));
+    } finally {
+      setReordering(null);
+    }
+  };
+
   const confirmDeleteRow = async () => {
     if (!deleteTarget) return;
     try {
@@ -129,6 +143,7 @@ export default function BlogCategoriesAdminPage() {
   const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
 
   const columns = [
+    { name: "SIRA", uid: "order" },
     { name: "AD (AZ)", uid: "az" },
     { name: "AD (RU)", uid: "ru" },
     { name: "POST SAYI", uid: "count" },
@@ -136,7 +151,43 @@ export default function BlogCategoriesAdminPage() {
   ];
 
   const renderCell = (row: BlogCategory, uid: string) => {
+    const globalIndex = items.indexOf(row);
+
     switch (uid) {
+      case "order":
+        return (
+          <div className="flex items-center gap-1">
+            <span className="text-small font-medium text-default-600 w-6 text-center">
+              {(row.order ?? globalIndex) + 1}
+            </span>
+            <div className="flex flex-col">
+              <Tooltip content="Yuxarı">
+                <Button
+                  isIconOnly
+                  variant="light"
+                  size="sm"
+                  isDisabled={globalIndex === 0 || reordering !== null}
+                  onPress={() => handleReorder(row.id, (row.order ?? globalIndex) - 1)}
+                  className="h-5 w-5 min-w-0"
+                >
+                  <FaArrowUp className="text-default-400" size={12} />
+                </Button>
+              </Tooltip>
+              <Tooltip content="Aşağı">
+                <Button
+                  isIconOnly
+                  variant="light"
+                  size="sm"
+                  isDisabled={globalIndex === items.length - 1 || reordering !== null}
+                  onPress={() => handleReorder(row.id, (row.order ?? globalIndex) + 1)}
+                  className="h-5 w-5 min-w-0"
+                >
+                  <FaArrowDown className="text-default-400" size={12} />
+                </Button>
+              </Tooltip>
+            </div>
+          </div>
+        );
       case "az":
         return <span className="text-small">{row.name?.az || "—"}</span>;
       case "ru":
@@ -224,6 +275,7 @@ export default function BlogCategoriesAdminPage() {
               <TableColumn
                 key={column.uid}
                 align={column.uid === "actions" ? "center" : "start"}
+                width={column.uid === "order" ? 100 : undefined}
               >
                 {column.name}
               </TableColumn>
