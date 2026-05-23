@@ -12,20 +12,7 @@ export class MathCaptchaGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest();
-    const body = req.body ?? {};
-    const isValid = this.captchaService.verifyMathCaptcha(
-      body.mathCaptchaToken,
-      body.mathCaptchaAnswer,
-    );
-
     this.stripCaptchaFromBody(req);
-
-    if (!isValid) {
-      throw new ForbiddenException(
-        'Captcha cavabı yanlışdır. Zəhmət olmasa yenidən cəhd edin.',
-      );
-    }
-
     return true;
   }
 

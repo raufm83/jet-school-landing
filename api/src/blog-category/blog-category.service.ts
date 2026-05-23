@@ -25,7 +25,17 @@ export class BlogCategoryService {
 
   async create(createDto: CreateBlogCategoryDto) {
     const total = await this.prisma.blogCategory.count();
-    const order = typeof createDto.order === 'number' ? createDto.order : total;
+    let order = typeof createDto.order === 'number' ? createDto.order : total;
+    if (order < 0) order = 0;
+    if (order > total) order = total;
+
+    if (order < total) {
+      await this.prisma.blogCategory.updateMany({
+        where: { order: { gte: order } },
+        data: { order: { increment: 1 } },
+      });
+    }
+
     const row = await this.prisma.blogCategory.create({
       data: {
         name: createDto.name as unknown as Prisma.InputJsonValue,

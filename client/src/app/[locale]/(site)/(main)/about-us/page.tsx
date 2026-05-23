@@ -7,7 +7,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
 import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
-import { buildAboutPageGraph } from "@/data/site-schema";
+import { buildAboutPageGraph, SITE_SCHEMA } from "@/data/site-schema";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 import { getAboutHero } from "@/utils/api/about-hero";
@@ -135,6 +135,7 @@ export default async function AboutPage({
       { name: homeLabel, url: base },
       { name: aboutLabel, url: aboutUrl },
     ],
+    primaryImageUrl: SITE_SCHEMA.image,
   });
 
   return (

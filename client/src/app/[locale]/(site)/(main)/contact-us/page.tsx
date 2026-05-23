@@ -111,6 +111,7 @@ export default async function ContactPage({
     streetAddress,
     email: contactData.email?.trim(),
     telephone: contactData.phone?.trim(),
+    primaryImageUrl: SITE_SCHEMA.image,
   });
 
   return (

@@ -101,6 +101,7 @@ export default async function Home({ params }: { params: { locale: string } }) {
     locale,
     baseUrl,
     breadcrumbItems: [{ name: homeLabel, url: base }],
+    primaryImageUrl: SITE_SCHEMA.image,
   });
 
   return (

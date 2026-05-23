@@ -44,16 +44,19 @@ const getTeamMembers = cache(async () => {
 
 export default async function SingleCoursePage({ params }: ISingleCoursePageProps) {
   try {
-    const [data, locale, t, courses, allTeachers, faqItems] = await Promise.all([
+    const [data, locale, t, courses, allTeachers] = await Promise.all([
       getCourseDetails(params.slug),
       getLocale() as Promise<Locale>,
       getTranslations("singleCoursePage"),
       getAllCourses({}),
       getTeamMembers(),
-      getFaqByPage(`course:${params.slug}`),
     ]);
 
     if (!data) notFound();
+
+    // FAQ page key həmişə AZ slug ilə saxlanılır, buna görə AZ slug istifadə edirik
+    const faqSlug = data.slug?.az || params.slug;
+    const faqItems = await getFaqByPage(`course:${faqSlug}`);
 
     const courseTitle = data.title[params.locale];
     const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
