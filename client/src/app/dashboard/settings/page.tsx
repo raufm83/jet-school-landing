@@ -427,16 +427,19 @@ export default function SettingsPage() {
                     </div>
                   ) : null;
                 })()}
-                <Button
-                  type="button"
-                  variant="bordered"
-                  size="sm"
-                  className="border-2 border-jsyellow/50 text-jsyellow"
-                  onPress={() => avatarInputRef.current?.click()}
-                  isDisabled={isSubmitting}
-                >
-                  {avatarPreview ? "Şəkli dəyiş" : "Şəkil yüklə"}
-                </Button>
+                <div className="flex flex-col gap-1">
+                  <Button
+                    type="button"
+                    variant="bordered"
+                    size="sm"
+                    className="border-2 border-jsyellow/50 text-jsyellow"
+                    onPress={() => avatarInputRef.current?.click()}
+                    isDisabled={isSubmitting}
+                  >
+                    {avatarPreview ? "Şəkli dəyiş" : "Şəkil yüklə"}
+                  </Button>
+                  <p className="text-xs text-gray-400">Tövsiyə olunan ölçü: 400×400 px (kare) · Maks. həcm: 1 MB · Format: JPG, PNG, WebP</p>
+                </div>
               </div>
             </div>
 
