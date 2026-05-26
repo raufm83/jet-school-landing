@@ -532,18 +532,21 @@ export default function UsersForm({
                     </div>
                   ) : null;
                 })()}
-                <Button
-                  type="button"
-                  variant="bordered"
-                  size="sm"
-                  className="border-2 border-jsyellow/50 text-jsyellow"
-                  onPress={() => avatarInputRef.current?.click()}
-                  isDisabled={isSubmitting}
-                >
-                  {avatarPreview || (control._defaultValues as any)?.avatarUrl
-                    ? "Şəkli dəyiş"
-                    : "Şəkil yüklə"}
-                </Button>
+                <div className="flex flex-col gap-1">
+                  <Button
+                    type="button"
+                    variant="bordered"
+                    size="sm"
+                    className="border-2 border-jsyellow/50 text-jsyellow"
+                    onPress={() => avatarInputRef.current?.click()}
+                    isDisabled={isSubmitting}
+                  >
+                    {avatarPreview || (control._defaultValues as any)?.avatarUrl
+                      ? "Şəkli dəyiş"
+                      : "Şəkil yüklə"}
+                  </Button>
+                  <p className="text-xs text-gray-400">Tövsiyə olunan ölçü: 400×400 px (kare) · Maks. həcm: 1 MB · Format: JPG, PNG, WebP</p>
+                </div>
               </div>
               <input type="hidden" {...register("avatarUrl")} />
             </div>

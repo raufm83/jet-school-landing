@@ -314,6 +314,7 @@ export default function HomeHeroAdminPage() {
                 Hero şəkli — ilk yaradılanda və ya dəyişmək istəndikdə seçin
                 (yalnız mətn üçün boş buraxın)
               </label>
+              <p className="text-xs text-default-500 mb-2">Tövsiyə olunan ölçü: 900x600 (3:2) — maksimum 900px, 2MB.</p>
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"

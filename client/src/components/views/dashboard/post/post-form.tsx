@@ -64,7 +64,7 @@ const formats = [
 const MAX_POST_IMAGE_BYTES = 2 * 1024 * 1024;
 
 const COVER_IMAGE_HINT =
-  "Format: PNG, JPEG, WebP və s. Maksimum 2 MB. Böyük fayllar avtomatik sıxılır; sıxılmadan sonra hələ də 2 MB-dan böyükdürsə qəbul olunmur.";
+  "Tövsiyə olunan ölçü: 1920x1080 (16:9). Format: PNG, JPEG, WebP və s. Maksimum 2 MB. Böyük fayllar avtomatik sıxılır; sıxılmadan sonra hələ də 2 MB-dan böyükdürsə qəbul olunmur.";
 
 const CONTENT_IMAGE_HINT =
   "Məzmuna şəkil əlavə: maksimum 2 MB; avtomatik təxminən 1024 px uzun tərəfə qədər kiçildilir və WebP/JPEG kimi saxlanılır.";

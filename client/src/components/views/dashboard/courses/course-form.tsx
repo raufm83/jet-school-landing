@@ -304,7 +304,7 @@ export default function CourseForm({
                       />
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      PNG, JPG, GIF (max. 2MB, avtomatik WebP-ə çevriləcək)
+                      Tövsiyə olunan ölçü: 1280x720 (16:9). PNG, JPG, GIF (max. 2MB, avtomatik WebP-ə çevriləcək)
                     </p>
                   </div>
                 )}

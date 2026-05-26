@@ -13,6 +13,10 @@ import {
   UseInterceptors,
   ParseIntPipe,
   ParseBoolPipe,
+  BadRequestException,
+  NotFoundException,
+  ForbiddenException,
+  HttpException,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -79,23 +83,30 @@ export class PostController {
     files: { imageAz?: Express.Multer.File[]; imageRu?: Express.Multer.File[] },
     @Request() req,
   ) {
-    let imageUrl: { az?: string; ru?: string } | undefined;
-    if (files?.imageAz?.[0]) {
-      const az = await this.sharpPipe.transform(files.imageAz[0]);
-      imageUrl = { ...imageUrl, az };
+    try {
+      let imageUrl: { az?: string; ru?: string } | undefined;
+      if (files?.imageAz?.[0]) {
+        const az = await this.sharpPipe.transform(files.imageAz[0]);
+        imageUrl = { ...imageUrl, az };
+      }
+      if (files?.imageRu?.[0]) {
+        const ru = await this.sharpPipe.transform(files.imageRu[0]);
+        imageUrl = { ...imageUrl, ru };
+      }
+      return await this.postService.create(
+        {
+          ...createPostDto,
+          ...(imageUrl && Object.keys(imageUrl).length > 0 && { imageUrl }),
+        },
+        req.user.id,
+        req.user.role,
+      );
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new BadRequestException(error.message || error);
     }
-    if (files?.imageRu?.[0]) {
-      const ru = await this.sharpPipe.transform(files.imageRu[0]);
-      imageUrl = { ...imageUrl, ru };
-    }
-    return this.postService.create(
-      {
-        ...createPostDto,
-        ...(imageUrl && Object.keys(imageUrl).length > 0 && { imageUrl }),
-      },
-      req.user.id,
-      req.user.role,
-    );
   }
 
   @Post('upload-image')
@@ -433,24 +444,31 @@ export class PostController {
     files?: { imageAz?: Express.Multer.File[]; imageRu?: Express.Multer.File[] },
     @Request() req?: { user: { id: string; role: string } },
   ) {
-    let imageUrl: { az?: string; ru?: string } | undefined;
-    if (files?.imageAz?.[0]) {
-      const az = await this.sharpPipe.transform(files.imageAz[0]);
-      imageUrl = { ...imageUrl, az };
+    try {
+      let imageUrl: { az?: string; ru?: string } | undefined;
+      if (files?.imageAz?.[0]) {
+        const az = await this.sharpPipe.transform(files.imageAz[0]);
+        imageUrl = { ...imageUrl, az };
+      }
+      if (files?.imageRu?.[0]) {
+        const ru = await this.sharpPipe.transform(files.imageRu[0]);
+        imageUrl = { ...imageUrl, ru };
+      }
+      return await this.postService.update(
+        id,
+        {
+          ...updatePostDto,
+          ...(imageUrl && Object.keys(imageUrl).length > 0 && { imageUrl }),
+        },
+        req?.user?.id,
+        req?.user?.role as Role,
+      );
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new BadRequestException(error.message || error);
     }
-    if (files?.imageRu?.[0]) {
-      const ru = await this.sharpPipe.transform(files.imageRu[0]);
-      imageUrl = { ...imageUrl, ru };
-    }
-    return this.postService.update(
-      id,
-      {
-        ...updatePostDto,
-        ...(imageUrl && Object.keys(imageUrl).length > 0 && { imageUrl }),
-      },
-      req?.user?.id,
-      req?.user?.role as Role,
-    );
   }
 
   @Delete(':id')
