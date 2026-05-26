@@ -363,7 +363,7 @@ export class PostService {
           ...(imageUrlJson && { imageUrl: imageUrlJson }),
           published: isPublished,
           eventStatus: eventStatus,
-          blogCategoryId,
+          ...(blogCategoryId ? { blogCategory: { connect: { id: blogCategoryId } } } : {}),
           author: {
             connect: { id: authorId },
           },
