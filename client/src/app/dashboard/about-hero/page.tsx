@@ -378,6 +378,7 @@ export default function AboutHeroAdminPage() {
                   className="block w-full text-sm"
                   onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
                 />
+                <p className="text-xs text-gray-400 mt-1">Tövsiyə olunan ölçü: 1920×600 px · Maks. həcm: 2 MB · Format: JPG, PNG, WebP</p>
               </div>
             </div>
             <div className="space-y-2">
@@ -401,6 +402,7 @@ export default function AboutHeroAdminPage() {
                   className="block w-full text-sm"
                   onChange={(e) => setMissionImageFile(e.target.files?.[0] ?? null)}
                 />
+                <p className="text-xs text-gray-400 mt-1">Tövsiyə olunan ölçü: 1280×720 px · Maks. həcm: 2 MB · Format: JPG, PNG, WebP</p>
               </div>
             </div>
           </div>

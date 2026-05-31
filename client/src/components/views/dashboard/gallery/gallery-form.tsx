@@ -148,6 +148,7 @@ export default function GalleryForm({
                   disabled={isSubmitting}
                   className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-jsyellow/10 file:text-jsyellow hover:file:bg-jsyellow/20"
                 />
+                <p className="text-xs text-gray-400">Tövsiyə olunan ölçü: 1280×853 px · Maks. həcm: 3 MB · Format: JPG, PNG, WebP</p>
                 {errors.image && (
                   <p className="text-tiny text-danger">
                     {errors.image.message}

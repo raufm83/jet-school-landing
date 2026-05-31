@@ -363,7 +363,7 @@ export class PostService {
           ...(imageUrlJson && { imageUrl: imageUrlJson }),
           published: isPublished,
           eventStatus: eventStatus,
-          blogCategoryId,
+          ...(blogCategoryId ? { blogCategory: { connect: { id: blogCategoryId } } } : {}),
           author: {
             connect: { id: authorId },
           },
@@ -381,9 +381,19 @@ export class PostService {
       return this.mapPostRow(created);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        throw new Error(`Failed to create post: ${error.message}`);
+        throw new BadRequestException(`Failed to create post: ${error.message}`);
       }
-      throw error;
+      if (error instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException(`Failed to create post (validation error): ${error.message}`);
+      }
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException
+      ) {
+        throw error;
+      }
+      throw new BadRequestException(`Failed to create post: ${error.message || error}`);
     }
   }
 
@@ -749,9 +759,19 @@ export class PostService {
       return this.mapPostRow(updated);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        throw new Error(`Failed to update post: ${error.message}`);
+        throw new BadRequestException(`Failed to update post: ${error.message}`);
       }
-      throw error;
+      if (error instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException(`Failed to update post (validation error): ${error.message}`);
+      }
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException
+      ) {
+        throw error;
+      }
+      throw new BadRequestException(`Failed to update post: ${error.message || error}`);
     }
   }
 
@@ -765,9 +785,19 @@ export class PostService {
       return { id };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        throw new Error(`Failed to delete post: ${error.message}`);
+        throw new BadRequestException(`Failed to delete post: ${error.message}`);
       }
-      throw error;
+      if (error instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException(`Failed to delete post (validation error): ${error.message}`);
+      }
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException
+      ) {
+        throw error;
+      }
+      throw new BadRequestException(`Failed to delete post: ${error.message || error}`);
     }
   }
 
