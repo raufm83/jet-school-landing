@@ -81,6 +81,14 @@
   max-width: 100% !important;
 }
 
+/* Editor heading sizes match published prose-post-article for WYSIWYG parity */
+.ql-editor h1 { font-size: 2rem !important;    font-weight: 700 !important; line-height: 1.2  !important; }
+.ql-editor h2 { font-size: 1.625rem !important; font-weight: 700 !important; line-height: 1.25 !important; }
+.ql-editor h3 { font-size: 1.3rem !important;   font-weight: 600 !important; line-height: 1.3  !important; }
+.ql-editor h4 { font-size: 1.1rem !important;   font-weight: 600 !important; line-height: 1.35 !important; }
+.ql-editor h5 { font-size: 1rem !important;     font-weight: 600 !important; line-height: 1.4  !important; }
+.ql-editor h6 { font-size: 0.9rem !important;   font-weight: 600 !important; line-height: 1.4  !important; color: #6b7280 !important; }
+
 .prose img,
 .post-content img {
   width: 100%;

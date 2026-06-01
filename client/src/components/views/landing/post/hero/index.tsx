@@ -126,7 +126,7 @@ export default function PostHero({
 
       <LazyHtmlContent
         html={deferEmbedsInHtml(content)}
-        className="prose prose-post-article max-w-none prose-headings:font-semibold prose-li:list-outside prose-li:ml-1 prose-li:pl-0"
+        className="prose prose-post-article max-w-none prose-li:list-outside prose-li:ml-1 prose-li:pl-0"
       />
 
 
