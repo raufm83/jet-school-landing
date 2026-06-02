@@ -16,7 +16,7 @@ import TeamSection from "@/components/views/landing/about/team-section";
 import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 import { CONTENT_ISR_SECONDS } from "@/constants/content-isr";
 import { cache } from "react";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildCoursePageGraph } from "@/data/site-schema";
 
@@ -162,9 +162,9 @@ export async function generateMetadata({ params }: ISingleCoursePageProps): Prom
     }
 
     const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-    const canonicalUrl = ensureTrailingSlash(`${baseUrl}/${locale}/course/${params.slug}`);
     const azSlug = data.slug?.az || params.slug;
     const ruSlug = data.slug?.ru || params.slug;
+    const canonicalUrl = buildCanonicalUrl(baseUrl, `course/${azSlug}`);
 
     const title = meta?.title
       ? trimMetaTitle(meta.title)
@@ -179,7 +179,7 @@ export async function generateMetadata({ params }: ISingleCoursePageProps): Prom
     const openGraph: Metadata["openGraph"] = {
       title,
       description: description ?? undefined,
-      url: canonicalUrl,
+      url: buildHreflangUrl(baseUrl, locale, `course/${locale === "az" ? azSlug : ruSlug}`),
       type: "website",
       locale: locale === "az" ? "az_AZ" : "ru_RU",
       alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",
@@ -190,9 +190,9 @@ export async function generateMetadata({ params }: ISingleCoursePageProps): Prom
       alternates: {
         canonical: canonicalUrl,
         languages: {
-          az: ensureTrailingSlash(`${baseUrl}/az/course/${azSlug}`),
-          ru: ensureTrailingSlash(`${baseUrl}/ru/course/${ruSlug}`),
-          "x-default": ensureTrailingSlash(`${baseUrl}/az/course/${azSlug}`),
+          az: buildHreflangUrl(baseUrl, "az", `course/${azSlug}`),
+          ru: buildHreflangUrl(baseUrl, "ru", `course/${ruSlug}`),
+          "x-default": buildHreflangUrl(baseUrl, "az", `course/${azSlug}`),
         },
       },
       openGraph,

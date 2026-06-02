@@ -3,9 +3,8 @@
  */
 
 /**
- * Ensures URL ends with trailing slash (before query string if present)
- * @param url - The URL to normalize
- * @returns URL with trailing slash
+ * Ensures URL ends with trailing slash (before query string if present).
+ * Also normalizes any accidental double-slashes in the path.
  */
 export function ensureTrailingSlash(url: string): string {
   if (!url || typeof url !== "string") return url;
@@ -14,6 +13,46 @@ export function ensureTrailingSlash(url: string): string {
   const normalizedPath = path.replace(/([^:])\/\/+/g, "$1/");
   const pathWithSlash = normalizedPath.endsWith("/") ? normalizedPath : `${normalizedPath}/`;
   return query ? `${pathWithSlash}?${query}` : pathWithSlash;
+}
+
+/**
+ * Builds a canonical URL WITHOUT locale prefix.
+ *   buildCanonicalUrl("https://jetschool.az")           → "https://jetschool.az/"
+ *   buildCanonicalUrl("https://jetschool.az", "blog")   → "https://jetschool.az/blog/"
+ *   buildCanonicalUrl("https://jetschool.az", "/az/blog/my-post") → strips locale → "https://jetschool.az/blog/my-post/"
+ */
+export function buildCanonicalUrl(
+  baseUrl: string,
+  path: string = "",
+  queryString?: string,
+): string {
+  const cleaned = path
+    .replace(/^\/+/, "")
+    .replace(/\/+$/, "")
+    // Strip leading locale segment (az or ru) from path if present
+    .replace(/^(az|ru)(\/|$)/, "");
+  const base = cleaned ? `${baseUrl}/${cleaned}` : baseUrl;
+  return ensureTrailingSlash(queryString ? `${base}?${queryString}` : base);
+}
+
+/**
+ * Builds a hreflang URL WITH locale prefix.
+ *   buildHreflangUrl("https://jetschool.az", "az")              → "https://jetschool.az/az/"
+ *   buildHreflangUrl("https://jetschool.az", "ru", "blog")      → "https://jetschool.az/ru/blog/"
+ *   buildHreflangUrl("https://jetschool.az", "az", "blog/slug") → "https://jetschool.az/az/blog/slug/"
+ */
+export function buildHreflangUrl(
+  baseUrl: string,
+  locale: string,
+  path: string = "",
+): string {
+  const cleaned = path
+    .replace(/^\/+/, "")
+    .replace(/\/+$/, "")
+    .replace(/^(az|ru)(\/|$)/, ""); // Strip leading locale if accidentally included
+  return ensureTrailingSlash(
+    cleaned ? `${baseUrl}/${locale}/${cleaned}` : `${baseUrl}/${locale}`,
+  );
 }
 
 /**

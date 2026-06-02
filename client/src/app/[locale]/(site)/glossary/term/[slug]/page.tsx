@@ -9,7 +9,7 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 
 interface PageProps {
   params: {
@@ -46,7 +46,7 @@ export async function generateMetadata({
   const pageTitle = termName ? `${termName}` : "Glossariy Termini";
   const defaultDescription = t("glossaryTermDefaultDescription") || "IT və proqramlaşdırma termini haqqında məlumat";
 
-  const canonicalUrl = ensureTrailingSlash(`${baseUrl}/${locale}/glossary/term/${slug}`);
+  const canonicalUrl = buildCanonicalUrl(baseUrl, `glossary/term/${slug}`);
 
   const title = trimMetaTitle(pageTitle);
   const description = trimMetaDescription(termDefinition || defaultDescription);
@@ -57,15 +57,15 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}/az/glossary/term/${slug}`),
-        ru: ensureTrailingSlash(`${baseUrl}/ru/glossary/term/${slug}`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az/glossary/term/${slug}`),
+        az: buildHreflangUrl(baseUrl, "az", `glossary/term/${slug}`),
+        ru: buildHreflangUrl(baseUrl, "ru", `glossary/term/${slug}`),
+        "x-default": buildHreflangUrl(baseUrl, "az", `glossary/term/${slug}`),
       },
     },
     openGraph: {
       title,
       description,
-      url: canonicalUrl,
+      url: buildHreflangUrl(baseUrl, locale, `glossary/term/${slug}`),
       type: "article",
       locale: locale === "az" ? "az_AZ" : "ru_RU",
       alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",

@@ -8,7 +8,7 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import { normalizeGlossaryLetterParam } from "@/utils/glossary-letter";
 
 /** Middleware ilə eyni: URL-də `letter` sorğu açarı varsa indekslənməsin */
@@ -41,14 +41,13 @@ export async function generateMetadata({
       typeof searchParams.letter === "string" ? searchParams.letter : undefined
     ) ?? null;
 
-  const queryString =
-    letterDisplay != null ? `?letter=${encodeURIComponent(letterDisplay)}` : "";
-
-  const termsIndexCanonical = ensureTrailingSlash(`${baseUrl}/${locale}/glossary/terms`);
+  const termsIndexCanonical = buildCanonicalUrl(baseUrl, "glossary/terms");
 
   const canonicalUrl = hasLetterFilter
     ? termsIndexCanonical
-    : ensureTrailingSlash(`${baseUrl}/${locale}/glossary/terms${queryString}`);
+    : (letterDisplay != null
+        ? buildCanonicalUrl(baseUrl, "glossary/terms", `letter=${encodeURIComponent(letterDisplay)}`)
+        : buildCanonicalUrl(baseUrl, "glossary/terms"));
 
   const pageTitle =
     letterDisplay != null
@@ -65,14 +64,10 @@ export async function generateMetadata({
         glossaryT("description") || "JET School glossariy lüğətində bütün IT terminləri"
       );
 
-  const openGraphUrl = hasLetterFilter
-    ? termsIndexCanonical
-    : canonicalUrl;
-
   const openGraph: Metadata["openGraph"] = {
     title,
     description,
-    url: openGraphUrl,
+    url: buildHreflangUrl(baseUrl, locale, "glossary/terms"),
     type: "website",
     locale: locale === "az" ? "az_AZ" : "ru_RU",
     alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",
@@ -83,9 +78,9 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}/az/glossary/terms`),
-        ru: ensureTrailingSlash(`${baseUrl}/ru/glossary/terms`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az/glossary/terms`),
+        az: buildHreflangUrl(baseUrl, "az", "glossary/terms"),
+        ru: buildHreflangUrl(baseUrl, "ru", "glossary/terms"),
+        "x-default": buildHreflangUrl(baseUrl, "az", "glossary/terms"),
       },
     },
     openGraph,

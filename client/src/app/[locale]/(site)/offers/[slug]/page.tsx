@@ -4,7 +4,7 @@ import { getAllPosts, getPostDetails } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
 import { buildImageUrl } from "@/utils/imageUrl";
 import SinglePostView from "@/components/views/landing/post/view";
@@ -124,11 +124,10 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
     }
 
     const contentText = metaContent.replace(/<[^>]*>/g, "");
-    
-    const canonicalUrl = ensureTrailingSlash(`${baseUrl}/${locale}/offers/${params.slug}`);
 
     const azSlug = data.slug?.az || params.slug;
     const ruSlug = data.slug?.ru || params.slug;
+    const canonicalUrl = buildCanonicalUrl(baseUrl, `offers/${azSlug}`);
 
     const title = trimMetaTitle(metaTitle);
     const description = trimMetaDescription(contentText);
@@ -139,15 +138,15 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
       alternates: {
         canonical: canonicalUrl,
         languages: {
-          az: data.slug?.az ? ensureTrailingSlash(`${baseUrl}/az/offers/${azSlug}`) : undefined,
-          ru: data.slug?.ru ? ensureTrailingSlash(`${baseUrl}/ru/offers/${ruSlug}`) : undefined,
-          "x-default": data.slug?.az ? ensureTrailingSlash(`${baseUrl}/az/offers/${azSlug}`) : undefined,
+          az: data.slug?.az ? buildHreflangUrl(baseUrl, "az", `offers/${azSlug}`) : undefined,
+          ru: data.slug?.ru ? buildHreflangUrl(baseUrl, "ru", `offers/${ruSlug}`) : undefined,
+          "x-default": data.slug?.az ? buildHreflangUrl(baseUrl, "az", `offers/${azSlug}`) : undefined,
         },
       },
       openGraph: {
         title,
         description,
-        url: canonicalUrl,
+        url: buildHreflangUrl(baseUrl, locale, `offers/${locale === "az" ? azSlug : ruSlug}`),
         images: (() => {
           const url = getPostImageUrl(data.imageUrl, locale);
           return url ? [{ url: buildImageUrl(url) }] : [];
