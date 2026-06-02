@@ -2,7 +2,7 @@ import { Locale } from "@/i18n/request";
 import { PostType } from "@/types/enums";
 import { getAllPosts, getPostDetails } from "@/utils/api/post";
 import { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
@@ -35,10 +35,12 @@ export async function generateStaticParams() {
 }
 
 export default async function SinglePostPage({ params }: ISinglePostPageProps) {
+  const locale = params.locale as Locale;
+  setRequestLocale(locale);
+
   try {
-    const [data, locale, t] = await Promise.all([
+    const [data, t] = await Promise.all([
       getPostDetails(params.slug),
-      getLocale() as Promise<Locale>,
       getTranslations("singlePostPage"),
     ]);
 

@@ -6,15 +6,20 @@ import { Locale } from "@/i18n/request";
 import type { Course } from "@/types/course";
 import { getAllCourses } from "@/utils/api/course";
 import { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
 import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const locale = params.locale as Locale;
+  setRequestLocale(locale);
   const t = await getTranslations("coursesPage");
-  const locale = (await getLocale()) as Locale;
 
   const meta = await getPageMeta("courses", locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
@@ -55,8 +60,9 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function CoursesPage() {
-  const locale = (await getLocale()) as Locale;
+export default async function CoursesPage({ params }: { params: { locale: string } }) {
+  const locale = params.locale as Locale;
+  setRequestLocale(locale);
   const t = await getTranslations("coursesPage");
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
   const base = `${baseUrl}/${locale}`;

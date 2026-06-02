@@ -10,7 +10,9 @@
 export function ensureTrailingSlash(url: string): string {
   if (!url || typeof url !== "string") return url;
   const [path, query] = url.split("?");
-  const pathWithSlash = path.endsWith("/") ? path : `${path}/`;
+  // Remove double slashes from path while preserving the protocol (e.g. https://)
+  const normalizedPath = path.replace(/([^:])\/\/+/g, "$1/");
+  const pathWithSlash = normalizedPath.endsWith("/") ? normalizedPath : `${normalizedPath}/`;
   return query ? `${pathWithSlash}?${query}` : pathWithSlash;
 }
 

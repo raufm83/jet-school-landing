@@ -3,7 +3,7 @@ import { PostType } from "@/types/enums";
 import { Post } from "@/types/post";
 import { getAllPosts, getPostDetails, getPostsByType } from "@/utils/api/post";
 import { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
 import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
@@ -43,20 +43,22 @@ export default async function SinglePostPage({
   params,
   searchParams = {},
 }: ISinglePostPageProps) {
+  const locale = params.locale as Locale;
+  setRequestLocale(locale);
+
   if (params.slug === "undefined") {
     const qs = new URLSearchParams();
     if (searchParams.page) qs.set("page", searchParams.page);
     if (searchParams.q) qs.set("q", searchParams.q);
     const tail = qs.toString();
     redirect(
-      tail ? `/${params.locale}/blog/?${tail}` : `/${params.locale}/blog/`
+      tail ? `/${locale}/blog/?${tail}` : `/${locale}/blog/`
     );
   }
 
   try {
-    const [data, locale, t] = await Promise.all([
+    const [data, t] = await Promise.all([
       getPostDetails(params.slug),
-      getLocale() as Promise<Locale>,
       getTranslations("singlePostPage"),
     ]);
 

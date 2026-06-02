@@ -9,7 +9,7 @@ import { getAllCourses, getCourseDetails } from "@/utils/api/course";
 import { getFaqByPage } from "@/utils/api/faq";
 import { getPageMeta } from "@/utils/api/page-meta";
 import { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import BreadcrumbContextWrapper from "@/hooks/BreadcrumbContextWrapper";
 import TeamSection from "@/components/views/landing/about/team-section";
@@ -44,9 +44,10 @@ const getTeamMembers = cache(async () => {
 
 export default async function SingleCoursePage({ params }: ISingleCoursePageProps) {
   try {
-    const [data, locale, t, courses, allTeachers] = await Promise.all([
+    const locale = params.locale as Locale;
+    setRequestLocale(locale);
+    const [data, t, courses, allTeachers] = await Promise.all([
       getCourseDetails(params.slug),
-      getLocale() as Promise<Locale>,
       getTranslations("singleCoursePage"),
       getAllCourses({}),
       getTeamMembers(),
