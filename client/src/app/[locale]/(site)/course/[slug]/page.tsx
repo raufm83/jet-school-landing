@@ -192,7 +192,7 @@ export async function generateMetadata({ params }: ISingleCoursePageProps): Prom
         languages: {
           az: buildHreflangUrl(baseUrl, "az", `course/${azSlug}`),
           ru: buildHreflangUrl(baseUrl, "ru", `course/${ruSlug}`),
-          "x-default": buildHreflangUrl(baseUrl, "az", `course/${azSlug}`),
+          "x-default": baseUrl,
         },
       },
       openGraph,

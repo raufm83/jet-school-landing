@@ -16,10 +16,10 @@ export function ensureTrailingSlash(url: string): string {
 }
 
 /**
- * Builds a canonical URL WITHOUT locale prefix.
- *   buildCanonicalUrl("https://jetschool.az")           → "https://jetschool.az/"
- *   buildCanonicalUrl("https://jetschool.az", "blog")   → "https://jetschool.az/blog/"
- *   buildCanonicalUrl("https://jetschool.az", "/az/blog/my-post") → strips locale → "https://jetschool.az/blog/my-post/"
+ * Builds a canonical URL WITHOUT locale prefix and WITHOUT trailing slash.
+ *   buildCanonicalUrl("https://jetschool.az")           → "https://jetschool.az"
+ *   buildCanonicalUrl("https://jetschool.az", "blog")   → "https://jetschool.az/blog"
+ *   buildCanonicalUrl("https://jetschool.az", "/az/blog/my-post") → strips locale → "https://jetschool.az/blog/my-post"
  */
 export function buildCanonicalUrl(
   baseUrl: string,
@@ -30,9 +30,14 @@ export function buildCanonicalUrl(
     .replace(/^\/+/, "")
     .replace(/\/+$/, "")
     // Strip leading locale segment (az or ru) from path if present
-    .replace(/^(az|ru)(\/|$)/, "");
-  const base = cleaned ? `${baseUrl}/${cleaned}` : baseUrl;
-  return ensureTrailingSlash(queryString ? `${base}?${queryString}` : base);
+    .replace(/^(az|ru)(\/|$)/, "")
+    .replace(/\/+$/, ""); // Remove any remaining trailing slash
+  // Normalize double-slashes while preserving protocol
+  const base = (cleaned ? `${baseUrl}/${cleaned}` : baseUrl)
+    .replace(/([^:])\/\/+/g, "$1/");
+  // No trailing slash on canonical URLs
+  const result = base.replace(/\/+$/, "");
+  return queryString ? `${result}?${queryString}` : result;
 }
 
 /**
