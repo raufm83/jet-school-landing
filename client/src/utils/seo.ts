@@ -41,10 +41,10 @@ export function buildCanonicalUrl(
 }
 
 /**
- * Builds a hreflang URL WITH locale prefix.
- *   buildHreflangUrl("https://jetschool.az", "az")              → "https://jetschool.az/az/"
- *   buildHreflangUrl("https://jetschool.az", "ru", "blog")      → "https://jetschool.az/ru/blog/"
- *   buildHreflangUrl("https://jetschool.az", "az", "blog/slug") → "https://jetschool.az/az/blog/slug/"
+ * Builds a hreflang URL WITH locale prefix, WITHOUT trailing slash.
+ *   buildHreflangUrl("https://jetschool.az", "az")              → "https://jetschool.az/az"
+ *   buildHreflangUrl("https://jetschool.az", "ru", "blog")      → "https://jetschool.az/ru/blog"
+ *   buildHreflangUrl("https://jetschool.az", "az", "blog/slug") → "https://jetschool.az/az/blog/slug"
  */
 export function buildHreflangUrl(
   baseUrl: string,
@@ -55,9 +55,9 @@ export function buildHreflangUrl(
     .replace(/^\/+/, "")
     .replace(/\/+$/, "")
     .replace(/^(az|ru)(\/|$)/, ""); // Strip leading locale if accidentally included
-  return ensureTrailingSlash(
-    cleaned ? `${baseUrl}/${locale}/${cleaned}` : `${baseUrl}/${locale}`,
-  );
+  const url = cleaned ? `${baseUrl}/${locale}/${cleaned}` : `${baseUrl}/${locale}`;
+  // Normalize double-slashes, no trailing slash
+  return url.replace(/([^:])\/\/+/g, "$1/").replace(/\/+$/, "");
 }
 
 /**

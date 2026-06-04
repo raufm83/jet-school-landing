@@ -25,8 +25,7 @@ const nextConfig = {
         ? { exclude: ["error", "warn"] }
         : false,
   },
-  // Canonical / alternates URL-ləri üçün kök və səhifə sonunda / — Next metadata x-default-u düzgün saxlayır
-  trailingSlash: true,
+  trailingSlash: false,
   experimental: {
     optimizePackageImports: [
       "@nextui-org/react",
