@@ -30,7 +30,7 @@ export async function generateMetadata({
   });
   const meta = await getPageMeta("home", locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonical = ensureTrailingSlash(`${baseUrl}/${locale}`);
+  const canonical = baseUrl;
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)
@@ -51,9 +51,9 @@ export async function generateMetadata({
     alternates: {
       canonical,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}/az`),
-        ru: ensureTrailingSlash(`${baseUrl}/ru`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az`),
+        az: `${baseUrl}/az/`,
+        ru: `${baseUrl}/ru/`,
+        "x-default": baseUrl,
       },
     },
     openGraph: {
