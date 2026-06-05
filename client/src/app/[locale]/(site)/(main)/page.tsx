@@ -10,7 +10,7 @@ import Blogs from "@/components/views/landing/home/blogs";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Locale } from "@/i18n/request";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildHomePageGraph, SITE_SCHEMA } from "@/data/site-schema";
 import { getPageMeta } from "@/utils/api/page-meta";
@@ -30,8 +30,7 @@ export async function generateMetadata({
   });
   const meta = await getPageMeta("home", locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonical = buildCanonicalUrl(baseUrl);
-  const ogUrl = buildHreflangUrl(baseUrl, locale);
+  const canonical = baseUrl;
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)
@@ -52,15 +51,15 @@ export async function generateMetadata({
     alternates: {
       canonical,
       languages: {
-        az: buildHreflangUrl(baseUrl, "az"),
-        ru: buildHreflangUrl(baseUrl, "ru"),
+        az: `${baseUrl}/az/`,
+        ru: `${baseUrl}/ru/`,
         "x-default": baseUrl,
       },
     },
     openGraph: {
       title: ogTitle,
       description: ogDescription,
-      url: ogUrl,
+      url: canonical,
       siteName: "JET School",
       images: [{ url: SITE_SCHEMA.ogImagePath, width: 1200, height: 630, alt: t("ogImageAlt") }],
       locale: params.locale === "az" ? "az_AZ" : "ru_RU",
