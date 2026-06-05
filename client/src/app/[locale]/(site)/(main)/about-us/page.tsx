@@ -5,9 +5,9 @@ import TeamSection from "@/components/views/landing/about/team-section";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
-import { buildAboutPageGraph } from "@/data/site-schema";
+import { buildAboutPageGraph, SITE_SCHEMA } from "@/data/site-schema";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 import { getAboutHero } from "@/utils/api/about-hero";
@@ -25,7 +25,7 @@ export async function generateMetadata({
     getPageMeta("about-us", locale),
   ]);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonicalUrl = ensureTrailingSlash(`${baseUrl}/${locale}/about-us`);
+  const canonicalUrl = buildCanonicalUrl(baseUrl, "about-us");
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)
@@ -40,7 +40,7 @@ export async function generateMetadata({
   const openGraph: Metadata["openGraph"] = {
     title,
     description,
-    url: canonicalUrl,
+    url: buildHreflangUrl(baseUrl, locale, "about-us"),
     type: "website",
     locale: locale === "az" ? "az_AZ" : "ru_RU",
     alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",
@@ -51,9 +51,9 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}/az/about-us`),
-        ru: ensureTrailingSlash(`${baseUrl}/ru/about-us`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az/about-us`),
+        az: buildHreflangUrl(baseUrl, "az", "about-us"),
+        ru: buildHreflangUrl(baseUrl, "ru", "about-us"),
+        "x-default": baseUrl,
       },
     },
     openGraph,
@@ -135,6 +135,7 @@ export default async function AboutPage({
       { name: homeLabel, url: base },
       { name: aboutLabel, url: aboutUrl },
     ],
+    primaryImageUrl: SITE_SCHEMA.image,
   });
 
   return (

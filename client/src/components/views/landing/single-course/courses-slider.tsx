@@ -36,7 +36,7 @@ const CoursesSlider = ({ courses, locale = "az", title }: ICoursesSlider) => {
   return (
     <div className="flex flex-col gap-8">
       <SectionTitle title={title || t("title")} />
-      <div className="relative w-full min-w-0 max-w-full overflow-x-clip">
+      <div className="relative w-full min-w-0 max-w-full ">
         <SwiperCourses
           courses={displayCourses}
           normalizedLocale={normalizedLocale}

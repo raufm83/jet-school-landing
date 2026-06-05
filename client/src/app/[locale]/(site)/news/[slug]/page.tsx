@@ -2,9 +2,9 @@ import { Locale } from "@/i18n/request";
 import { PostType } from "@/types/enums";
 import { getAllPosts, getPostDetails } from "@/utils/api/post";
 import { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
 import SinglePostView from "@/components/views/landing/post/view";
 import JsonLd from "@/components/seo/json-ld";
@@ -35,10 +35,12 @@ export async function generateStaticParams() {
 }
 
 export default async function SinglePostPage({ params }: ISinglePostPageProps) {
+  const locale = params.locale as Locale;
+  setRequestLocale(locale);
+
   try {
-    const [data, locale, t] = await Promise.all([
+    const [data, t] = await Promise.all([
       getPostDetails(params.slug),
-      getLocale() as Promise<Locale>,
       getTranslations("singlePostPage"),
     ]);
 
@@ -113,11 +115,10 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
     }
 
     const contentText = data.content[locale].replace(/<[^>]*>/g, "");
-    
-    const canonicalUrl = ensureTrailingSlash(`${baseUrl}/${locale}/news/${params.slug}`);
 
     const azSlug = data.slug?.az || params.slug;
     const ruSlug = data.slug?.ru || params.slug;
+    const canonicalUrl = buildCanonicalUrl(baseUrl, `news/${azSlug}`);
 
     const title = trimMetaTitle(data.title[locale]);
     const description = trimMetaDescription(contentText);
@@ -128,15 +129,15 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
       alternates: {
         canonical: canonicalUrl,
         languages: {
-          az: data.slug.az ? ensureTrailingSlash(`${baseUrl}/az/news/${azSlug}`) : undefined,
-          ru: data.slug.ru ? ensureTrailingSlash(`${baseUrl}/ru/news/${ruSlug}`) : undefined,
-          "x-default": data.slug.az ? ensureTrailingSlash(`${baseUrl}/az/news/${azSlug}`) : undefined,
+          az: data.slug.az ? buildHreflangUrl(baseUrl, "az", `news/${azSlug}`) : undefined,
+          ru: data.slug.ru ? buildHreflangUrl(baseUrl, "ru", `news/${ruSlug}`) : undefined,
+          "x-default": baseUrl,
         },
       },
       openGraph: {
         title,
         description,
-        url: canonicalUrl,
+        url: buildHreflangUrl(baseUrl, locale, `news/${locale === "az" ? azSlug : ruSlug}`),
         images: (() => {
           const url = getPostImageUrl(data.imageUrl, locale);
           const cdn = process.env.NEXT_PUBLIC_CDN_URL || "";

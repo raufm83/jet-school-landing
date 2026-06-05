@@ -10,7 +10,7 @@ import Blogs from "@/components/views/landing/home/blogs";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Locale } from "@/i18n/request";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildHomePageGraph, SITE_SCHEMA } from "@/data/site-schema";
 import { getPageMeta } from "@/utils/api/page-meta";
@@ -101,6 +101,7 @@ export default async function Home({ params }: { params: { locale: string } }) {
     locale,
     baseUrl,
     breadcrumbItems: [{ name: homeLabel, url: base }],
+    primaryImageUrl: SITE_SCHEMA.image,
   });
 
   return (

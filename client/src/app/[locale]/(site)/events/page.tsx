@@ -10,7 +10,7 @@ import { getAllPosts } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 
@@ -34,8 +34,7 @@ export async function generateMetadata({
 
   const meta = await getPageMeta("events", locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const basePath = `/${locale}/events`;
-  const canonicalUrl = ensureTrailingSlash(`${baseUrl}${basePath}`);
+  const canonicalUrl = buildCanonicalUrl(baseUrl, "events");
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)
@@ -50,25 +49,21 @@ export async function generateMetadata({
   const truncatedTitle = title;
   const truncatedDesc = description;
 
-  const queryParam = "";
-  const azPath = `/az/events${queryParam}`;
-  const ruPath = `/ru/events${queryParam}`;
-
   return {
     title: truncatedTitle,
     description: truncatedDesc,
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}${azPath}`),
-        ru: ensureTrailingSlash(`${baseUrl}${ruPath}`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az/events`),
+        az: buildHreflangUrl(baseUrl, "az", "events"),
+        ru: buildHreflangUrl(baseUrl, "ru", "events"),
+        "x-default": baseUrl,
       },
     },
     openGraph: {
       title: truncatedTitle,
       description: truncatedDesc,
-      url: canonicalUrl,
+      url: buildHreflangUrl(baseUrl, locale, "events"),
       type: "website",
       locale: locale === "az" ? "az_AZ" : "ru_RU",
       alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",

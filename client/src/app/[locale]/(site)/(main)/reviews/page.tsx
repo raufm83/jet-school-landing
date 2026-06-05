@@ -10,7 +10,7 @@ import { buildCollectionPageGraph } from "@/data/site-schema";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 import { getReviewsPathSegment } from "@/i18n/routing";
@@ -23,8 +23,7 @@ export async function generateMetadata({
   const tMeta = await getTranslations({ locale, namespace: "Metadata" });
   const meta = await getPageMeta("reviews", locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const reviewsSeg = getReviewsPathSegment(locale);
-  const canonicalUrl = ensureTrailingSlash(`${baseUrl}/${locale}/${reviewsSeg}`);
+  const canonicalUrl = buildCanonicalUrl(baseUrl, "reyler");
   const title = meta?.title
     ? trimMetaTitle(meta.title)
     : trimMetaTitle(tMeta("reviewsPageTitle") || "Rəylər");
@@ -37,7 +36,7 @@ export async function generateMetadata({
     title,
     description,
     type: "website",
-    url: canonicalUrl,
+    url: buildHreflangUrl(baseUrl, locale, getReviewsPathSegment(locale)),
   };
   return {
     title,
@@ -45,9 +44,9 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}/az/${getReviewsPathSegment("az")}`),
-        ru: ensureTrailingSlash(`${baseUrl}/ru/${getReviewsPathSegment("ru")}`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az/${getReviewsPathSegment("az")}`),
+        az: buildHreflangUrl(baseUrl, "az", "reyler"),
+        ru: buildHreflangUrl(baseUrl, "ru", "otzyvy"),
+        "x-default": baseUrl,
       },
     },
     openGraph,

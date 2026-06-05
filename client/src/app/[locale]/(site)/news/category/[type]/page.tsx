@@ -6,7 +6,7 @@ import { PostType } from "@/types/enums";
 import { getAllPosts } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildCollectionPageGraph } from "@/data/site-schema";
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
@@ -35,10 +35,8 @@ export async function generateMetadata({
   const type = params.type?.toUpperCase() as PostType | undefined;
 
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-
-  const basePath = `/${locale}/${params.type || "news"}`;
-
-  const canonicalUrl = ensureTrailingSlash(`${baseUrl}${basePath}`);
+  const typePath = `news/category/${params.type || "news"}`;
+  const canonicalUrl = buildCanonicalUrl(baseUrl, typePath);
 
   let title = t("metaTitle") || "Bloq";
   let description =
@@ -75,10 +73,6 @@ export async function generateMetadata({
     }
   }
 
-  const pathWithoutLocale = `/${params.type || "news"}`;
-  const azPath = `/az${pathWithoutLocale}`;
-  const ruPath = `/ru${pathWithoutLocale}`;
-
   const trimmedTitle = trimMetaTitle(title);
   const trimmedDescription = trimMetaDescription(description);
 
@@ -88,15 +82,15 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}${azPath}`),
-        ru: ensureTrailingSlash(`${baseUrl}${ruPath}`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az${pathWithoutLocale}`),
+        az: buildHreflangUrl(baseUrl, "az", typePath),
+        ru: buildHreflangUrl(baseUrl, "ru", typePath),
+        "x-default": baseUrl,
       },
     },
     openGraph: {
       title: trimmedTitle,
       description: trimmedDescription,
-      url: canonicalUrl,
+      url: buildHreflangUrl(baseUrl, locale, typePath),
       type: "website",
       locale: locale === "az" ? "az_AZ" : "ru_RU",
       alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",

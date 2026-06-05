@@ -168,7 +168,7 @@ export default function VacancyCard({
               aria-hidden
             />
             <span className="min-w-0 text-sm font-medium leading-snug text-gray-800">
-              {expText ?? L.noData}
+              {locale === "ru" ? "Опыт:" : "Təcrübə:"} {expText ?? L.noData}
             </span>
           </div>
         </div>

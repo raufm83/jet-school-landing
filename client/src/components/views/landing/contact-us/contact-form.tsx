@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Language, RequestFormInputs, RequestSubmitPayload } from "@/types/request";
+import { useState } from "react";
+import { Language, RequestFormInputs } from "@/types/request";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -10,8 +10,7 @@ import axios, { AxiosError } from "axios";
 import api from "@/utils/api/axios";
 import Select from "@/components/ui/select";
 import { MdClose, MdOutlineCheck } from "react-icons/md";
-import { useMathCaptcha } from "@/hooks/useMathCaptcha";
-import MathCaptcha from "@/components/shared/math-captcha";
+
 
 const ageOptions = Array.from({ length: 8 }, (_, i) => ({
   value: i + 8,
@@ -21,14 +20,6 @@ const ageOptions = Array.from({ length: 8 }, (_, i) => ({
 const ContactForm = () => {
   const t = useTranslations("contact.form");
   const [success, setSuccess] = useState(false);
-  const {
-    challenge: mathCaptcha,
-    error: mathCaptchaError,
-    loading: mathCaptchaLoading,
-    question: mathCaptchaQuestion,
-    refreshCaptcha,
-  } = useMathCaptcha();
-
   const languageOptions = [
     { value: Language.AZ, label: t("childLanguage.options.az") },
     { value: Language.RU, label: t("childLanguage.options.ru") },
@@ -40,29 +31,12 @@ const ContactForm = () => {
     formState: { errors, isSubmitting },
     reset,
     setValue,
-  } = useForm<RequestFormInputs>({
-    defaultValues: { mathCaptchaAnswer: "" },
-  });
-
-  useEffect(() => {
-    if (mathCaptcha?.token) {
-      setValue("mathCaptchaAnswer", "");
-    }
-  }, [mathCaptcha?.token, setValue]);
+  } = useForm<RequestFormInputs>();
 
   const onSubmit: SubmitHandler<RequestFormInputs> = async (data) => {
     try {
-      if (!mathCaptcha?.token) {
-        toast.error(t("captchaError"));
-        return;
-      }
-      const payload: RequestSubmitPayload = {
-        ...data,
-        mathCaptchaToken: mathCaptcha.token,
-      };
-      await api.post("/requests", payload);
+      await api.post("/requests", data);
       reset();
-      await refreshCaptcha();
       setSuccess(true);
     } catch (err) {
       console.error("Error sending message:", err);
@@ -78,7 +52,6 @@ const ContactForm = () => {
       } else {
         toast.error(t("unexpectedError"));
       }
-      await refreshCaptcha();
     }
   };
 
@@ -89,11 +62,6 @@ const ContactForm = () => {
 
   const handleLanguageChange = (value: string | number) => {
     setValue("childLanguage", value as Language);
-  };
-
-  const handleCaptchaRefresh = async () => {
-    setValue("mathCaptchaAnswer", "");
-    await refreshCaptcha();
   };
 
   return (
@@ -236,20 +204,6 @@ const ContactForm = () => {
           onChange={handleLanguageChange}
         />
 
-        <MathCaptcha
-          question={mathCaptchaQuestion}
-          challengeError={mathCaptchaError}
-          loadErrorMessage={t("mathCaptcha.loadError")}
-          answerLocked={!mathCaptcha?.token}
-          loading={mathCaptchaLoading}
-          error={errors.mathCaptchaAnswer?.message}
-          register={register}
-          onRefresh={handleCaptchaRefresh}
-          label={t("mathCaptcha.label")}
-          placeholder={t("mathCaptcha.placeholder")}
-          requiredMessage={t("mathCaptcha.required")}
-        />
-
         <motion.button
           type="submit"
           className="w-full bg-jsyellow text-white font-semibold py-4 px-8 
@@ -257,7 +211,7 @@ const ContactForm = () => {
             transition-all duration-300 ease-in-out shadow-md"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          disabled={isSubmitting || mathCaptchaLoading || !mathCaptcha?.token}
+          disabled={isSubmitting}
         >
           {isSubmitting ? t("sending") : t("submit")}
         </motion.button>

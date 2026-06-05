@@ -9,7 +9,7 @@ import { buildCollectionPageGraph } from "@/data/site-schema";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 
@@ -22,7 +22,7 @@ export async function generateMetadata({
 
   const meta = await getPageMeta("projects", locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonicalUrl = ensureTrailingSlash(`${baseUrl}/${locale}/projects`);
+  const canonicalUrl = buildCanonicalUrl(baseUrl, "projects");
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)
@@ -38,7 +38,7 @@ export async function generateMetadata({
     title,
     description,
     type: "website",
-    url: canonicalUrl,
+    url: buildHreflangUrl(baseUrl, locale, "projects"),
     locale: locale === "az" ? "az_AZ" : "ru_RU",
     alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",
   };
@@ -49,9 +49,9 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}/az/projects`),
-        ru: ensureTrailingSlash(`${baseUrl}/ru/projects`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az/projects`),
+        az: buildHreflangUrl(baseUrl, "az", "projects"),
+        ru: buildHreflangUrl(baseUrl, "ru", "projects"),
+        "x-default": baseUrl,
       },
     },
     openGraph,

@@ -11,6 +11,8 @@ import {
   ensureTrailingSlash,
   trimMetaDescription,
   trimMetaTitle,
+  buildCanonicalUrl,
+  buildHreflangUrl,
 } from "@/utils/seo";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -31,7 +33,7 @@ export async function generateMetadata({
     /\/+$/,
     ""
   );
-  const canonicalUrl = ensureTrailingSlash(`${baseUrl}/${locale}/vacancies`);
+  const canonicalUrl = buildCanonicalUrl(baseUrl, "vacancies");
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)
@@ -46,15 +48,15 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}/az/vacancies`),
-        ru: ensureTrailingSlash(`${baseUrl}/ru/vacancies`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az/vacancies`),
+        az: buildHreflangUrl(baseUrl, "az", "vacancies"),
+        ru: buildHreflangUrl(baseUrl, "ru", "vacancies"),
+        "x-default": baseUrl,
       },
     },
     openGraph: {
       title,
       description,
-      url: canonicalUrl,
+      url: buildHreflangUrl(baseUrl, locale, "vacancies"),
       type: "website",
       locale: locale === "az" ? "az_AZ" : "ru_RU",
       alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",

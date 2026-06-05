@@ -293,6 +293,7 @@ export function buildCollectionPageGraph(params: {
   baseUrl: string;
   breadcrumbItems: { name: string; url: string }[];
   itemList?: { name: string; url: string }[];
+  primaryImageUrl?: string | null;
 }): Record<string, unknown> {
   const base = normalizeUrl(`${params.baseUrl.replace(/\/+$/, "")}${params.locale === "az" ? "" : `/${params.locale}`}`);
   const url = normalizeUrl(params.url);
@@ -322,6 +323,15 @@ export function buildCollectionPageGraph(params: {
     inLanguage: getLang(params.locale),
     isPartOf: { "@id": `${base}/#website` },
   };
+
+  if (params.primaryImageUrl?.trim()) {
+    webPageDoc.primaryImageOfPage = {
+      "@type": "ImageObject",
+      "@id": `${url}#primaryimage`,
+      url: params.primaryImageUrl,
+      contentUrl: params.primaryImageUrl,
+    };
+  }
 
   // 3) CollectionPage — müstəqil container, WebPage-ə heç bir istinadı yoxdur
   const collectionDoc: Record<string, unknown> = {
@@ -361,6 +371,7 @@ export function buildHomePageGraph(params: {
   locale: string;
   baseUrl: string;
   breadcrumbItems: { name: string; url: string }[];
+  primaryImageUrl?: string | null;
 }): Record<string, unknown> {
   const base = normalizeUrl(`${params.baseUrl.replace(/\/+$/, "")}${params.locale === "az" ? "" : `/${params.locale}`}`);
   const url = normalizeUrl(params.url);
@@ -388,6 +399,15 @@ export function buildHomePageGraph(params: {
     about: { "@id": CANONICAL_ORG_ID },
   };
 
+  if (params.primaryImageUrl?.trim()) {
+    webPageDoc.primaryImageOfPage = {
+      "@type": "ImageObject",
+      "@id": `${url}#primaryimage`,
+      url: params.primaryImageUrl,
+      contentUrl: params.primaryImageUrl,
+    };
+  }
+
   const orgNode = buildOrgNode(params.locale);
   const webSiteNode = buildWebSiteNode(params.locale);
   return {
@@ -404,6 +424,7 @@ export function buildAboutPageGraph(params: {
   locale: string;
   baseUrl: string;
   breadcrumbItems: { name: string; url: string }[];
+  primaryImageUrl?: string | null;
 }): Record<string, unknown> {
   const base = normalizeUrl(`${params.baseUrl.replace(/\/+$/, "")}${params.locale === "az" ? "" : `/${params.locale}`}`);
   const url = normalizeUrl(params.url);
@@ -430,6 +451,15 @@ export function buildAboutPageGraph(params: {
     inLanguage: getLang(params.locale),
     isPartOf: { "@id": `${base}/#website` },
   };
+
+  if (params.primaryImageUrl?.trim()) {
+    webPageDoc.primaryImageOfPage = {
+      "@type": "ImageObject",
+      "@id": `${url}#primaryimage`,
+      url: params.primaryImageUrl,
+      contentUrl: params.primaryImageUrl,
+    };
+  }
 
   // AboutPage — müstəqil container, WebPage-ə heç bir istinadı yoxdur
   const aboutPageDoc: Record<string, unknown> = {
@@ -462,6 +492,7 @@ export function buildContactPageGraph(params: {
   streetAddress: string;
   email?: string;
   telephone?: string;
+  primaryImageUrl?: string | null;
 }): Record<string, unknown> {
   const base = normalizeUrl(`${params.baseUrl.replace(/\/+$/, "")}${params.locale === "az" ? "" : `/${params.locale}`}`);
   const url = normalizeUrl(params.url);
@@ -491,6 +522,15 @@ export function buildContactPageGraph(params: {
     inLanguage: getLang(params.locale),
     isPartOf: { "@id": `${base}/#website` },
   };
+
+  if (params.primaryImageUrl?.trim()) {
+    webPageDoc.primaryImageOfPage = {
+      "@type": "ImageObject",
+      "@id": `${url}#primaryimage`,
+      url: params.primaryImageUrl,
+      contentUrl: params.primaryImageUrl,
+    };
+  }
 
   // ContactPage — müstəqil container, WebPage-ə heç bir istinadı yoxdur
   const contactPageDoc: Record<string, unknown> = {

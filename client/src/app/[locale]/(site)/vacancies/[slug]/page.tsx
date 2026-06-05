@@ -7,6 +7,8 @@ import {
   ensureTrailingSlash,
   trimMetaDescription,
   trimMetaTitle,
+  buildCanonicalUrl,
+  buildHreflangUrl,
 } from "@/utils/seo";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -59,15 +61,9 @@ export async function generateMetadata({
   const title = trimMetaTitle(`${titleText} | JET School`);
   const description = trimMetaDescription(excerpt(descText));
 
-  const canonicalUrl = ensureTrailingSlash(
-    `${baseUrl}/${locale}/vacancies/${params.slug}`
-  );
-  const azVacUrl = ensureTrailingSlash(
-    `${baseUrl}/az/vacancies/${vacancy.slug.az}`
-  );
-  const ruVacUrl = ensureTrailingSlash(
-    `${baseUrl}/ru/vacancies/${vacancy.slug.ru}`
-  );
+  const canonicalUrl = buildCanonicalUrl(baseUrl, `vacancies/${vacancy.slug.az}`);
+  const azVacUrl = buildHreflangUrl(baseUrl, "az", `vacancies/${vacancy.slug.az}`);
+  const ruVacUrl = buildHreflangUrl(baseUrl, "ru", `vacancies/${vacancy.slug.ru}`);
 
   return {
     title,
@@ -77,13 +73,13 @@ export async function generateMetadata({
       languages: {
         az: azVacUrl,
         ru: ruVacUrl,
-        "x-default": azVacUrl,
+        "x-default": baseUrl,
       },
     },
     openGraph: {
       title,
       description,
-      url: canonicalUrl,
+      url: buildHreflangUrl(baseUrl, locale, `vacancies/${params.slug}`),
       type: "article",
       locale: locale === "az" ? "az_AZ" : "ru_RU",
     },
@@ -261,7 +257,7 @@ export default async function VacancyDetailPage({
                         aria-hidden
                       />
                       <p
-                        className={`text-center text-sm font-semibold leading-snug text-[#1F2937] sm:text-base ${isExpired ? "line-through decoration-gray-400/70" : ""}`}
+                        className={`text-center text-sm font-normal leading-snug text-[#1F2937] sm:text-base ${isExpired ? "line-through decoration-gray-400/70" : ""}`}
                       >
                         {deadlineText ?? metaL.dash}
                       </p>
@@ -275,7 +271,7 @@ export default async function VacancyDetailPage({
                         className={`shrink-0 text-2xl ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
                         aria-hidden
                       />
-                      <p className="text-center text-sm font-semibold leading-snug text-[#1F2937] sm:text-base">
+                      <p className="text-center text-sm font-normal leading-snug text-[#1F2937] sm:text-base">
                         {regimeText ?? metaL.dash}
                       </p>
                     </div>
@@ -288,7 +284,7 @@ export default async function VacancyDetailPage({
                         className={`shrink-0 text-2xl ${isExpired ? "text-gray-400" : "text-jsyellow"}`}
                         aria-hidden
                       />
-                      <p className="text-center text-sm font-semibold leading-snug text-[#1F2937] sm:text-base">
+                      <p className="text-center text-sm font-normal leading-snug text-[#1F2937] sm:text-base">
                         {experienceInline}
                       </p>
                     </div>

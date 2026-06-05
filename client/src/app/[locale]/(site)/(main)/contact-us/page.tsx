@@ -5,7 +5,7 @@ import { buildContactPageGraph, SITE_SCHEMA } from "@/data/site-schema";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import { getContact } from "@/utils/api/contact";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
@@ -20,9 +20,8 @@ export async function generateMetadata({
     getTranslations({ locale, namespace: "contact" }),
     getPageMeta("contact-us", locale),
   ]);
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az";
-
-  const canonicalUrl = ensureTrailingSlash(`${baseUrl}/${locale}/contact-us`);
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
+  const canonicalUrl = buildCanonicalUrl(baseUrl, "contact-us");
 
   const metaTitle = meta?.title ? trimMetaTitle(meta.title) : "";
   const title = metaTitle || trimMetaTitle(t("contactPageTitle") || "Əlaqə Məlumatları");
@@ -38,7 +37,7 @@ export async function generateMetadata({
   const openGraph: Metadata["openGraph"] = {
     title,
     description,
-    url: canonicalUrl,
+    url: buildHreflangUrl(baseUrl, locale, "contact-us"),
     type: "website",
     locale: locale === "az" ? "az_AZ" : "ru_RU",
     alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",
@@ -49,9 +48,9 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}/az/contact-us`),
-        ru: ensureTrailingSlash(`${baseUrl}/ru/contact-us`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az/contact-us`),
+        az: buildHreflangUrl(baseUrl, "az", "contact-us"),
+        ru: buildHreflangUrl(baseUrl, "ru", "contact-us"),
+        "x-default": baseUrl,
       },
     },
     openGraph,
@@ -111,6 +110,7 @@ export default async function ContactPage({
     streetAddress,
     email: contactData.email?.trim(),
     telephone: contactData.phone?.trim(),
+    primaryImageUrl: SITE_SCHEMA.image,
   });
 
   return (

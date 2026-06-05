@@ -32,11 +32,6 @@ export interface RequestFormInputs {
   childLanguage: Language;
   /** Honeypot: leave empty; bots fill it – API rejects if set */
   website?: string;
-  mathCaptchaAnswer: string;
-}
-
-export interface RequestSubmitPayload extends RequestFormInputs {
-  mathCaptchaToken: string;
 }
 
 export type RequestResponse = PaginatedResponse<Request>;

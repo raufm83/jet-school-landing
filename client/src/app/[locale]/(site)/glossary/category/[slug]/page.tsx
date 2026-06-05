@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import GlossaryTermList from "@/components/views/landing/glossary/glossary-term-list";
 import { getTranslations } from "next-intl/server";
-import { trimMetaTitle, trimMetaDescription, ensureTrailingSlash } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildCollectionPageGraph } from "@/data/site-schema";
 
@@ -44,9 +44,7 @@ export async function generateMetadata({
     ? `${categoryName}`
     : "Glossariy Kateqoriyası";
 
-  const canonicalUrl = ensureTrailingSlash(
-    `${baseUrl}/${locale}/glossary/category/${slug}`
-  );
+  const canonicalUrl = buildCanonicalUrl(baseUrl.replace(/\/+$/, ""), `glossary/category/${slug}`);
 
   const defaultDescription = t("glossaryCategoryDescription", { category: categoryName }) ||
     `JET School glossariy lüğətində ${categoryName} kateqoriyasına aid terminlər`;
@@ -60,15 +58,15 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: ensureTrailingSlash(`${baseUrl}/az/glossary/category/${slug}`),
-        ru: ensureTrailingSlash(`${baseUrl}/ru/glossary/category/${slug}`),
-        "x-default": ensureTrailingSlash(`${baseUrl}/az/glossary/category/${slug}`),
+        az: buildHreflangUrl(baseUrl.replace(/\/+$/, ""), "az", `glossary/category/${slug}`),
+        ru: buildHreflangUrl(baseUrl.replace(/\/+$/, ""), "ru", `glossary/category/${slug}`),
+        "x-default": baseUrl,
       },
     },
     openGraph: {
       title,
       description,
-      url: canonicalUrl,
+      url: buildHreflangUrl(baseUrl.replace(/\/+$/, ""), locale, `glossary/category/${slug}`),
       type: "website",
       locale: locale === "az" ? "az_AZ" : "ru_RU",
       alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",

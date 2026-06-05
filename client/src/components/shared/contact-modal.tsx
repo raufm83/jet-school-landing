@@ -4,13 +4,11 @@ import { useTranslations } from "next-intl";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { MdClose, MdOutlineCheck } from "react-icons/md";
-import { RequestFormInputs, RequestSubmitPayload, Language } from "@/types/request";
+import { RequestFormInputs, Language } from "@/types/request";
 import axios from "axios";
 import api from "@/utils/api/axios";
 import { toast } from "sonner";
 import Select from "../ui/select";
-import { useMathCaptcha } from "@/hooks/useMathCaptcha";
-import MathCaptcha from "./math-captcha";
 
 export default function ContactModal() {
   const t = useTranslations("contact.form");
@@ -19,28 +17,12 @@ export default function ContactModal() {
   const [visible, setVisible] = useState(false);
 
   const {
-    challenge: mathCaptcha,
-    error: mathCaptchaError,
-    loading: mathCaptchaLoading,
-    question: mathCaptchaQuestion,
-    refreshCaptcha,
-  } = useMathCaptcha({ enabled: isOpen || visible });
-
-  const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
     setValue,
-  } = useForm<RequestFormInputs>({
-    defaultValues: { mathCaptchaAnswer: "" },
-  });
-
-  useEffect(() => {
-    if (mathCaptcha?.token) {
-      setValue("mathCaptchaAnswer", "");
-    }
-  }, [mathCaptcha?.token, setValue]);
+  } = useForm<RequestFormInputs>();
 
   useEffect(() => {
     if (isOpen) {
@@ -64,14 +46,7 @@ export default function ContactModal() {
   ];
 
   const submitRequest = async (data: RequestFormInputs) => {
-    if (!mathCaptcha?.token) {
-      throw new Error(t("captchaError"));
-    }
-    const payload: RequestSubmitPayload = {
-      ...data,
-      mathCaptchaToken: mathCaptcha.token,
-    };
-    return api.post("/requests", payload);
+    return api.post("/requests", data);
   };
 
   const onSubmit = handleSubmit((data) =>
@@ -79,12 +54,10 @@ export default function ContactModal() {
       loading: t("sending"),
       success: () => {
         reset();
-        void refreshCaptcha();
         setSuccess(true);
         return t("messageSent");
       },
       error: (err) => {
-        void refreshCaptcha();
         if (axios.isAxiosError(err) && err.response) {
           const raw = err.response.data?.message as string | string[] | undefined;
           const apiMsg = Array.isArray(raw) ? raw[0] : raw;
@@ -103,11 +76,6 @@ export default function ContactModal() {
   };
   const handleLanguageChange = (value: string | number) => {
     setValue("childLanguage", value as Language);
-  };
-
-  const handleCaptchaRefresh = async () => {
-    setValue("mathCaptchaAnswer", "");
-    await refreshCaptcha();
   };
 
   if (!visible) return null;
@@ -299,23 +267,9 @@ export default function ContactModal() {
             onChange={handleLanguageChange}
           />
 
-          <MathCaptcha
-            question={mathCaptchaQuestion}
-            challengeError={mathCaptchaError}
-            loadErrorMessage={t("mathCaptcha.loadError")}
-            answerLocked={!mathCaptcha?.token}
-            loading={mathCaptchaLoading}
-            error={errors.mathCaptchaAnswer?.message}
-            register={register}
-            onRefresh={handleCaptchaRefresh}
-            label={t("mathCaptcha.label")}
-            placeholder={t("mathCaptcha.placeholder")}
-            requiredMessage={t("mathCaptcha.required")}
-          />
-
           <button
             type="submit"
-            disabled={isSubmitting || mathCaptchaLoading || !mathCaptcha?.token}
+            disabled={isSubmitting}
             className="
               w-full bg-jsyellow text-white font-semibold py-5
               rounded-[32px] hover:bg-jsyellow/90 active:scale-[0.98]

@@ -1,6 +1,7 @@
 import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
 import GlossaryTermDetail from "@/components/views/landing/glossary/glossary-term-detail";
 import GlossaryBreadcrumbSetter from "@/components/views/landing/glossary/glossary-breadcrumb-setter";
 import JsonLd from "@/components/seo/json-ld";
@@ -21,7 +22,7 @@ export async function generateMetadata({
 
   try {
     const term = await getGlossaryTerm(params.slug);
-    const canonical = `${baseUrl}/${language}/glossary/${params.slug}/`;
+    const canonical = buildCanonicalUrl(baseUrl, `glossary/${params.slug}`);
 
     return {
       title: `${term.term[language]}`,
@@ -29,9 +30,9 @@ export async function generateMetadata({
       alternates: {
         canonical,
         languages: {
-          az: `${baseUrl}/az/glossary/${params.slug}/`,
-          ru: `${baseUrl}/ru/glossary/${params.slug}/`,
-          "x-default": `${baseUrl}/az/glossary/${params.slug}/`,
+          az: buildHreflangUrl(baseUrl, "az", `glossary/${params.slug}`),
+          ru: buildHreflangUrl(baseUrl, "ru", `glossary/${params.slug}`),
+          "x-default": baseUrl,
         },
       },
     };

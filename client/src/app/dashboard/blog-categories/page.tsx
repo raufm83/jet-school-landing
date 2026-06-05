@@ -49,6 +49,7 @@ export default function BlogCategoriesAdminPage() {
   const [editing, setEditing] = useState<BlogCategory | null>(null);
   const [formAz, setFormAz] = useState("");
   const [formRu, setFormRu] = useState("");
+  const [formOrder, setFormOrder] = useState("");
   const [saving, setSaving] = useState(false);
 
   const [deleteTarget, setDeleteTarget] = useState<BlogCategory | null>(null);
@@ -76,6 +77,7 @@ export default function BlogCategoriesAdminPage() {
     setEditing(null);
     setFormAz("");
     setFormRu("");
+    setFormOrder(String(items.length + 1));
     onEditorOpen();
   };
 
@@ -83,6 +85,7 @@ export default function BlogCategoriesAdminPage() {
     setEditing(row);
     setFormAz(row.name?.az ?? "");
     setFormRu(row.name?.ru ?? "");
+    setFormOrder(String((row.order ?? items.indexOf(row)) + 1));
     onEditorOpen();
   };
 
@@ -91,16 +94,27 @@ export default function BlogCategoriesAdminPage() {
       toast.error("Hər iki dil üçün ad daxil edin.");
       return;
     }
+    const orderNum = parseInt(formOrder, 10);
+    if (isNaN(orderNum) || orderNum < 1) {
+      toast.error("Sıra nömrəsi düzgün daxil edilməyib.");
+      return;
+    }
     setSaving(true);
     try {
       if (editing) {
+        const maxVal = items.length;
+        const finalOrder = Math.max(1, Math.min(orderNum, maxVal)) - 1;
         await api.patch(`/blog-categories/${editing.id}`, {
           name: { az: formAz.trim(), ru: formRu.trim() },
+          order: finalOrder,
         });
         toast.success("Kateqoriya yeniləndi");
       } else {
+        const maxVal = items.length + 1;
+        const finalOrder = Math.max(1, Math.min(orderNum, maxVal)) - 1;
         await api.post("/blog-categories", {
           name: { az: formAz.trim(), ru: formRu.trim() },
+          order: finalOrder,
         });
         toast.success("Kateqoriya yaradıldı");
       }
@@ -316,6 +330,14 @@ export default function BlogCategoriesAdminPage() {
                 variant="bordered"
                 value={formRu}
                 onValueChange={setFormRu}
+              />
+              <Input
+                label="Sıra"
+                type="number"
+                variant="bordered"
+                value={formOrder}
+                onValueChange={setFormOrder}
+                min={1}
               />
             </ModalBody>
             <ModalFooter>

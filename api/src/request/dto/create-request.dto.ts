@@ -33,19 +33,4 @@ export class CreateRequestDto {
   @IsString()
   website?: string;
 
-  @ApiProperty({
-    required: false,
-    description: 'Riyazi captcha tokeni (guard tərəfindən yoxlanılır)',
-  })
-  @IsOptional()
-  @IsString()
-  mathCaptchaToken?: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'Riyazi captcha cavabı (guard tərəfindən yoxlanılır)',
-  })
-  @IsOptional()
-  @IsString()
-  mathCaptchaAnswer?: string;
 }
