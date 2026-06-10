@@ -131,10 +131,28 @@ function withHtmlLangHeader(request: NextRequest, lang: "az" | "ru"): NextReques
   return new NextRequest(request, { headers: h });
 }
 
+/**
+ * Dashboard cavabları (və xüsusilə auth redirect-ləri) brauzer keşində saxlanmamalıdır.
+ * Əks halda köhnə "login-ə yönləndir" redirect-i keşdən oxunur və giriş etdikdən sonra
+ * istifadəçi yenidən login səhifəsinə atılır.
+ */
+function applyNoStore<T extends NextResponse>(response: T): T {
+  response.headers.set(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, max-age=0"
+  );
+  response.headers.set("Pragma", "no-cache");
+  return response;
+}
+
+function redirectNoStore(url: URL | string): NextResponse {
+  return applyNoStore(NextResponse.redirect(url));
+}
+
 function nextDashboard(request: NextRequest) {
   const h = new Headers(request.headers);
   h.set("x-html-lang", "az");
-  return NextResponse.next({ request: { headers: h } });
+  return applyNoStore(NextResponse.next({ request: { headers: h } }));
 }
 
 /**
@@ -206,7 +224,7 @@ const middlewares = withAuth(
 
     if (pathname.match(/^\/(az|ru)\/dashboard\/login/)) {
       const newUrl = new URL(pathname.replace(/^\/(az|ru)/, ""), request.url);
-      return NextResponse.redirect(newUrl);
+      return redirectNoStore(newUrl);
     }
 
     /* ?letter=… (lüğət hərfi və s.) axtarış nəticələri indekslənməsin */
@@ -224,7 +242,7 @@ const middlewares = withAuth(
 
         if (token) {
           const roleName = (token.role as Role) || Role.USER;
-          return NextResponse.redirect(getRoleHomePage(roleName, request));
+          return redirectNoStore(getRoleHomePage(roleName, request));
         }
         return nextDashboard(request);
       }
@@ -235,17 +253,17 @@ const middlewares = withAuth(
         if (path !== "/dashboard/login") {
           loginUrl.searchParams.set("callbackUrl", pathname);
         }
-        return NextResponse.redirect(loginUrl);
+        return redirectNoStore(loginUrl);
       }
 
       const userRole = (token.role as Role) || Role.USER;
 
       if (path === "/dashboard") {
-        return NextResponse.redirect(getRoleHomePage(userRole, request));
+        return redirectNoStore(getRoleHomePage(userRole, request));
       }
 
       if (!hasRouteAccess(path, userRole)) {
-        return NextResponse.redirect(getRoleHomePage(userRole, request));
+        return redirectNoStore(getRoleHomePage(userRole, request));
       }
 
       return nextDashboard(request);
