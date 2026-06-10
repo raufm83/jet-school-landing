@@ -111,15 +111,12 @@ const ROLE_HOME_PAGES = {
 
 const intlMiddleware = createIntlMiddleware(routing);
 
-/**
- * Next.js `trailingSlash: true` → pathname `/dashboard/login/` olur; marşrut müqayisələri isə slash-sızdır.
- */
 function normalizePathname(pathname: string): string {
   if (pathname === "/") return "/";
   return pathname.replace(/\/+$/, "") || "/";
 }
 
-const DASHBOARD_LOGIN_PATH = "/dashboard/login/";
+const DASHBOARD_LOGIN_PATH = "/dashboard/login";
 
 function htmlLangFromPathname(pathname: string): "az" | "ru" {
   const p = pathname.replace(/\/+$/, "") || "/";
@@ -198,8 +195,7 @@ const hasRouteAccess = (pathname: string, role: Role): boolean => {
  * Gets the appropriate home page URL for a given role
  */
 const getRoleHomePage = (role: Role, request: Request): URL => {
-  let homePath = ROLE_HOME_PAGES[role] || "/dashboard/profile";
-  if (!homePath.endsWith("/")) homePath += "/";
+  const homePath = ROLE_HOME_PAGES[role] || "/dashboard/requests";
   return new URL(homePath, request.url);
 };
 
@@ -264,7 +260,7 @@ const middlewares = withAuth(
       authorized: ({ token }) => true,
     },
     pages: {
-      signIn: "/dashboard/login/",
+      signIn: "/dashboard/login",
     },
   }
 );

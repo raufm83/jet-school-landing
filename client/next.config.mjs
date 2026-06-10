@@ -205,6 +205,22 @@ const nextConfig = {
   async headers() {
     return [
       {
+        // Dashboard pages must never be cached — prevents stale auth state in browser
+        source: "/dashboard/:path*",
+        headers: [
+          { key: "Cache-Control", value: "no-store, no-cache, must-revalidate, max-age=0" },
+          { key: "Pragma", value: "no-cache" },
+        ],
+      },
+      {
+        // NextAuth API routes must not be cached
+        source: "/api/auth/:path*",
+        headers: [
+          { key: "Cache-Control", value: "no-store, no-cache, must-revalidate, max-age=0" },
+          { key: "Pragma", value: "no-cache" },
+        ],
+      },
+      {
         // Static assets: aggressive long-term caching
         source: "/_next/static/:path*",
         headers: [
