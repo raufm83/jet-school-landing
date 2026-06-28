@@ -12,7 +12,7 @@ import { getAllPosts } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 
@@ -53,7 +53,9 @@ export async function generateMetadata({
     query.set("category", categoryParam);
   }
   const qs = query.toString();
-  const canonicalUrl = buildCanonicalUrl(baseUrl, "blog", qs || undefined);
+  const canonicalUrl = qs
+    ? `${buildHreflangUrl(baseUrl, locale, "blog")}?${qs}`
+    : buildHreflangUrl(baseUrl, locale, "blog");
 
   const isIndexable =
     (!pageParam || pageParam === "1") && !(searchParams.q?.trim());
@@ -81,8 +83,8 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: buildHreflangUrl(baseUrl, "az", "blog"),
-        ru: buildHreflangUrl(baseUrl, "ru", "blog"),
+        az: qs ? `${buildHreflangUrl(baseUrl, "az", "blog")}?${qs}` : buildHreflangUrl(baseUrl, "az", "blog"),
+        ru: qs ? `${buildHreflangUrl(baseUrl, "ru", "blog")}?${qs}` : buildHreflangUrl(baseUrl, "ru", "blog"),
         "x-default": baseUrl,
       },
     },

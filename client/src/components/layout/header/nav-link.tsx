@@ -67,6 +67,8 @@ export default function NavLink({
     <div className="relative z-20 shrink-0" ref={dropdownRef}>
       <button
         type="button"
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "flex items-center gap-1 transition-all duration-300 hover:text-jsyellow focus:outline-none",

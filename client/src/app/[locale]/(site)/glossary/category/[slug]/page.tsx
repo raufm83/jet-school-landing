@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import GlossaryTermList from "@/components/views/landing/glossary/glossary-term-list";
 import { getTranslations } from "next-intl/server";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildCollectionPageGraph } from "@/data/site-schema";
 
@@ -44,7 +44,7 @@ export async function generateMetadata({
     ? `${categoryName}`
     : "Glossariy Kateqoriyası";
 
-  const canonicalUrl = buildCanonicalUrl(baseUrl.replace(/\/+$/, ""), `glossary/category/${slug}`);
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, `glossary/category/${slug}`);
 
   const defaultDescription = t("glossaryCategoryDescription", { category: categoryName }) ||
     `JET School glossariy lüğətində ${categoryName} kateqoriyasına aid terminlər`;

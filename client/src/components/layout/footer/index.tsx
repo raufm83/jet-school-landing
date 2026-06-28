@@ -82,6 +82,7 @@ export default async function Footer() {
       "text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200 hover:text-white/90 leading-relaxed [@media(min-width:3500px)]:leading-relaxed";
     const exploreLinks = [
       { href: "/", label: t("home") },
+      { href: "/about-us", label: t("about") },
       { href: "/reviews", label: t("reviews") },
       { href: "/projects", label: t("projects") },
       { href: "/about-us#mezunlar", label: t("graduates") },
@@ -214,6 +215,7 @@ export default async function Footer() {
                       href={socialUrl(contact.socialLinks.facebook.trim())}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="Facebook"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaFacebook className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
@@ -224,6 +226,7 @@ export default async function Footer() {
                       href={socialUrl(contact.socialLinks.instagram.trim())}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="Instagram"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaInstagram className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
@@ -234,6 +237,7 @@ export default async function Footer() {
                       href={socialUrl(contact.socialLinks.youtube.trim())}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="YouTube"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaYoutube className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
@@ -244,6 +248,7 @@ export default async function Footer() {
                       href={socialUrl(contact.socialLinks.tiktok.trim())}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="TikTok"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaTiktok className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />

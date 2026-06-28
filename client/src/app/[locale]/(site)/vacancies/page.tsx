@@ -11,7 +11,6 @@ import {
   ensureTrailingSlash,
   trimMetaDescription,
   trimMetaTitle,
-  buildCanonicalUrl,
   buildHreflangUrl,
 } from "@/utils/seo";
 import { Metadata } from "next";
@@ -33,7 +32,7 @@ export async function generateMetadata({
     /\/+$/,
     ""
   );
-  const canonicalUrl = buildCanonicalUrl(baseUrl, "vacancies");
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, "vacancies");
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)

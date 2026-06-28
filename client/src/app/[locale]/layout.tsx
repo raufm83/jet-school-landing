@@ -4,7 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import React from "react";
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { SITE_SCHEMA } from "@/data/site-schema";
 import HtmlLangSync from "@/components/shared/html-lang-sync";
 
@@ -21,7 +21,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonicalUrl = buildCanonicalUrl(baseUrl);
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale);
 
   const title = trimMetaTitle(t("title"));
   const description = trimMetaDescription(t("description"));

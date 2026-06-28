@@ -5,7 +5,7 @@ import { getPostsByTag } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 
 interface PageProps {
   params: { locale: string; tag: string };
@@ -29,13 +29,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const t = await getTranslations({ locale, namespace: "tagSearchPage" });
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
   const pathSeg = encodeURIComponent(tag);
-  const canonicalUrl = buildCanonicalUrl(baseUrl, `search/tag/${pathSeg}`);
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, `search/tag/${pathSeg}`);
   const title = trimMetaTitle(t("metaTitle", { tag }));
   const description = trimMetaDescription(t("metaDescription", { tag }));
   return {
     title,
     description,
-    alternates: { canonical: canonicalUrl },
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        az: buildHreflangUrl(baseUrl, "az", `search/tag/${pathSeg}`),
+        ru: buildHreflangUrl(baseUrl, "ru", `search/tag/${pathSeg}`),
+        "x-default": baseUrl,
+      },
+    },
     openGraph: { title, description, url: canonicalUrl, type: "website" },
   };
 

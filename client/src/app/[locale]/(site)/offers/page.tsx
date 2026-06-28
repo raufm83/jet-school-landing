@@ -10,7 +10,7 @@ import { getAllPosts } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 
@@ -32,7 +32,7 @@ export async function generateMetadata({
 
   const meta = await getPageMeta("offers", locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonicalUrl = buildCanonicalUrl(baseUrl, "offers");
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, "offers");
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)

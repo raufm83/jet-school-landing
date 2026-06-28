@@ -6,7 +6,7 @@ import { PostType } from "@/types/enums";
 import { getAllPosts } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildCollectionPageGraph } from "@/data/site-schema";
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
@@ -36,7 +36,7 @@ export async function generateMetadata({
 
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
   const typePath = `news/category/${params.type || "news"}`;
-  const canonicalUrl = buildCanonicalUrl(baseUrl, typePath);
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, typePath);
 
   let title = t("metaTitle") || "Bloq";
   let description =

@@ -1,0 +1,23 @@
+# JET School
+
+> JET School is an innovative educational platform in Azerbaijan specializing in interactive IT, programming, robotics, and design courses for kids and teenagers.
+
+## Main Navigation & Pages
+
+- [Home Page](/): Main landing page of JET School.
+- [About Us](/about-us): Our mission, values, achievements, team, and educational methodology.
+- [Contact Us](/contact-us): Get in touch with our team, view locations, phone numbers, and submit inquiries.
+- [Courses](/courses): Browse all available IT and technology courses designed for children.
+- [Student Projects](/projects): Explore applications, games, and hardware projects built by our talented students.
+- [Gallery](/gallery): Photo galleries of our classes, workshops, and student activities.
+- [Student Reviews (AZ)](/reyler): Direct testimonials and feedback from students and parents (Azerbaijani).
+- [Student Reviews (RU)](/ru/otzyvy): Direct testimonials and feedback from students and parents (Russian).
+- [Glossary](/glossary): Comprehensive IT terminology dictionary and programming glossary.
+- [Vacancies](/vacancies): Career opportunities at JET School for teachers and staff.
+
+## Content & News
+
+- [Offers & Campaigns](/offers): Special campaigns, discounts, and enrollment packages.
+- [News](/news): Latest updates, events, and announcements from JET School.
+- [Blog](/blog): Informative articles, learning guides, and parenting tips on children's technology education.
+- [Events](/events): Seminars, bootcamps, and robotics competitions.

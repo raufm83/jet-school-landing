@@ -9,7 +9,7 @@ import { getAllPosts } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 
@@ -54,7 +54,9 @@ export async function generateMetadata({
   const pageKey = type ? PAGE_META_KEY_BY_TYPE[type] : "news";
   const meta = await getPageMeta(pageKey, locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonicalUrl = buildCanonicalUrl(baseUrl, "news", type ? `type=${type}` : undefined);
+  const canonicalUrl = type
+    ? `${buildHreflangUrl(baseUrl, locale, "news")}?type=${type}`
+    : buildHreflangUrl(baseUrl, locale, "news");
 
   const defaultTitle =
     !type
@@ -111,8 +113,8 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: buildHreflangUrl(baseUrl, "az", "news"),
-        ru: buildHreflangUrl(baseUrl, "ru", "news"),
+        az: type ? `${buildHreflangUrl(baseUrl, "az", "news")}?type=${type}` : buildHreflangUrl(baseUrl, "az", "news"),
+        ru: type ? `${buildHreflangUrl(baseUrl, "ru", "news")}?type=${type}` : buildHreflangUrl(baseUrl, "ru", "news"),
         "x-default": baseUrl,
       },
     },

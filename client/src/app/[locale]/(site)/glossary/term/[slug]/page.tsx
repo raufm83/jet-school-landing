@@ -9,7 +9,7 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 
 interface PageProps {
   params: {
@@ -46,7 +46,7 @@ export async function generateMetadata({
   const pageTitle = termName ? `${termName}` : "Glossariy Termini";
   const defaultDescription = t("glossaryTermDefaultDescription") || "IT və proqramlaşdırma termini haqqında məlumat";
 
-  const canonicalUrl = buildCanonicalUrl(baseUrl, `glossary/term/${slug}`);
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, `glossary/term/${slug}`);
 
   const title = trimMetaTitle(pageTitle);
   const description = trimMetaDescription(termDefinition || defaultDescription);

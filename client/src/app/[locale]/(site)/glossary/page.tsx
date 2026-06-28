@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildCollectionPageGraph } from "@/data/site-schema";
 import { getFaqByPage } from "@/utils/api/faq";
@@ -21,7 +21,7 @@ export async function generateMetadata({
     getPageMeta("glossary", locale),
   ]);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonicalUrl = buildCanonicalUrl(baseUrl, "glossary");
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, "glossary");
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)

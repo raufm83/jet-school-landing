@@ -5,7 +5,7 @@ import { buildContactPageGraph, SITE_SCHEMA } from "@/data/site-schema";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { getContact } from "@/utils/api/contact";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
@@ -21,7 +21,7 @@ export async function generateMetadata({
     getPageMeta("contact-us", locale),
   ]);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonicalUrl = buildCanonicalUrl(baseUrl, "contact-us");
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, "contact-us");
 
   const metaTitle = meta?.title ? trimMetaTitle(meta.title) : "";
   const title = metaTitle || trimMetaTitle(t("contactPageTitle") || "Əlaqə Məlumatları");

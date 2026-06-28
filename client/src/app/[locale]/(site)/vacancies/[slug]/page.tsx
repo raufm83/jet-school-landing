@@ -7,7 +7,6 @@ import {
   ensureTrailingSlash,
   trimMetaDescription,
   trimMetaTitle,
-  buildCanonicalUrl,
   buildHreflangUrl,
 } from "@/utils/seo";
 import { Metadata } from "next";
@@ -61,7 +60,8 @@ export async function generateMetadata({
   const title = trimMetaTitle(`${titleText} | JET School`);
   const description = trimMetaDescription(excerpt(descText));
 
-  const canonicalUrl = buildCanonicalUrl(baseUrl, `vacancies/${vacancy.slug.az}`);
+  const currentSlug = locale === "ru" ? vacancy.slug.ru : vacancy.slug.az;
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, `vacancies/${currentSlug}`);
   const azVacUrl = buildHreflangUrl(baseUrl, "az", `vacancies/${vacancy.slug.az}`);
   const ruVacUrl = buildHreflangUrl(baseUrl, "ru", `vacancies/${vacancy.slug.ru}`);
 

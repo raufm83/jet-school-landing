@@ -10,7 +10,7 @@ import { buildCollectionPageGraph } from "@/data/site-schema";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 import { getReviewsPathSegment } from "@/i18n/routing";
@@ -23,7 +23,7 @@ export async function generateMetadata({
   const tMeta = await getTranslations({ locale, namespace: "Metadata" });
   const meta = await getPageMeta("reviews", locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonicalUrl = buildCanonicalUrl(baseUrl, "reyler");
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, getReviewsPathSegment(locale));
   const title = meta?.title
     ? trimMetaTitle(meta.title)
     : trimMetaTitle(tMeta("reviewsPageTitle") || "Rəylər");

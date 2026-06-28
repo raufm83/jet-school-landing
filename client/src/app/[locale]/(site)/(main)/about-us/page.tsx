@@ -5,7 +5,7 @@ import TeamSection from "@/components/views/landing/about/team-section";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildAboutPageGraph, SITE_SCHEMA } from "@/data/site-schema";
 import { getFaqByPage } from "@/utils/api/faq";
@@ -25,7 +25,7 @@ export async function generateMetadata({
     getPageMeta("about-us", locale),
   ]);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonicalUrl = buildCanonicalUrl(baseUrl, "about-us");
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, "about-us");
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)

@@ -8,7 +8,7 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { getPageMeta } from "@/utils/api/page-meta";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { normalizeGlossaryLetterParam } from "@/utils/glossary-letter";
 
 /** Middleware ilə eyni: URL-də `letter` sorğu açarı varsa indekslənməsin */
@@ -41,13 +41,13 @@ export async function generateMetadata({
       typeof searchParams.letter === "string" ? searchParams.letter : undefined
     ) ?? null;
 
-  const termsIndexCanonical = buildCanonicalUrl(baseUrl, "glossary/terms");
+  const termsIndexCanonical = buildHreflangUrl(baseUrl, locale, "glossary/terms");
 
   const canonicalUrl = hasLetterFilter
     ? termsIndexCanonical
     : (letterDisplay != null
-        ? buildCanonicalUrl(baseUrl, "glossary/terms", `letter=${encodeURIComponent(letterDisplay)}`)
-        : buildCanonicalUrl(baseUrl, "glossary/terms"));
+        ? `${termsIndexCanonical}?letter=${encodeURIComponent(letterDisplay)}`
+        : termsIndexCanonical);
 
   const pageTitle =
     letterDisplay != null

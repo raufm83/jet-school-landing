@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class PageMetaService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async findByKeyAndLocale(pageKey: string, locale: string) {
     return this.prisma.pageMeta.findFirst({

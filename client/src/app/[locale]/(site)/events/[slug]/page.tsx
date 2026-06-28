@@ -4,7 +4,7 @@ import { getAllPosts, getPostDetails } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
 import SinglePostView from "@/components/views/landing/post/view";
 import JsonLd from "@/components/seo/json-ld";
@@ -115,7 +115,7 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
 
     const azSlug = data.slug?.az || params.slug;
     const ruSlug = data.slug?.ru || params.slug;
-    const canonicalUrl = buildCanonicalUrl(baseUrl, `events/${azSlug}`);
+    const canonicalUrl = buildHreflangUrl(baseUrl, locale, `events/${locale === "az" ? azSlug : ruSlug}`);
 
     const title = trimMetaTitle(data.title[locale]);
     const description = trimMetaDescription(contentText);

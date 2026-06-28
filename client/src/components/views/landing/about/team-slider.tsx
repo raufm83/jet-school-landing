@@ -54,7 +54,7 @@ export default function TeamSlider({
       >
         {teamMembers?.map((member, index) => (
           <SwiperSlide key={member.id} className="!flex !h-auto items-stretch">
-            <div className="flex h-full w-full">
+            <div className="flex h-full w-full justify-center">
               <TeamMemberCard
                 member={member}
                 locale={locale}

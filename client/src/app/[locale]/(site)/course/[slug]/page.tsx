@@ -16,7 +16,7 @@ import TeamSection from "@/components/views/landing/about/team-section";
 import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 import { CONTENT_ISR_SECONDS } from "@/constants/content-isr";
 import { cache } from "react";
-import { trimMetaTitle, trimMetaDescription, buildCanonicalUrl, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildCoursePageGraph } from "@/data/site-schema";
 
@@ -164,7 +164,7 @@ export async function generateMetadata({ params }: ISingleCoursePageProps): Prom
     const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
     const azSlug = data.slug?.az || params.slug;
     const ruSlug = data.slug?.ru || params.slug;
-    const canonicalUrl = buildCanonicalUrl(baseUrl, `course/${azSlug}`);
+    const canonicalUrl = buildHreflangUrl(baseUrl, locale, `course/${locale === "az" ? azSlug : ruSlug}`);
 
     const title = meta?.title
       ? trimMetaTitle(meta.title)
