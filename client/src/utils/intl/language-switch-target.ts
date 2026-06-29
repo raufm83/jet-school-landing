@@ -26,6 +26,32 @@ export async function fetchCourseSlugsFromApi(
   }
 }
 
+export async function fetchBlogSlugsFromApi(
+  slugFromUrl: string
+): Promise<{ az?: string; ru?: string; en?: string } | null> {
+  const s = slugFromUrl.trim();
+  if (!s) return null;
+  try {
+    const res = await fetch(
+      `${PUBLIC_API_BASE}/posts/slug/${encodeURIComponent(s)}`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as {
+      slug?: { az?: string; ru?: string; en?: string };
+    };
+    const obj = data?.slug;
+    if (!obj || typeof obj !== "object") return null;
+    return {
+      ...(obj.az && { az: String(obj.az).trim() }),
+      ...(obj.ru && { ru: String(obj.ru).trim() }),
+      ...(obj.en && { en: String(obj.en).trim() }),
+    };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Dil keçidindən əvvəl: next-intl `usePathname()` bəzən `[slug]` placeholder qaytarır;
  * `next/navigation` pathname isə real `/az/course/foo/` verir — bu dəstək hər iki halı birləşdirir.

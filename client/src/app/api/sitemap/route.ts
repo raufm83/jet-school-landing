@@ -174,11 +174,10 @@ export async function GET() {
     ]);
 
     for (const lang of languages) {
-      // News
       for (const post of newsResult.items || []) {
         if (post.slug?.[lang as Locale]) {
           postSitemapEntries.push({
-            url: `${baseUrl}/${lang}/news/${post.slug[lang as Locale]}`,
+            url: `${baseUrl}/${lang}/news/${encodeURIComponent(post.slug[lang as Locale])}`,
             lastModified: new Date(post.updatedAt ?? post.createdAt ?? Date.now()).toISOString(),
             changeFrequency: "weekly",
             priority: 0.7,
@@ -186,11 +185,10 @@ export async function GET() {
         }
       }
 
-      // Blogs
       for (const blog of blogsResult.items || []) {
         if (blog.slug?.[lang as Locale]) {
           blogSitemapEntries.push({
-            url: `${baseUrl}/${lang}/blog/${blog.slug[lang as Locale]}`,
+            url: `${baseUrl}/${lang}/blog/${encodeURIComponent(blog.slug[lang as Locale])}`,
             lastModified: new Date(blog.updatedAt ?? blog.createdAt ?? Date.now()).toISOString(),
             changeFrequency: "weekly",
             priority: 0.7,
@@ -198,11 +196,10 @@ export async function GET() {
         }
       }
 
-      // Events
       for (const event of eventsResult.items || []) {
         if (event.slug?.[lang as Locale]) {
           eventSitemapEntries.push({
-            url: `${baseUrl}/${lang}/events/${event.slug[lang as Locale]}`,
+            url: `${baseUrl}/${lang}/events/${encodeURIComponent(event.slug[lang as Locale])}`,
             lastModified: new Date(event.updatedAt ?? event.createdAt ?? Date.now()).toISOString(),
             changeFrequency: "weekly",
             priority: 0.7,
@@ -210,11 +207,10 @@ export async function GET() {
         }
       }
 
-      // Offers
       for (const offer of offersResult.items || []) {
         if (offer.slug?.[lang as Locale]) {
           offerSitemapEntries.push({
-            url: `${baseUrl}/${lang}/offers/${offer.slug[lang as Locale]}`,
+            url: `${baseUrl}/${lang}/offers/${encodeURIComponent(offer.slug[lang as Locale])}`,
             lastModified: new Date(offer.updatedAt ?? offer.createdAt ?? Date.now()).toISOString(),
             changeFrequency: "weekly",
             priority: 0.7,
@@ -222,11 +218,10 @@ export async function GET() {
         }
       }
 
-      // Courses
       for (const course of (coursesResult.items || [])) {
         if (course.slug?.[lang as Locale]) {
           courseSitemapEntries.push({
-            url: `${baseUrl}/${lang}/course/${course.slug[lang as Locale]}`,
+            url: `${baseUrl}/${lang}/course/${encodeURIComponent(course.slug[lang as Locale])}`,
             lastModified: new Date(course.updatedAt ?? course.createdAt ?? Date.now()).toISOString(),
             changeFrequency: "weekly",
             priority: 0.8,
@@ -234,11 +229,10 @@ export async function GET() {
         }
       }
 
-      // Glossary Categories
       for (const category of glossaryCategories) {
         if (category.slug?.[lang as Locale]) {
           glossaryCategorySitemapEntries.push({
-            url: `${baseUrl}/${lang}/glossary/category/${category.slug[lang as Locale]}`,
+            url: `${baseUrl}/${lang}/glossary/category/${encodeURIComponent(category.slug[lang as Locale])}`,
             lastModified: new Date(category.updatedAt ?? category.createdAt ?? Date.now()).toISOString(),
             changeFrequency: "weekly",
             priority: 0.7,
@@ -246,11 +240,10 @@ export async function GET() {
         }
       }
 
-      // Glossary Terms
       for (const term of glossaryTerms) {
         if (term.published && term.slug?.[lang as Locale]) {
           glossaryTermSitemapEntries.push({
-            url: `${baseUrl}/${lang}/glossary/term/${term.slug[lang as Locale]}`,
+            url: `${baseUrl}/${lang}/glossary/term/${encodeURIComponent(term.slug[lang as Locale])}`,
             lastModified: nowISO,
             changeFrequency: "monthly",
             priority: 0.6,

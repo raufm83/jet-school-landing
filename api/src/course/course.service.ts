@@ -187,6 +187,9 @@ export class CourseService {
             newTags: true,
             tag: true,
             order: true,
+            totalHours: true,
+            classesPerWeek: true,
+            durationMonths: true,
 
           },
         }),

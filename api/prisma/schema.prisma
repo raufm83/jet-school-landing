@@ -214,6 +214,9 @@ model Course {
   tag              String[]
   newTags          Json?
   imageUrl         String?
+  totalHours       Int?
+  classesPerWeek   Int?
+  durationMonths   Int?
   ageRange         String?
   backgroundColor  String?               @default("#FEF3C7")
   borderColor      String?               @default("#F59E0B")

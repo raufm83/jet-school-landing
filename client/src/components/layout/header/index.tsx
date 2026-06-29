@@ -104,58 +104,59 @@ export default function Header({
           </button>
         </div>
 
-        {/* Mobile menu — yalnız açıq olduqda DOM-da olur (accessibility + performance) */}
-        {isMenuOpen && (
-          <>
-            <div
-              aria-hidden="true"
+        {/* Mobile menu backdrop */}
+        <div
+          className={`fixed inset-0 bg-black transition-opacity duration-300 z-40 ${
+            isMenuOpen ? "opacity-50 visible" : "opacity-0 invisible pointer-events-none"
+          }`}
+          onClick={() => setIsMenuOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Mobile menu panel */}
+        <div
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Naviqasiya menyusu"
+          className={`fixed inset-y-0 right-0 z-50 flex w-full sm:w-[400px] flex-col bg-white shadow-2xl transition-transform duration-300 ${
+            isMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex shrink-0 items-center justify-between border-b border-gray-100 p-4">
+            <Logo />
+            <button
               onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 bg-black/50 z-40"
-            />
-            <div
-              id="mobile-menu"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Naviqasiya menyusu"
-              className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-3 sm:p-4 pt-6 sm:pt-4"
+              aria-label="Menyunu bağla"
+              className="rounded-lg p-2 transition-colors hover:bg-gray-100"
             >
-              <div className="bg-white rounded-2xl shadow-lg w-full max-w-md max-h-[min(88vh,640px)] flex flex-col overflow-hidden relative">
-                <div className="flex justify-end items-center p-3 border-b border-gray-200 flex-shrink-0">
-                  <button
-                    onClick={() => setIsMenuOpen(false)}
-                    aria-label="Menyunu bağla"
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    <HiX size={24} />
-                  </button>
-                </div>
+              <HiX size={28} />
+            </button>
+          </div>
 
-                <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 py-2 flex flex-col gap-2 md:gap-1.5">
-                  {navLinks.map((link) => (
-                    <NavLink
-                      key={link.title}
-                      {...link}
-                      handleClick={() => setIsMenuOpen(false)}
-                      className="text-base md:text-lg py-2 md:py-1.5 border-b border-gray-100 cursor-pointer whitespace-nowrap"
-                    />
-                  ))}
-                </div>
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 py-6 flex flex-col gap-4">
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.title}
+                {...link}
+                handleClick={() => setIsMenuOpen(false)}
+                className="text-lg md:text-xl font-medium border-b border-gray-50 pb-3 cursor-pointer whitespace-nowrap"
+              />
+            ))}
+          </div>
 
-                <div className="px-3 pt-2 pb-3 border-t border-gray-100 flex-shrink-0 bg-white">
-                  <Button
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      toggle();
-                    }}
-                    icon={<HiOutlinePhone size={22} />}
-                    className="font-medium w-full text-base md:text-lg h-12 bg-jsyellow text-white hover:!text-white hover:bg-[#00A300]"
-                    text={t("contactus")}
-                  />
-                </div>
-              </div>
-            </div>
-          </>
-        )}
+          <div className="shrink-0 border-t border-gray-100 bg-gray-50/50 p-6">
+            <Button
+              onClick={() => {
+                setIsMenuOpen(false);
+                toggle();
+              }}
+              icon={<HiOutlinePhone size={24} />}
+              className="font-medium w-full text-lg h-14 bg-jsyellow text-white hover:!text-white hover:bg-[#00A300] rounded-xl"
+              text={t("contactus")}
+            />
+          </div>
+        </div>
       </nav>
     </header>
   );

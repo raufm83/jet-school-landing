@@ -5,7 +5,7 @@ import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 export const getCourseDetails = cache(async function getCourseDetails(slug: string) {
   try {
     const res = await fetch(
-      `${PUBLIC_API_BASE}/courses/slug/${slug}`,
+      `${PUBLIC_API_BASE}/courses/slug/${encodeURIComponent(slug)}`,
       { next: { revalidate: CONTENT_ISR_SECONDS } }
     );
 

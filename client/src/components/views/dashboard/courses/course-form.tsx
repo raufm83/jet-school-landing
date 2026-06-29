@@ -457,13 +457,34 @@ export default function CourseForm({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
                 type="number"
-                label="Müddət (ay)"
+                label="Müddət (ay - Köhnə)"
                 variant="bordered"
                 startContent={<MdAccessTime className="text-gray-400" />}
                 {...register("duration", {
                   required: "Müddət tələb olunur",
                   valueAsNumber: true,
                 })}
+              />
+              <Input
+                type="number"
+                label="Ümumi Saat"
+                variant="bordered"
+                startContent={<MdAccessTime className="text-gray-400" />}
+                {...register("totalHours", { valueAsNumber: true })}
+              />
+              <Input
+                type="number"
+                label="Həftəlik Dərs"
+                variant="bordered"
+                startContent={<MdAccessTime className="text-gray-400" />}
+                {...register("classesPerWeek", { valueAsNumber: true })}
+              />
+              <Input
+                type="number"
+                label="Müddət (Ay - Yeni)"
+                variant="bordered"
+                startContent={<MdAccessTime className="text-gray-400" />}
+                {...register("durationMonths", { valueAsNumber: true })}
               />
               <Input
                 label="Yaş Aralığı"

@@ -7,6 +7,7 @@ import {
   pathnameWithoutLeadingLocale,
   interpolatePathnameDynamicSegments,
   fetchCourseSlugsFromApi,
+  fetchBlogSlugsFromApi,
 } from "@/utils/intl/language-switch-target";
 import { Link, usePathname } from "@/i18n/routing";
 import {
@@ -60,6 +61,11 @@ function LanguageSwitcherInner({ className }: { className?: string }) {
     (pathStr === "/course/[slug]" ||
       /^\/course\/[^/]+\/?$/.test(normalizedPathInternal));
 
+  const isBlogDetail =
+    Boolean(slugParam) &&
+    (pathStr === "/blog/[slug]" ||
+      /^\/blog\/[^/]+\/?$/.test(normalizedPathInternal));
+
   const [vacancySlugs, setVacancySlugs] = useState<VacancySlugPair | null>(
     null
   );
@@ -69,6 +75,11 @@ function LanguageSwitcherInner({ className }: { className?: string }) {
     Partial<Record<"az" | "ru", string>> | null
   >(null);
   const [courseFetchDone, setCourseFetchDone] = useState(false);
+
+  const [blogSlugs, setBlogSlugs] = useState<
+    Partial<Record<"az" | "ru", string>> | null
+  >(null);
+  const [blogFetchDone, setBlogFetchDone] = useState(false);
 
   const qs = searchParams.toString();
 
@@ -137,6 +148,30 @@ function LanguageSwitcherInner({ className }: { className?: string }) {
     };
   }, [isCourseDetail, slugParam]);
 
+  useEffect(() => {
+    if (!isBlogDetail || !slugParam) {
+      setBlogSlugs(null);
+      setBlogFetchDone(false);
+      return;
+    }
+    let cancelled = false;
+    setBlogFetchDone(false);
+    setBlogSlugs(null);
+    (async () => {
+      try {
+        const slugs = await fetchBlogSlugsFromApi(slugParam);
+        if (!cancelled && slugs) setBlogSlugs(slugs);
+      } catch {
+        /* real URL əsasında keçid saxlanılır */
+      } finally {
+        if (!cancelled) setBlogFetchDone(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isBlogDetail, slugParam]);
+
   function hrefForTargetLocale(code: (typeof locales)[number]): never {
     if (vacancySlugs) {
       const slug = code === "az" ? vacancySlugs.az : vacancySlugs.ru;
@@ -167,12 +202,29 @@ function LanguageSwitcherInner({ className }: { className?: string }) {
       } as never;
     }
 
+    if (blogSlugs) {
+      const slug =
+        (code === "az" ? blogSlugs.az : blogSlugs.ru) ??
+        slugParam ??
+        "";
+      const base = {
+        pathname: "/blog/[slug]" as const,
+        params: { slug },
+      };
+      if (!qs) return base as never;
+      return {
+        ...base,
+        query: Object.fromEntries(searchParams.entries()),
+      } as never;
+    }
+
     return defaultHref;
   }
 
   const linkPending =
     (isVacancyDetail && !vacancyFetchDone) ||
-    (isCourseDetail && !courseFetchDone);
+    (isCourseDetail && !courseFetchDone) ||
+    (isBlogDetail && !blogFetchDone);
 
   useEffect(() => {
     function handlePointerDown(event: Event) {

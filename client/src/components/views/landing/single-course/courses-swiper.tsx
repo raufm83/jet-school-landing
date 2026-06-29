@@ -133,9 +133,9 @@ export default function SwiperCourses({
                         </div>
 
                         <span className="text-base text-black">
-                          {normalizedLocale === "az"
+                          <span className="font-bold">{normalizedLocale === "az"
                             ? "Yaş:"
-                            : "Возраст:"}{" "}
+                            : "Возраст:"}</span>{" "}
                           {course.ageRange}
                         </span>
                       </div>
@@ -157,9 +157,9 @@ export default function SwiperCourses({
                       </div>
 
                       <span className="text-base text-black">
-                        {normalizedLocale === "az"
+                        <span className="font-bold">{normalizedLocale === "az"
                           ? "Səviyyə:"
-                          : "Уровень:"}{" "}
+                          : "Уровень:"}</span>{" "}
                         {course.level[normalizedLocale]}
                       </span>
                     </div>
@@ -180,9 +180,9 @@ export default function SwiperCourses({
                       </div>
 
                       <span className="text-base text-black">
-                        {normalizedLocale === "az"
+                        <span className="font-bold">{normalizedLocale === "az"
                           ? "Müddət:"
-                          : "Длительность:"}{" "}
+                          : "Длительность:"}</span>{" "}
                         {course.duration}{" "}
                         {normalizedLocale === "az"
                           ? "ay"

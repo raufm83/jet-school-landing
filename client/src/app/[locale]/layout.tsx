@@ -3,6 +3,7 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { setRequestLocale } from "next-intl/server";
 import React from "react";
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import dynamic from "next/dynamic";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { SITE_SCHEMA } from "@/data/site-schema";
@@ -20,8 +21,13 @@ export async function generateMetadata({
 
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
+  const headersList = headers();
+  const pathname = headersList.get("x-pathname") || "";
+  const normalizedPath = pathname.replace(/^\/(az|ru)(\/|$)/, "/");
+  const pathForAlternates = normalizedPath.startsWith("/") ? normalizedPath.slice(1) : normalizedPath;
+
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonicalUrl = buildHreflangUrl(baseUrl, locale);
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, pathForAlternates);
 
   const title = trimMetaTitle(t("title"));
   const description = trimMetaDescription(t("description"));
@@ -40,9 +46,9 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        az: buildHreflangUrl(baseUrl, "az"),
-        ru: buildHreflangUrl(baseUrl, "ru"),
-        "x-default": baseUrl,
+        az: buildHreflangUrl(baseUrl, "az", pathForAlternates),
+        ru: buildHreflangUrl(baseUrl, "ru", pathForAlternates),
+        "x-default": canonicalUrl,
       },
     },
     openGraph: {

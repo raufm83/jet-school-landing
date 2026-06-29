@@ -100,7 +100,7 @@ export default async function CoursesSlider() {
                         </svg>
                       </div>
                       <span className="text-xs sm:text-sm text-black">
-                        {normalizedLocale === "az" ? "Yaş:" : "Возраст:"} {course.ageRange}
+                        <span className="font-bold">{normalizedLocale === "az" ? "Yaş:" : "Возраст:"}</span> {course.ageRange}
                       </span>
                     </div>
                   )}
@@ -111,7 +111,7 @@ export default async function CoursesSlider() {
                       </svg>
                     </div>
                     <span className="text-xs sm:text-sm text-black">
-                      {normalizedLocale === "az" ? "Səviyyə:" : "Уровень:"} {course.level[normalizedLocale]}
+                      <span className="font-bold">{normalizedLocale === "az" ? "Səviyyə:" : "Уровень:"}</span> {course.level[normalizedLocale]}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5 sm:gap-2">
@@ -121,7 +121,7 @@ export default async function CoursesSlider() {
                       </svg>
                     </div>
                     <span className="text-xs sm:text-sm text-black">
-                      {normalizedLocale === "az" ? "Müddət:" : "Длительность:"} {course.duration} {normalizedLocale === "az" ? "ay" : "месяцев"}
+                      <span className="font-bold">{normalizedLocale === "az" ? "Müddət:" : "Длительность:"}</span> {course.duration} {normalizedLocale === "az" ? "ay" : "месяцев"}
                     </span>
                   </div>
                 </div>

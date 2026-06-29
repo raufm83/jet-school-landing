@@ -101,4 +101,37 @@ export class CreateCourseDto {
   })
   @IsNumber()
   order?: number;
+
+  @ApiProperty({ example: 48, description: 'Total hours of the course', required: false })
+  @IsOptional()
+  @Type(() => Number)
+  @Transform(({ value }) => {
+    if (value === '' || value === null || value === undefined) return undefined;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : undefined;
+  })
+  @IsNumber()
+  totalHours?: number;
+
+  @ApiProperty({ example: 2, description: 'Classes per week', required: false })
+  @IsOptional()
+  @Type(() => Number)
+  @Transform(({ value }) => {
+    if (value === '' || value === null || value === undefined) return undefined;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : undefined;
+  })
+  @IsNumber()
+  classesPerWeek?: number;
+
+  @ApiProperty({ example: 6, description: 'Duration in months', required: false })
+  @IsOptional()
+  @Type(() => Number)
+  @Transform(({ value }) => {
+    if (value === '' || value === null || value === undefined) return undefined;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : undefined;
+  })
+  @IsNumber()
+  durationMonths?: number;
 }

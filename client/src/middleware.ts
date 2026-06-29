@@ -255,9 +255,13 @@ const middlewares = withAuth(
       return nextDashboard(request);
     }
 
-    return intlMiddleware(
-      withHtmlLangHeader(request, htmlLangFromPathname(pathname))
-    );
+    // SEO: JSON-LD schema üçün layout-da pathname oxumaq
+    const h = new Headers(request.headers);
+    h.set("x-html-lang", htmlLangFromPathname(pathname));
+    h.set("x-pathname", pathname);
+    const newReq = new NextRequest(request, { headers: h });
+    
+    return intlMiddleware(newReq);
   },
   {
     callbacks: {

@@ -42,8 +42,8 @@ export default function CourseCard({ course, locale }: CourseCardProps) {
       pathname: "/course/[slug]",
       params: { slug: course.slug[locale] },
     }}
-      className="relative flex  flex-col h-full w-full   md:w-full [@media(min-width:1440px)]:!w-[49%] [@media(min-width:2500px)]:!w-[24%]  bg-[#fef9e7]  border-1 border-jsyellow rounded-[32px] overflow-hidden 
-        transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[rgba(252,174,30,0.2)]  hover:scale-[1.02]"
+      className="relative flex flex-col h-full w-full md:w-full [@media(min-width:1440px)]:!w-[49%] [@media(min-width:2500px)]:!w-[24%] bg-[#fef9e7] border border-jsyellow/50 rounded-[32px] overflow-hidden 
+        transition-all duration-300 ease-out hover:border-jsyellow hover:shadow-md hover:-translate-y-1"
     >
       <div className="absolute inset-x-0 top-0 z-0 h-24 bg-gradient-to-b from-jsyellow/10 to-transparent pointer-events-none" />
 
@@ -62,21 +62,18 @@ export default function CourseCard({ course, locale }: CourseCardProps) {
         </div>
 
         {tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-6">
-            {tags.slice(0, 3).map((tag, index) => (
-              <span
-                key={index}
-                className="inline-block px-3 py-1.5 [@media(min-width:3500px)]:text-xl  bg-jsyellow/10 text-black border-black border text-xs font-medium 
-                  rounded-full  border-jsyellow/20 backdrop-blur-sm"
-              >
-                {tag}
-              </span>
-            ))}
-            {tags.length > 3 && (
-              <span className="flex justify-center items-center px-3 py-1.5 border border-black font-bold bg-gray-100 text-gray-500 text-xs  rounded-full">
-                +{tags.length - 3}
-              </span>
-            )}
+          <div className="relative z-0 mt-auto mb-6 -mx-6 overflow-hidden px-6">
+            <div className="scrolling-tags flex w-max gap-2">
+              {[...tags, ...tags].map((tag, index) => (
+                <span
+                  key={index}
+                  className="inline-block px-3 py-1.5 [@media(min-width:3500px)]:text-xl bg-jsyellow/10 text-black border-black border text-xs font-medium 
+                    rounded-full border-jsyellow/20 backdrop-blur-sm whitespace-nowrap"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 

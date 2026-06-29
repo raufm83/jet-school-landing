@@ -123,7 +123,7 @@ const CourseListingClient = ({ courses, locale = "az" }: ICoursesSlider) => {
                             </svg>
                           </div>
                           <span className="text-xs sm:text-sm lg:text-sm text-black">
-                            {normalizedLocale === "az" ? "Yaş:" : "Возраст:"}{" "}
+                            <span className="font-bold">{normalizedLocale === "az" ? "Yaş:" : "Возраст:"}</span>{" "}
                             {course.ageRange}
                           </span>
                         </div>
@@ -144,9 +144,9 @@ const CourseListingClient = ({ courses, locale = "az" }: ICoursesSlider) => {
                           </svg>
                         </div>
                         <span className="text-xs sm:text-sm lg:text-sm text-black">
-                          {normalizedLocale === "az"
+                          <span className="font-bold">{normalizedLocale === "az"
                             ? "Səviyyə:"
-                            : "Уровень:"}{" "}
+                            : "Уровень:"}</span>{" "}
                           {course.level[normalizedLocale]}
                         </span>
                       </div>
@@ -166,9 +166,9 @@ const CourseListingClient = ({ courses, locale = "az" }: ICoursesSlider) => {
                           </svg>
                         </div>
                         <span className="text-xs sm:text-sm lg:text-sm text-black">
-                          {normalizedLocale === "az"
+                          <span className="font-bold">{normalizedLocale === "az"
                             ? "Müddət:"
-                            : "Длительность:"}{" "}
+                            : "Длительность:"}</span>{" "}
                           {course.duration}{" "}
                           {normalizedLocale === "az" ? "ay" : "месяцев"}
                         </span>
