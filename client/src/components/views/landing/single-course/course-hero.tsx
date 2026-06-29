@@ -41,20 +41,20 @@ export default async function CourseHero({
       <div className="flex flex-wrap gap-4 items-center mt-2">
         <div className="flex items-center gap-2 bg-[#fef7eb] border border-jsyellow/40 text-jsblack rounded-xl px-5 py-2.5 shadow-sm">
           <MdPeople className="text-jsyellow w-5 h-5 sm:w-6 sm:h-6" />
-          <span className="font-semibold text-[clamp(14px,1.2vw,16px)]">
-            {locale === 'az' ? 'Yaş:' : 'Возраст:'} {data?.ageRange || "-"}
+          <span className="text-[clamp(14px,1.2vw,16px)]">
+            <strong className="font-bold">{locale === 'az' ? 'Yaş:' : 'Возраст:'}</strong> <span className="font-medium">{data?.ageRange || "-"}</span>
           </span>
         </div>
         <div className="flex items-center gap-2 bg-[#fef7eb] border border-jsyellow/40 text-jsblack rounded-xl px-5 py-2.5 shadow-sm">
           <MdSignalCellular4Bar className="text-jsyellow w-5 h-5 sm:w-6 sm:h-6" />
-          <span className="font-semibold text-[clamp(14px,1.2vw,16px)]">
-            {locale === 'az' ? 'Səviyyə:' : 'Уровень:'} {data?.level?.[locale] || "-"}
+          <span className="text-[clamp(14px,1.2vw,16px)]">
+            <strong className="font-bold">{locale === 'az' ? 'Səviyyə:' : 'Уровень:'}</strong> <span className="font-medium">{data?.level?.[locale] || "-"}</span>
           </span>
         </div>
         <div className="flex items-center gap-2 bg-[#fef7eb] border border-jsyellow/40 text-jsblack rounded-xl px-5 py-2.5 shadow-sm">
           <MdCalendarToday className="text-jsyellow w-5 h-5 sm:w-6 sm:h-6" />
-          <span className="font-semibold text-[clamp(14px,1.2vw,16px)]">
-            {locale === 'az' ? 'Müddət:' : 'Длительность:'} {data?.duration || "0"} {locale === 'az' ? 'ay' : 'месяцев'}
+          <span className="text-[clamp(14px,1.2vw,16px)]">
+            <strong className="font-bold">{locale === 'az' ? 'Müddət:' : 'Длительность:'}</strong> <span className="font-medium">{data?.duration || "0"} {locale === 'az' ? 'ay' : 'месяцев'}</span>
           </span>
         </div>
       </div>
