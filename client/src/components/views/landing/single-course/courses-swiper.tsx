@@ -98,7 +98,7 @@ export default function SwiperCourses({
                 />
 
                 {/* Content */}
-                <div className="relative z-10 flex min-w-0 flex-col gap-3 pb-4">
+                <div className="relative z-10 flex min-w-0 flex-1 flex-col pb-4">
                   <div>
                     <h2 className="mb-1 text-2xl font-bold leading-tight text-jsblack">
                       {course.title[normalizedLocale]}
@@ -193,38 +193,38 @@ export default function SwiperCourses({
 
                   {/* Tags */}
                   {tags.length > 0 && (
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {tags.slice(0, 4).map((tag, i) => (
-                        <span
-                          key={i}
-                          className="rounded-full bg-white/90 px-3 py-1.5 text-sm font-medium shadow-sm"
-                          style={{
-                            color:
-                              course.textColor ||
-                              "#1F2937",
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                    <div className="relative z-0 mt-auto pt-6 -mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6">
+                      <div className="scrolling-tags flex w-max gap-2">
+                        {[...tags, ...tags].map((tag, index) => (
+                          <span
+                            key={index}
+                            className="inline-block rounded-full bg-white/90 px-3.5 py-1.5 text-sm font-normal shadow-sm whitespace-nowrap"
+                            style={{
+                              color: course.textColor || "#1F2937",
+                            }}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
 
                 {/* Image */}
-                <div className="absolute bottom-0 right-0 z-10">
-                  <div className="relative h-[120px] w-[120px] sm:h-[180px] sm:w-[180px]">
+                <div className="absolute bottom-3 right-3 z-10 pointer-events-none drop-shadow-lg">
+                  <div className="relative h-[120px] w-[120px] sm:h-[160px] sm:w-[160px]">
                     <Image
                       src={getImageUrl(course.imageUrl)}
                       alt={course.title[normalizedLocale]}
                       fill
                       className="
-                        object-contain
+                        object-contain object-right-bottom
                         transition-transform
                         duration-300
                         group-hover:scale-105
                       "
-                      sizes="(max-width: 639px) 120px, 180px"
+                      sizes="(max-width: 639px) 120px, 160px"
                       quality={64}
                       placeholder="blur"
                       blurDataURL={BLUR_PLACEHOLDER_YELLOW}
