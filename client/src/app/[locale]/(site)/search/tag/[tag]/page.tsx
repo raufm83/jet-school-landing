@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: {
         az: buildHreflangUrl(baseUrl, "az", `search/tag/${pathSeg}`),
         ru: buildHreflangUrl(baseUrl, "ru", `search/tag/${pathSeg}`),
-        "x-default": baseUrl,
+        "x-default": buildHreflangUrl(baseUrl, "az", `search/tag/${pathSeg}`),
       },
     },
     openGraph: { title, description, url: canonicalUrl, type: "website" },

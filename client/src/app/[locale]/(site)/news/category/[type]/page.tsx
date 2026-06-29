@@ -84,7 +84,7 @@ export async function generateMetadata({
       languages: {
         az: buildHreflangUrl(baseUrl, "az", typePath),
         ru: buildHreflangUrl(baseUrl, "ru", typePath),
-        "x-default": baseUrl,
+        "x-default": buildHreflangUrl(baseUrl, "az", typePath),
       },
     },
     openGraph: {

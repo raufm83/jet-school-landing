@@ -126,9 +126,9 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
       alternates: {
         canonical: canonicalUrl,
         languages: {
-          az: data.slug.az ? buildHreflangUrl(baseUrl, "az", `events/${azSlug}`) : undefined,
-          ru: data.slug.ru ? buildHreflangUrl(baseUrl, "ru", `events/${ruSlug}`) : undefined,
-          "x-default": baseUrl,
+          az: buildHreflangUrl(baseUrl, "az", `events/${azSlug}`),
+          ru: buildHreflangUrl(baseUrl, "ru", `events/${ruSlug}`),
+          "x-default": buildHreflangUrl(baseUrl, "az", `events/${azSlug}`),
         },
       },
       openGraph: {
