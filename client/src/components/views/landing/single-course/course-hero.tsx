@@ -39,19 +39,19 @@ export default async function CourseHero({
       </h1>
 
       <div className="flex flex-wrap gap-4 items-center mt-2">
-        <div className="flex items-center gap-2 bg-[#fef7eb] border border-jsyellow/40 text-jsblack rounded-xl px-5 py-2.5 shadow-sm">
+        <div className="flex items-center gap-2 bg-[#fef7eb] border border-jsyellow/40 text-jsblack rounded-xl px-5 py-2.5">
           <MdPeople className="text-jsyellow w-5 h-5 sm:w-6 sm:h-6" />
           <span className="text-[clamp(14px,1.2vw,16px)]">
             <strong className="font-bold">{locale === 'az' ? 'Yaş:' : 'Возраст:'}</strong> <span className="font-medium">{data?.ageRange || "-"}</span>
           </span>
         </div>
-        <div className="flex items-center gap-2 bg-[#fef7eb] border border-jsyellow/40 text-jsblack rounded-xl px-5 py-2.5 shadow-sm">
+        <div className="flex items-center gap-2 bg-[#fef7eb] border border-jsyellow/40 text-jsblack rounded-xl px-5 py-2.5">
           <MdSignalCellular4Bar className="text-jsyellow w-5 h-5 sm:w-6 sm:h-6" />
           <span className="text-[clamp(14px,1.2vw,16px)]">
             <strong className="font-bold">{locale === 'az' ? 'Səviyyə:' : 'Уровень:'}</strong> <span className="font-medium">{data?.level?.[locale] || "-"}</span>
           </span>
         </div>
-        <div className="flex items-center gap-2 bg-[#fef7eb] border border-jsyellow/40 text-jsblack rounded-xl px-5 py-2.5 shadow-sm">
+        <div className="flex items-center gap-2 bg-[#fef7eb] border border-jsyellow/40 text-jsblack rounded-xl px-5 py-2.5">
           <MdCalendarToday className="text-jsyellow w-5 h-5 sm:w-6 sm:h-6" />
           <span className="text-[clamp(14px,1.2vw,16px)]">
             <strong className="font-bold">{locale === 'az' ? 'Müddət:' : 'Длительность:'}</strong> <span className="font-medium">{data?.duration || "0"} {locale === 'az' ? 'ay' : 'месяцев'}</span>
@@ -95,15 +95,17 @@ export default async function CourseHero({
           <CourseContent title={t("courseModules")} locale={locale} modules={data.modules} />
           
           {tags && tags.length > 0 && (
-            <div className="mt-8 flex flex-wrap gap-3">
-              {tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-[#fef7eb] text-jsblack border border-jsyellow/40 transition-all hover:bg-jsyellow/20 hover:scale-105 shadow-sm [@media(min-width:2500px)]:text-xl"
-                >
-                  #{tag}
-                </span>
-              ))}
+            <div className="mt-8 -mx-4 overflow-hidden px-4">
+              <div className="scrolling-tags flex w-max gap-3">
+                {[...tags, ...tags].map((tag, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-[#fef7eb] text-jsblack border border-jsyellow/40 transition-all hover:bg-jsyellow/20 hover:scale-105 [@media(min-width:2500px)]:text-xl whitespace-nowrap"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
