@@ -127,7 +127,7 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
 
             <TeamSection
               title={t("teachers")}
-              teamMembers={allTeachers}
+              teamMembers={data.teachers ?? []}
               isCoursePage
             />
 
