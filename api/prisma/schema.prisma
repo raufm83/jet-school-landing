@@ -226,6 +226,10 @@ model Course {
   createdAt        DateTime              @default(now())
   updatedAt        DateTime              @updatedAt
 
+  metaTitle        Json?
+  metaDescription  Json?
+  metaKeywords     Json?
+
   @@unique([slug], name: "uniqueMultilingualCourseSlug")
 }
 

@@ -82,6 +82,13 @@ export default function CreateCoursePage() {
         formData.append("textColor", data.textColor);
       }
 
+      if (data.metaTitle?.az) formData.append("metaTitle[az]", data.metaTitle.az);
+      if (data.metaTitle?.ru) formData.append("metaTitle[ru]", data.metaTitle.ru);
+      if (data.metaDescription?.az) formData.append("metaDescription[az]", data.metaDescription.az);
+      if (data.metaDescription?.ru) formData.append("metaDescription[ru]", data.metaDescription.ru);
+      if (data.metaKeywords?.az) formData.append("metaKeywords[az]", data.metaKeywords.az);
+      if (data.metaKeywords?.ru) formData.append("metaKeywords[ru]", data.metaKeywords.ru);
+
       if (data.image) {
   const imageFile = data.image instanceof FileList ? data.image[0] : data.image;
   if (imageFile) {

@@ -134,4 +134,34 @@ export class CreateCourseDto {
   })
   @IsNumber()
   durationMonths?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  'metaTitle[az]'?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  'metaTitle[ru]'?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  'metaDescription[az]'?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  'metaDescription[ru]'?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  'metaKeywords[az]'?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  'metaKeywords[ru]'?: string;
 }

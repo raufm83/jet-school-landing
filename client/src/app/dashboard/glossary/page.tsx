@@ -16,6 +16,7 @@ import {
   Switch,
   Tooltip,
   useDisclosure,
+  Input,
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -77,20 +78,23 @@ export default function GlossaryDashboardPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [includeUnpublished, setIncludeUnpublished] = useState(true);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const fetchTerms = useCallback(async () => {
     try {
       setLoading(true);
       // Author üçün yalnız öz terminlərini göstərən endpoint
       if (isAuthor) {
         const { data } = await api.get<GlossaryResponse>(
-          `/glossary/my?page=${page}&limit=${rowsPerPage}&includeUnpublished=${includeUnpublished}`
+          `/glossary/my?page=${page}&limit=${rowsPerPage}&includeUnpublished=${includeUnpublished}&search=${debouncedSearch}`
         );
         setTerms(data.items);
         setTotalTerms(data.meta.total);
         return;
       }
       const { data } = await api.get<GlossaryResponse>(
-        `/glossary?page=${page}&limit=${rowsPerPage}&includeUnpublished=${includeUnpublished}&sortBy=createdAt&order=desc`
+        `/glossary?page=${page}&limit=${rowsPerPage}&includeUnpublished=${includeUnpublished}&sortBy=createdAt&order=desc&search=${debouncedSearch}`
       );
       setTerms(data.items);
       setTotalTerms(data.meta.total);
@@ -100,7 +104,15 @@ export default function GlossaryDashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage, includeUnpublished, isAuthor]);
+  }, [page, rowsPerPage, includeUnpublished, isAuthor, debouncedSearch]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPage(1); // Reset page on new search
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   // Sessiya yüklənənə qədər göndərmə (xüsusən AUTHOR üçün JWT göndərilməsi üçün)
   useEffect(() => {
@@ -249,29 +261,38 @@ export default function GlossaryDashboardPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <div>
             <h1 className="text-2xl font-bold">Glossariy</h1>
             <p className="text-gray-500">Terminləri idarə edin</p>
           </div>
-          <div className="flex gap-3">
-            {!isAuthor && (
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <Input
+              isClearable
+              className="w-full sm:max-w-[300px]"
+              placeholder="Termin və ya tərif axtar..."
+              value={searchQuery}
+              onValueChange={setSearchQuery}
+            />
+            <div className="flex gap-3">
+              {!isAuthor && (
+                <Button
+                  color="warning"
+                  variant="flat"
+                  onClick={() => router.push("/dashboard/glossary/categories")}
+                >
+                  Kateqoriyalar
+                </Button>
+              )}
               <Button
-                color="warning"
-                variant="flat"
-                onClick={() => router.push("/dashboard/glossary/categories")}
+                color="primary"
+                className="bg-jsyellow text-white"
+                startContent={<MdAdd size={24} />}
+                onClick={() => router.push("/dashboard/glossary/create")}
               >
-                Kateqoriyalar
+                Yeni Termin
               </Button>
-            )}
-            <Button
-              color="primary"
-              className="bg-jsyellow text-white"
-              startContent={<MdAdd size={24} />}
-              onClick={() => router.push("/dashboard/glossary/create")}
-            >
-              Yeni Termin
-            </Button>
+            </div>
           </div>
         </div>
 

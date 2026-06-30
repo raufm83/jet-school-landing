@@ -92,7 +92,7 @@ export default function PostCard({ post, locale, t, loadEager = false }: PostCar
         blurDataURL={BLUR_PLACEHOLDER_SVG}
         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 25vw"
         quality={64}
-        className="object-cover object-center transition-transform duration-500 hover:scale-105"
+        className="object-contain sm:object-cover object-center transition-transform duration-500 hover:scale-105"
       />
     </div>
   )}

@@ -27,30 +27,14 @@ interface ISingleCoursePageProps {
   };
 }
 
-
-const getTeamMembers = cache(async () => {
-  try {
-    const res = await fetch(
-      `${PUBLIC_API_BASE}/team/active?limit=30`,
-      { next: { revalidate: CONTENT_ISR_SECONDS } },
-    );
-    if (!res.ok) return [];
-    return (await res.json()) ?? [];
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-});
-
 export default async function SingleCoursePage({ params }: ISingleCoursePageProps) {
   try {
     const locale = params.locale as Locale;
     setRequestLocale(locale);
-    const [data, t, courses, allTeachers] = await Promise.all([
+    const [data, t, courses] = await Promise.all([
       getCourseDetails(params.slug),
       getTranslations("singleCoursePage"),
       getAllCourses({}),
-      getTeamMembers(),
     ]);
 
     if (!data) notFound();
@@ -99,7 +83,7 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
         </div>
         <div className="container mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 3xl:px-28 4xl:px-32 my-10 md:my-16 lg:my-10 4xl:my-24 [@media(min-width:2500px)]:!px-[111px] [@media(min-width:3500px)]:px-32">
 
-          <div className="mb-16 flex flex-col gap-12 lg:gap-16 2xl:gap-20">
+          <div className="mb-16 flex flex-col gap-8 lg:gap-12 2xl:gap-16">
             <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8 xl:gap-10 2xl:gap-12">
               <div className="min-w-0 w-full flex-1">
                 <CourseHero
@@ -162,24 +146,28 @@ export async function generateMetadata({ params }: ISingleCoursePageProps): Prom
     }
 
     const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-    const azSlug = data.slug?.az || params.slug;
-    const ruSlug = data.slug?.ru || params.slug;
-    const canonicalUrl = buildHreflangUrl(baseUrl, locale, `course/${locale === "az" ? azSlug : ruSlug}`);
+    const canonicalUrl = buildHreflangUrl(baseUrl, locale, `course/${params.slug}`);
 
-    const title = meta?.title
-      ? trimMetaTitle(meta.title)
-      : trimMetaTitle(data.title[locale]);
-    const descriptionText = meta?.description
-      ? meta.description
-      : data.description[locale]
-        ? data.description[locale].replace(/<[^>]*>/g, "")
-        : "";
+    const title = data.metaTitle?.[locale]
+      ? trimMetaTitle(data.metaTitle[locale])
+      : meta?.title
+        ? trimMetaTitle(meta.title)
+        : trimMetaTitle(data.title[locale]);
+
+    const descriptionText = data.metaDescription?.[locale]
+      ? data.metaDescription[locale]
+      : meta?.description
+        ? meta.description
+        : data.description[locale]
+          ? data.description[locale].replace(/<[^>]*>/g, "")
+          : "";
     const description = descriptionText ? trimMetaDescription(descriptionText) : undefined;
+    const keywords = data.metaKeywords?.[locale] || undefined;
 
     const openGraph: Metadata["openGraph"] = {
       title,
       description: description ?? undefined,
-      url: buildHreflangUrl(baseUrl, locale, `course/${locale === "az" ? azSlug : ruSlug}`),
+      url: canonicalUrl,
       type: "website",
       locale: locale === "az" ? "az_AZ" : "ru_RU",
       alternateLocale: locale === "az" ? "ru_RU" : "az_AZ",
@@ -187,12 +175,13 @@ export async function generateMetadata({ params }: ISingleCoursePageProps): Prom
     return {
       title,
       description,
+      keywords,
       alternates: {
         canonical: canonicalUrl,
         languages: {
-          az: buildHreflangUrl(baseUrl, "az", `course/${azSlug}`),
-          ru: buildHreflangUrl(baseUrl, "ru", `course/${ruSlug}`),
-          "x-default": buildHreflangUrl(baseUrl, "az", `course/${azSlug}`),
+          az: buildHreflangUrl(baseUrl, "az", `course/${params.slug}`),
+          ru: buildHreflangUrl(baseUrl, "ru", `course/${params.slug}`),
+          "x-default": buildHreflangUrl(baseUrl, "az", `course/${params.slug}`),
         },
       },
       openGraph,

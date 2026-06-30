@@ -25,6 +25,9 @@ export interface CourseFormInputs {
     az: string[];
     ru: string[];
   };
+  metaTitle?: MultilingualContent;
+  metaDescription?: MultilingualContent;
+  metaKeywords?: MultilingualContent;
 }
 interface ModuleContent extends MultilingualContent {
   order: number;

@@ -16,6 +16,9 @@ export class CourseService {
       'slug',
       'level',
       'newTags',
+      'metaTitle',
+      'metaDescription',
+      'metaKeywords',
     ];
     const processedData: any = { ...dto };
     const result: any = {};

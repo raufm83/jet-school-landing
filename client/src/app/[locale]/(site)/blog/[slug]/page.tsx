@@ -151,9 +151,7 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
 
     const contentText = data.content[locale].replace(/<[^>]*>/g, "");
 
-    const azSlug = data.slug?.az || params.slug;
-    const ruSlug = data.slug?.ru || params.slug;
-    const canonicalUrl = buildHreflangUrl(baseUrl, locale, `blog/${locale === "az" ? azSlug : ruSlug}`);
+    const canonicalUrl = buildHreflangUrl(baseUrl, locale, `blog/${params.slug}`);
 
     const title = trimMetaTitle(data.title[locale]);
     const description = trimMetaDescription(contentText);
@@ -164,15 +162,15 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
       alternates: {
         canonical: canonicalUrl,
         languages: {
-          az: buildHreflangUrl(baseUrl, "az", `blog/${azSlug}`),
-          ru: buildHreflangUrl(baseUrl, "ru", `blog/${ruSlug}`),
-          "x-default": buildHreflangUrl(baseUrl, "az", `blog/${azSlug}`),
+          az: buildHreflangUrl(baseUrl, "az", `blog/${params.slug}`),
+          ru: buildHreflangUrl(baseUrl, "ru", `blog/${params.slug}`),
+          "x-default": buildHreflangUrl(baseUrl, "az", `blog/${params.slug}`),
         },
       },
       openGraph: {
         title,
         description,
-        url: buildHreflangUrl(baseUrl, locale, `blog/${locale === "az" ? azSlug : ruSlug}`),
+        url: canonicalUrl,
         images: (() => {
           const url = getPostImageUrl(data.imageUrl, locale);
           const cdn = process.env.NEXT_PUBLIC_CDN_URL || "";
