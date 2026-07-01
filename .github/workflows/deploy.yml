@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy Application
         run: |
-          ssh -i ~/.ssh/id_ci ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} <<'EOF'
+          ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=30 -i ~/.ssh/id_ci ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }} <<'EOF'
           set -e
 
           cd /root/jetschool
@@ -33,6 +33,9 @@ jobs:
           mkdir -p ~/uploads
 
           cd /root/jetschool
+
+          export DOCKER_CLIENT_TIMEOUT=600
+          export COMPOSE_HTTP_TIMEOUT=600
 
           echo "🔧 Optimizing system for deployment..."
           # Clear Docker cache to free up space
@@ -55,7 +58,7 @@ jobs:
           fi
 
           echo "🔨 Building and starting backend API..."
-          docker compose build --no-cache api
+          timeout 600 docker compose build --no-cache api || exit 1
           docker compose up -d api
 
           echo "🩺 API cavab yoxlaması (127.0.0.1:3001 → konteyner 3002)..."
@@ -78,7 +81,7 @@ jobs:
           export DOCKER_BUILDKIT=1
           export COMPOSE_DOCKER_CLI_BUILD=1
 
-          docker compose build --no-cache client
+          timeout 1200 docker compose build --no-cache client || exit 1
           docker compose up -d client
 
           echo "✅ Deployment complete!"
