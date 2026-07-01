@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Set Node.js memory limit for build process s
-ENV NODE_OPTIONS="--max_old_space_size=1024"
+ENV NODE_OPTIONS="--max_old_space_size=2048"
 
 # Disable Next.js telemetry during build
 ENV NEXT_TELEMETRY_DISABLED=1
