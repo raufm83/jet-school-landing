@@ -95,14 +95,14 @@ export class GlossaryService {
         const lowerSearch = search.toLowerCase().trim();
         filteredItems = filteredItems.filter((item) => {
           const termAz = item.term?.az?.toLowerCase() || '';
-          const termEn = item.term?.en?.toLowerCase() || '';
+          const termRu = item.term?.ru?.toLowerCase() || '';
           const defAz = item.definition?.az?.toLowerCase() || '';
-          const defEn = item.definition?.en?.toLowerCase() || '';
+          const defRu = item.definition?.ru?.toLowerCase() || '';
           return (
             termAz.includes(lowerSearch) ||
-            termEn.includes(lowerSearch) ||
+            termRu.includes(lowerSearch) ||
             defAz.includes(lowerSearch) ||
-            defEn.includes(lowerSearch)
+            defRu.includes(lowerSearch)
           );
         });
       }
