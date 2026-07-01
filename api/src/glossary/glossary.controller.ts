@@ -62,6 +62,8 @@ export class GlossaryController {
     @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('includeUnpublished') includeUnpublished = false,
+    @Query('search') search = '',
+    @Query('categoryId') categoryId = '',
     @Query('sortBy') sortBy?: string,
     @Query('order') sortOrder?: string,
   ) {
@@ -74,6 +76,8 @@ export class GlossaryController {
       letterFilter,
       sortBy,
       sortOrder,
+      search,
+      categoryId,
     );
   }
   @Get('brief')

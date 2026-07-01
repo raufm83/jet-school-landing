@@ -17,6 +17,9 @@ import { CONTENT_ISR_SECONDS } from "@/constants/content-isr";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildCoursePageGraph } from "@/data/site-schema";
+import { cache } from "react";
+
+const cachedGetCourseDetails = cache((slug: string) => getCourseDetails(slug));
 
 interface ISingleCoursePageProps {
   params: {
@@ -30,7 +33,7 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
     const locale = params.locale as Locale;
     setRequestLocale(locale);
     const [data, t, courses] = await Promise.all([
-      getCourseDetails(params.slug),
+      cachedGetCourseDetails(params.slug),
       getTranslations("singleCoursePage"),
       getAllCourses({}),
     ]);
@@ -134,7 +137,7 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
 export async function generateMetadata({ params }: ISingleCoursePageProps): Promise<Metadata> {
   try {
     const [data, meta] = await Promise.all([
-      getCourseDetails(params.slug),
+      cachedGetCourseDetails(params.slug),
       getPageMeta(`course:${params.slug}`, params.locale),
     ]);
     const locale = params.locale as Locale;

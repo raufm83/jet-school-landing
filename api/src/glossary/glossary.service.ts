@@ -66,21 +66,46 @@ export class GlossaryService {
     letter = '',
     sortBy = 'term',
     sortOrder?: string,
+    search = '',
+    categoryId = '',
   ) {
     try {
       const skip = (page - 1) * limit;
       const unpublished = includeUnpublished === true || includeUnpublished === 'true';
 
+      const where: Prisma.GlossaryWhereInput = {
+        ...(unpublished ? {} : { published: true }),
+        ...(categoryId ? { categoryId } : {}),
+      };
+
       const allItems = await this.prisma.glossary.findMany({
-        where: unpublished ? {} : { published: true },
+        where,
         include: this.includeRelations,
       });
 
-      const filteredItems = letter
-        ? allItems.filter((item) =>
+      let filteredItems = allItems;
+      
+      if (letter) {
+        filteredItems = filteredItems.filter((item) =>
           item.term?.az?.toLowerCase().startsWith(letter.toLowerCase()),
-        )
-        : allItems;
+        );
+      }
+
+      if (search) {
+        const lowerSearch = search.toLowerCase().trim();
+        filteredItems = filteredItems.filter((item) => {
+          const termAz = item.term?.az?.toLowerCase() || '';
+          const termEn = item.term?.en?.toLowerCase() || '';
+          const defAz = item.definition?.az?.toLowerCase() || '';
+          const defEn = item.definition?.en?.toLowerCase() || '';
+          return (
+            termAz.includes(lowerSearch) ||
+            termEn.includes(lowerSearch) ||
+            defAz.includes(lowerSearch) ||
+            defEn.includes(lowerSearch)
+          );
+        });
+      }
 
       const useCreatedAt = sortBy === 'createdAt';
       const createdDir =
