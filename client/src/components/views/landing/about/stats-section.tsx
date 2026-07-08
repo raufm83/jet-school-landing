@@ -34,7 +34,7 @@ export default function StatsSection({ stats }: StatsProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.08, duration: 0.45, ease: "easeOut" }}
           >
-            <motion.h3
+            <motion.div
               className="
                 font-bold text-jsyellow mb-2 sm:mb-3 lg:mb-4 leading-none 
                 text-[clamp(36px,5vw,48px)]
@@ -48,7 +48,7 @@ export default function StatsSection({ stats }: StatsProps) {
               transition={{ duration: 0.2 }}
             >
               {value}
-            </motion.h3>
+            </motion.div>
 
             <p
               className="

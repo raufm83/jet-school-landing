@@ -3,7 +3,7 @@ import { PostType } from "@/types/enums";
 import { getAllPosts, getPostDetails } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
 import { buildImageUrl } from "@/utils/imageUrl";
@@ -63,7 +63,7 @@ export default async function SinglePostPage({ params }: ISinglePostPageProps) {
       !contentHtml.trim() ||
       data.postType !== PostType.OFFERS
     ) {
-      notFound();
+      permanentRedirect(`/${locale}/offers`);
     }
 
     const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");

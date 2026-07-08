@@ -40,6 +40,8 @@ export class GlossaryController {
     @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('includeUnpublished') includeUnpublished = true,
+    @Query('search') search = '',
+    @Query('categoryId') categoryId = '',
     @Request() req,
   ) {
     return this.glossaryService.findMyTerms(
@@ -47,6 +49,8 @@ export class GlossaryController {
       +page,
       +limit,
       includeUnpublished,
+      search,
+      categoryId,
     );
   }
 

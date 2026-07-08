@@ -4,6 +4,18 @@ import { Prisma } from '@prisma/client';
 import { CreateGlossaryDto } from './dto/create-glossary.dto';
 import { UpdateGlossaryDto } from './dto/update-glossary.dto';
 
+const normalizeText = (text: string): string => {
+  if (!text) return '';
+  const charMap: Record<string, string> = {
+    'ü': 'u', 'ö': 'o', 'ğ': 'g', 'ı': 'i', 'ə': 'e', 'ş': 's', 'ç': 'c',
+    'Ü': 'u', 'Ö': 'o', 'Ğ': 'g', 'I': 'i', 'Ə': 'e', 'Ş': 's', 'Ç': 'c',
+    'i': 'i', 'İ': 'i'
+  };
+  return text
+    .replace(/[üöğıəşçÜÖĞIƏŞÇİi]/g, (match) => charMap[match] || match)
+    .toLowerCase();
+};
+
 @Injectable()
 export class GlossaryService {
   constructor(private prisma: PrismaService) { }
@@ -92,12 +104,12 @@ export class GlossaryService {
       }
 
       if (search) {
-        const lowerSearch = search.toLowerCase().trim();
+        const lowerSearch = normalizeText(search.trim());
         filteredItems = filteredItems.filter((item) => {
-          const termAz = item.term?.az?.toLowerCase() || '';
-          const termRu = item.term?.ru?.toLowerCase() || '';
-          const defAz = item.definition?.az?.toLowerCase() || '';
-          const defRu = item.definition?.ru?.toLowerCase() || '';
+          const termAz = normalizeText(item.term?.az);
+          const termRu = normalizeText(item.term?.ru);
+          const defAz = normalizeText(item.definition?.az);
+          const defRu = normalizeText(item.definition?.ru);
           return (
             termAz.includes(lowerSearch) ||
             termRu.includes(lowerSearch) ||
@@ -231,7 +243,7 @@ export class GlossaryService {
     return glossaryTerm;
   }
 
-  async findMyTerms(authorId: string, page = 1, limit = 10, includeUnpublished: boolean | string = true) {
+  async findMyTerms(authorId: string, page = 1, limit = 10, includeUnpublished: boolean | string = true, search = '', categoryId = '') {
     try {
       const skip = (page - 1) * limit;
       const unpublished = includeUnpublished === true || includeUnpublished === 'true';
@@ -239,28 +251,44 @@ export class GlossaryService {
       const whereClause = {
         authorId,
         ...(unpublished ? {} : { published: true }),
+        ...(categoryId ? { categoryId } : {}),
       };
 
-      const [total, items] = await Promise.all([
-        this.prisma.glossary.count({ where: whereClause }),
-        this.prisma.glossary.findMany({
-          where: whereClause,
-          skip,
-          take: limit,
-          include: this.includeRelations,
-          orderBy: {
-            createdAt: 'desc',
-          },
-        }),
-      ]);
+      const allItems = await this.prisma.glossary.findMany({
+        where: whereClause,
+        include: this.includeRelations,
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      let filteredItems = allItems;
+
+      if (search) {
+        const lowerSearch = normalizeText(search.trim());
+        filteredItems = filteredItems.filter((item) => {
+          const termAz = normalizeText(item.term?.az);
+          const termRu = normalizeText(item.term?.ru);
+          const defAz = normalizeText(item.definition?.az);
+          const defRu = normalizeText(item.definition?.ru);
+          return (
+            termAz.includes(lowerSearch) ||
+            termRu.includes(lowerSearch) ||
+            defAz.includes(lowerSearch) ||
+            defRu.includes(lowerSearch)
+          );
+        });
+      }
+
+      const paginated = filteredItems.slice(skip, skip + limit);
 
       return {
-        items,
+        items: paginated,
         meta: {
-          total,
+          total: filteredItems.length,
           page,
           limit,
-          totalPages: Math.ceil(total / limit),
+          totalPages: Math.ceil(filteredItems.length / limit),
         },
       };
     } catch (error) {
@@ -455,7 +483,7 @@ export class GlossaryService {
   ) {
     try {
       const skip = (page - 1) * limit;
-      const lowerQuery = (query || '').toLowerCase(); // Fix for empty query
+      const lowerQuery = normalizeText((query || '').trim()); // Fix for empty query
 
       const allItems = await this.prisma.glossary.findMany({
         where: includeUnpublished ? {} : { published: true },
@@ -465,10 +493,10 @@ export class GlossaryService {
       const filtered = allItems.filter((item) => {
         if (excludeId && item.id === excludeId) return false;
 
-        const termAz = item.term?.az?.toLowerCase() || '';
-        const termRu = item.term?.ru?.toLowerCase() || '';
-        const defAz = item.definition?.az?.toLowerCase() || '';
-        const defRu = item.definition?.ru?.toLowerCase() || '';
+        const termAz = normalizeText(item.term?.az);
+        const termRu = normalizeText(item.term?.ru);
+        const defAz = normalizeText(item.definition?.az);
+        const defRu = normalizeText(item.definition?.ru);
         return (
           termAz.includes(lowerQuery) ||
           termRu.includes(lowerQuery) ||

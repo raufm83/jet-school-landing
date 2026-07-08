@@ -132,7 +132,7 @@ export default function PostHero({
 
       {tags && tags.length > 0 && (
         <div className="mt-4">
-          <h3 className="font-semibold mb-2">{tagsText}:</h3>
+          <div className="font-semibold mb-2">{tagsText}:</div>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag, index) => (
               <Link

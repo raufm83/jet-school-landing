@@ -19,5 +19,5 @@ const desc2Map: Record<Locale, string> = {
 };
 
 export function defaultAboutIntroHtml(locale: Locale): string {
-  return `<h2>${titleMap[locale]}</h2><p>${desc1Map[locale]}</p><p>${desc2Map[locale]}</p>`;
+  return `<h1>${titleMap[locale]}</h1><p>${desc1Map[locale]}</p><p>${desc2Map[locale]}</p>`;
 }

@@ -60,9 +60,9 @@ export default function GlossaryTermList({
               }`}
             >
               <div className="border rounded-xl sm:rounded-2xl lg:rounded-[16px] p-3 sm:p-4 lg:p-6 hover:shadow-md transition-all duration-300 hover:scale-[1.01] cursor-pointer bg-[#fef9e7] border-jsblack/20">
-                <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-jsblack mb-1 sm:mb-2 [@media(min-width:3500px)]:!text-3xl">
+                <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-jsblack mb-1 sm:mb-2 [@media(min-width:3500px)]:!text-3xl">
                   {term.term[language as keyof typeof term.term]} 
-                </h3>
+                </h2>
 
                 {term.category && (
                   <span className="bg-jsyellow/10 text-jsblack px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm [@media(min-width:3500px)]:!text-xl">

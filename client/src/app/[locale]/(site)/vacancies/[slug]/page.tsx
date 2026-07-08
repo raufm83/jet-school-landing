@@ -11,7 +11,7 @@ import {
 } from "@/utils/seo";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
 import BreadcrumbContextWrapper from "@/hooks/BreadcrumbContextWrapper";
 import { getFaqByPage } from "@/utils/api/faq";
@@ -104,7 +104,7 @@ export default async function VacancyDetailPage({
   
   try {
     const vacancy = await getVacancyBySlugPublic(params.slug);
-    if (!vacancy) return notFound();
+    if (!vacancy) return permanentRedirect(`/${locale}/vacancies`);
 
     const [t, tList, faqItems] = await Promise.all([
       getTranslations({ locale, namespace: "vacancyDetail" }),

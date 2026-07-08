@@ -43,12 +43,12 @@ export default function TeamSlider({
           0: { slidesPerView: 1, spaceBetween: 14, centeredSlides: false },
           480: { slidesPerView: 1, spaceBetween: 16, centeredSlides: false },
           640: { slidesPerView: 2, spaceBetween: 18, centeredSlides: false },
-          768: { slidesPerView: 3, spaceBetween: 24, centeredSlides: true },
-          1024: { slidesPerView: 4, spaceBetween: 24, centeredSlides: true },
-          1280: { slidesPerView: 5, spaceBetween: 24, centeredSlides: true },
-          1536: { slidesPerView: 6, spaceBetween: 30, centeredSlides: true },
-          2500: { slidesPerView: 7, spaceBetween: 40, centeredSlides: true },
-          3500: { slidesPerView: 9, spaceBetween: 50, centeredSlides: true },
+          768: { slidesPerView: 3, spaceBetween: 24, centeredSlides: false },
+          1024: { slidesPerView: 4, spaceBetween: 24, centeredSlides: false },
+          1280: { slidesPerView: 5, spaceBetween: 24, centeredSlides: false },
+          1536: { slidesPerView: 6, spaceBetween: 30, centeredSlides: false },
+          2500: { slidesPerView: 7, spaceBetween: 40, centeredSlides: false },
+          3500: { slidesPerView: 9, spaceBetween: 50, centeredSlides: false },
         }}
         className="!overflow-hidden !px-0 !pb-20 !pt-2"
       >

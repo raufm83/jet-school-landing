@@ -149,9 +149,9 @@ export default async function Footer() {
           <div className="flex w-full min-w-0 flex-col lg:flex-row lg:items-start justify-between gap-8 md:gap-8 lg:gap-12 [@media(min-width:2500px)]:gap-16 [@media(min-width:3500px)]:gap-24">
             {/* Left Section - Company Info */}
             <div className="flex min-w-0 flex-1 flex-col gap-4 sm:gap-5 lg:gap-6 [@media(min-width:2500px)]:gap-8 [@media(min-width:3500px)]:gap-10 lg:min-w-[260px] max-w-[500px] [@media(min-width:2500px)]:max-w-[600px] [@media(min-width:3500px)]:max-w-[800px]">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl [@media(min-width:2500px)]:!text-5xl [@media(min-width:3500px)]:!text-6xl font-bold">
+              <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl [@media(min-width:2500px)]:!text-5xl [@media(min-width:3500px)]:!text-6xl font-bold">
                 JET School
-              </h2>
+              </div>
               <p className="max-w-xs sm:max-w-sm lg:max-w-md [@media(min-width:2500px)]:max-w-lg [@media(min-width:3500px)]:max-w-xl text-white/80 text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl leading-relaxed [@media(min-width:3500px)]:leading-relaxed">
                 {t("tagline")}
               </p>
@@ -268,9 +268,9 @@ export default async function Footer() {
               "
             >
               <div className="w-full min-w-0 md:flex-1 md:basis-0">
-                <h3 className="text-lg sm:text-xl lg:text-2xl [@media(min-width:2500px)]:!text-3xl [@media(min-width:3500px)]:!text-5xl font-bold mb-5 sm:mb-6 [@media(min-width:2500px)]:mb-7 [@media(min-width:3500px)]:mb-9">
+                <h2 className="text-lg sm:text-xl lg:text-2xl [@media(min-width:2500px)]:!text-3xl [@media(min-width:3500px)]:!text-5xl font-bold mb-5 sm:mb-6 [@media(min-width:2500px)]:mb-7 [@media(min-width:3500px)]:mb-9">
                   {t("explore")}
-                </h3>
+                </h2>
                 <ul className="flex min-w-0 flex-col gap-4 sm:gap-5 lg:gap-[1.125rem] [@media(min-width:2500px)]:gap-6 [@media(min-width:3500px)]:gap-8">
                   {exploreLinks.map((item) => (
                     <li key={item.href}>
@@ -284,9 +284,9 @@ export default async function Footer() {
 
               {/* Courses Section */}
               <div className="w-full min-w-0 md:flex-1 md:basis-0">
-                <h3 className="text-lg sm:text-xl lg:text-2xl [@media(min-width:2500px)]:!text-3xl [@media(min-width:3500px)]:!text-5xl font-bold mb-5 sm:mb-6 [@media(min-width:2500px)]:mb-7 [@media(min-width:3500px)]:mb-9">
+                <h2 className="text-lg sm:text-xl lg:text-2xl [@media(min-width:2500px)]:!text-3xl [@media(min-width:3500px)]:!text-5xl font-bold mb-5 sm:mb-6 [@media(min-width:2500px)]:mb-7 [@media(min-width:3500px)]:mb-9">
                   {t("teachingAreas")}
-                </h3>
+                </h2>
                 <ul className="flex min-w-0 flex-col gap-4 sm:gap-5 lg:gap-[1.125rem] [@media(min-width:2500px)]:gap-6 [@media(min-width:3500px)]:gap-8">
                   {sortedCourses.length > 0 ? (
                     sortedCourses.map((c) => (
@@ -312,9 +312,9 @@ export default async function Footer() {
 
               {/* Resources Section */}
               <div className="w-full min-w-0 md:flex-1 md:basis-0">
-                <h3 className="text-lg sm:text-xl lg:text-2xl [@media(min-width:2500px)]:!text-3xl [@media(min-width:3500px)]:!text-5xl font-bold mb-5 sm:mb-6 [@media(min-width:2500px)]:mb-7 [@media(min-width:3500px)]:mb-9">
+                <h2 className="text-lg sm:text-xl lg:text-2xl [@media(min-width:2500px)]:!text-3xl [@media(min-width:3500px)]:!text-5xl font-bold mb-5 sm:mb-6 [@media(min-width:2500px)]:mb-7 [@media(min-width:3500px)]:mb-9">
                   {t("resources")}
-                </h3>
+                </h2>
                 <ul className="flex min-w-0 flex-col gap-4 sm:gap-5 lg:gap-[1.125rem] [@media(min-width:2500px)]:gap-6 [@media(min-width:3500px)]:gap-8">
                   {resourceLinks.map((item) => (
                     <li key={item.href}>

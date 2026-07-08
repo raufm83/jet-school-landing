@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import dynamic from "next/dynamic";
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const ContentProtection = dynamic(
   () => import("@/components/content-protection"),
@@ -85,23 +86,7 @@ export default function RootLayout({
             src="https://www.facebook.com/tr?id=24501015369551397&ev=PageView&noscript=1"
           />
         </noscript>
-        <Script
-          id="ga-gtag"
-          strategy="lazyOnload"
-          src="https://www.googletagmanager.com/gtag/js?id=G-8PKPCDFDSF"
-        />
-        <Script
-          id="ga-init"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer=window.dataLayer||[];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js',new Date());
-              gtag('config','G-8PKPCDFDSF');
-            `,
-          }}
-        />
+        <GoogleAnalytics gaId="G-8PKPCDFDSF" />
       </body>
     </html>
   );

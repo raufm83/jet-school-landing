@@ -69,9 +69,9 @@ const TeamMemberCard = memo(
             }}
           />
         </div>
-        <h4 className="text-center text-sm font-semibold leading-snug text-jsblack sm:text-base">
+        <div className="text-center text-sm font-semibold leading-snug text-jsblack sm:text-base">
           {fullName}
-        </h4>
+        </div>
         <p className="mt-1.5 line-clamp-3 min-h-0 text-center text-xs leading-snug text-neutral-600 sm:mt-2 sm:line-clamp-2 sm:text-[13px]">
           {description}
         </p>

@@ -96,8 +96,9 @@ export default async function AboutPage({
   ]);
 
   const localeKey = locale === "ru" ? "ru" : "az";
-  const introHtml =
+  const rawHtml =
     aboutHero?.bodyHtml?.[localeKey]?.trim() || defaultAboutIntroHtml(localeKey);
+  const introHtml = rawHtml.replace(/<h2/g, "<h1").replace(/<\/h2>/g, "</h1>");
   const introImageAlt =
     aboutHero?.imageAlt?.[localeKey] ||
     (localeKey === "az" ? "JET School haqqimizda" : "JET School o nas");
