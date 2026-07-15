@@ -208,6 +208,16 @@ const middlewares = withAuth(
     const pathname = request.nextUrl.pathname;
     const path = normalizePathname(pathname);
 
+    // Protect robots.txt from normal users
+    if (pathname === "/robots.txt") {
+      const userAgent = request.headers.get("user-agent") || "";
+      const isSearchEngine = /Googlebot|Bingbot|Slurp|DuckDuckBot|Baiduspider|YandexBot/i.test(userAgent);
+      if (!isSearchEngine) {
+        return new NextResponse("Not Found", { status: 404 });
+      }
+      return NextResponse.next();
+    }
+
     if (pathname.match(/^\/(az|ru)\/dashboard\/login/)) {
       const newUrl = new URL(pathname.replace(/^\/(az|ru)/, ""), request.url);
       return NextResponse.redirect(newUrl);
@@ -277,6 +287,7 @@ export default middlewares;
 
 export const config = {
   matcher: [
+    "/robots.txt",
     "/dashboard/:path*",
     "/((?!api|_next|public|_vercel|.*\\..*|favicon.ico).*)",
     "/",

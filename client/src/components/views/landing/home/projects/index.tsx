@@ -53,6 +53,7 @@ export default async function Projects() {
       >
         <SectionTitle
           home
+          as="h1"
           title={t("title")}
           description={t("description")}
         />

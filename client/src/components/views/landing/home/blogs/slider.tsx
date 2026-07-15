@@ -37,7 +37,7 @@ export default function PostsSlider({ data }: SliderProps) {
           2560: { slidesPerView: 4 },
           3540: { slidesPerView: 4 },
         }}
-        className="!pb-4 4xl:!pb-6"
+        className="!py-4 px-2 4xl:!py-6"
       >
         {items.map((post: Post, idx: number) => (
           <SwiperSlide key={post.id} className="!h-auto flex items-stretch">

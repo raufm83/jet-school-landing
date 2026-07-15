@@ -100,9 +100,9 @@ export default function SwiperCourses({
                 {/* Content */}
                 <div className="relative z-10 flex min-w-0 flex-1 flex-col pb-4">
                   <div>
-                    <h2 className="mb-1 text-2xl font-bold leading-tight text-jsblack">
+                    <h3 className="mb-1 text-2xl font-bold leading-tight text-jsblack">
                       {course.title[normalizedLocale]}
-                    </h2>
+                    </h3>
 
                     <p
                       className="text-base font-normal"
@@ -194,7 +194,7 @@ export default function SwiperCourses({
                   {/* Tags */}
                   {tags.length > 0 && (
                     <div className="relative z-0 mt-auto pt-6 -mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6">
-                      <div className="scrolling-tags flex w-max gap-2">
+                      <div className="scrolling-tags flex w-max gap-2" style={{ animationDuration: `${tags.length * 3.5}s` }}>
                         {[...tags, ...tags].map((tag, index) => (
                           <span
                             key={index}

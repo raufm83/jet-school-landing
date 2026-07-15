@@ -97,7 +97,7 @@ export default async function SinglePostPage({ params }: ISinglePostPageProps) {
       </>
     );
   } catch {
-    notFound();
+    permanentRedirect(`/${params.locale}/offers`);
   }
 }
 
@@ -116,11 +116,7 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
       !metaContent.trim() ||
       data.postType !== PostType.OFFERS
     ) {
-      return {
-        title: "Not Found",
-        description: "The requested offer was not found",
-        robots: { index: false },
-      };
+      permanentRedirect(`/${params.locale}/offers`);
     }
 
     const contentText = metaContent.replace(/<[^>]*>/g, "");
@@ -166,11 +162,7 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
       },
     };
   } catch {
-    return {
-      title: "Error",
-      description: "Failed to load post details",
-      robots: { index: false },
-    };
+    permanentRedirect(`/${params.locale}/offers`);
   }
 }
 

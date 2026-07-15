@@ -10,7 +10,7 @@ import Blogs from "@/components/views/landing/home/blogs";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Locale } from "@/i18n/request";
-import { trimMetaTitle, trimMetaDescription } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildHomePageGraph, SITE_SCHEMA } from "@/data/site-schema";
 import { getPageMeta } from "@/utils/api/page-meta";
@@ -30,7 +30,7 @@ export async function generateMetadata({
   });
   const meta = await getPageMeta("home", locale);
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const canonical = baseUrl;
+  const canonical = buildHreflangUrl(baseUrl, locale);
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)

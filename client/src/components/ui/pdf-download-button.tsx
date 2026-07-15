@@ -1,7 +1,5 @@
 "use client"
 import { useRef, useState } from "react";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import { FaFilePdf } from "react-icons/fa";
 
 const CONTENT_WIDTH_PX = 800;
@@ -77,12 +75,19 @@ export default function PdfDownloadButton({
   }
 
   const handleDownload = async () => {
-    const element = printRef.current;
-    if (!element) return;
     setIsGenerating(true);
     const modifiedElements: { el: HTMLElement; originalMargin: string }[] = [];
 
     try {
+      const jsPDF = (await import("jspdf")).default;
+      const html2canvas = (await import("html2canvas")).default;
+      
+      // Wait for React to render the hidden print div
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const element = printRef.current;
+      if (!element) return;
+
       const contentDiv = element.querySelector(".pdf-render-content");
       if (contentDiv) {
         const containerRect = element.getBoundingClientRect();
@@ -233,108 +238,110 @@ export default function PdfDownloadButton({
         <span className="font-medium">{isGenerating ? loadingText : buttonText}</span>
       </button>
 
-      <div style={{ position: "absolute", left: "-9999px", top: 0, width: CONTENT_WIDTH_PX }}>
-        <div
-          ref={printRef}
-          style={{
-            width: `${CONTENT_WIDTH_PX}px`,
-            padding: `${CONTENT_PADDING_PX}px`,
-            boxSizing: "border-box",
-            background: "white",
-            color: "#1a202c",
-            fontFamily: "inherit",
-          }}
-        >
+      {isGenerating && (
+        <div style={{ position: "absolute", left: "-9999px", top: 0, width: CONTENT_WIDTH_PX }}>
           <div
+            ref={printRef}
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderBottom: "1px solid #e2e8f0",
-              paddingBottom: "15px",
-              marginBottom: "30px",
-              position: "relative",
-              zIndex: 2,
+              width: `${CONTENT_WIDTH_PX}px`,
+              padding: `${CONTENT_PADDING_PX}px`,
+              boxSizing: "border-box",
+              background: "white",
+              color: "#1a202c",
+              fontFamily: "inherit",
             }}
           >
-            <img
-              alt="JET School"
-              src="/logos/JET_School_Yellowww.webp"
-              width={200}
-              height={48}
-              style={{
-                width: "140px",
-                height: "auto",
-                maxHeight: "44px",
-                objectFit: "contain",
-                display: "block",
-              }}
-              onError={(e) => {
-                const t = e.currentTarget;
-                if (t.src.endsWith(".webp")) {
-                  t.src = "/logos/JET_School_Yellowww.png";
-                }
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "inherit",
-                fontSize: "15px",
-                fontWeight: 600,
-                color: "#64748b",
-              }}
-            >
-              {SITE_LINK}
-            </span>
-          </div>
-
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <h1
-              style={{
-                fontSize: "38px",
-                fontWeight: "800",
-                marginBottom: "25px",
-                color: "#0f172a",
-                lineHeight: "1.2",
-              }}
-            >
-              {title}
-            </h1>
-
             <div
-              className="pdf-render-content"
               style={{
-                fontSize: "17px",
-                lineHeight: "1.8",
-                color: "#334155",
-                textAlign: "justify",
-              }}
-              dangerouslySetInnerHTML={{ __html: description }}
-            />
-
-            <div
-              className="pdf-render-footer"
-              style={{
-                borderTop: "1px solid #e2e8f0",
-                marginTop: "28px",
-                paddingTop: "14px",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                gap: "24px",
-                color: "#64748b",
-                fontFamily: "inherit",
-                fontSize: "15px",
-                fontWeight: 500,
-                pageBreakInside: "avoid",
+                borderBottom: "1px solid #e2e8f0",
+                paddingBottom: "15px",
+                marginBottom: "30px",
+                position: "relative",
+                zIndex: 2,
               }}
             >
-              <span>{phoneTrim}</span>
-              <span>{SITE_LINK}</span>
+              <img
+                alt="JET School"
+                src="/logos/JET_School_Yellowww.webp"
+                width={200}
+                height={48}
+                style={{
+                  width: "140px",
+                  height: "auto",
+                  maxHeight: "44px",
+                  objectFit: "contain",
+                  display: "block",
+                }}
+                onError={(e) => {
+                  const t = e.currentTarget;
+                  if (t.src.endsWith(".webp")) {
+                    t.src = "/logos/JET_School_Yellowww.png";
+                  }
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: "inherit",
+                  fontSize: "15px",
+                  fontWeight: 600,
+                  color: "#64748b",
+                }}
+              >
+                {SITE_LINK}
+              </span>
+            </div>
+
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <h1
+                style={{
+                  fontSize: "38px",
+                  fontWeight: "800",
+                  marginBottom: "25px",
+                  color: "#0f172a",
+                  lineHeight: "1.2",
+                }}
+              >
+                {title}
+              </h1>
+
+              <div
+                className="pdf-render-content"
+                style={{
+                  fontSize: "17px",
+                  lineHeight: "1.8",
+                  color: "#334155",
+                  textAlign: "justify",
+                }}
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
+
+              <div
+                className="pdf-render-footer"
+                style={{
+                  borderTop: "1px solid #e2e8f0",
+                  marginTop: "28px",
+                  paddingTop: "14px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "24px",
+                  color: "#64748b",
+                  fontFamily: "inherit",
+                  fontSize: "15px",
+                  fontWeight: 500,
+                  pageBreakInside: "avoid",
+                }}
+              >
+                <span>{phoneTrim}</span>
+                <span>{SITE_LINK}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       <style jsx global>{`
         .pdf-render-content h1,

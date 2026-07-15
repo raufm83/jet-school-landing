@@ -32,9 +32,9 @@ export default async function ContactSection({
       </div>
 
       <div className="space-y-6 w-full">
-        <h1 className="mb-3 font-bold text-jsblack text-2xl sm:text-3xl md:text-4xl leading-tight">
+        <h2 className="mb-3 font-bold text-jsblack text-2xl sm:text-3xl md:text-4xl leading-tight">
           {t("contact.form.title")}
-        </h1>
+        </h2>
         <p className="text-pretty text-base leading-snug text-jsblack/70 sm:text-lg">
           {t("contact.form.description")}
         </p>

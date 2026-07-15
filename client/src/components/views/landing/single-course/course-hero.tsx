@@ -96,7 +96,7 @@ export default async function CourseHero({
           
           {tags && tags.length > 0 && (
             <div className="mt-4 -mx-4 overflow-hidden px-4">
-              <div className="scrolling-tags flex w-max gap-3">
+              <div className="scrolling-tags flex w-max gap-3" style={{ animationDuration: `${tags.length * 3.5}s` }}>
                 {[...tags, ...tags].map((tag, index) => (
                   <span
                     key={index}

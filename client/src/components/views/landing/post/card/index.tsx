@@ -66,7 +66,7 @@ export default function PostCard({ post, locale, t, loadEager = false }: PostCar
     <Link
       href={{ pathname: postPathname, params: { slug } }}
       className="group relative flex flex-col h-full bg-[#fef7eb] border border-jsyellow/50 rounded-[32px] overflow-hidden transition-all duration-300 ease-out
-        hover:border-jsyellow hover:shadow-md hover:-translate-y-1"
+        hover:border-jsyellow hover:shadow-lg hover:shadow-jsyellow/20 hover:-translate-y-1"
     >
   {imageSrc && (
     <div
@@ -121,9 +121,9 @@ export default function PostCard({ post, locale, t, loadEager = false }: PostCar
       )}
     </div>
 
-    <h2 className="text-xl font-bold mb-3 [@media(min-width:3500px)]:!text-4xl line-clamp-2">
+    <h3 className="text-xl font-bold mb-3 [@media(min-width:3500px)]:!text-4xl line-clamp-2">
       {title}
-    </h2>
+    </h3>
 
     <p className="text-gray-600 [@media(min-width:3500px)]:!text-2xl mb-4 line-clamp-3 flex-grow">
       {contentPreview}
