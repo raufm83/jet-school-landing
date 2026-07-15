@@ -263,6 +263,7 @@ export default function PdfDownloadButton({
                 zIndex: 2,
               }}
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt="JET School"
                 src="/logos/JET_School_Yellowww.webp"
