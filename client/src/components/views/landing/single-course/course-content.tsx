@@ -12,6 +12,7 @@ interface CourseContentProps {
 export default function CourseContent({
   modules = [],
   locale,
+  title,
   defaultOpenIndex = 0,
 }: CourseContentProps) {
   // null ilə başlayırıq: ilk render-də ref-lər hələ boşdur,
