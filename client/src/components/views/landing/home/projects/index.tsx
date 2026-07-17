@@ -76,7 +76,7 @@ export default async function Projects() {
           ))}
         </div>
 
-        <Link href="/projects">
+        <Link href="/projects" aria-label={`${t("seeAll")} ${t("title")}`}>
           <Button
             iconPosition="right"
             className="
@@ -86,6 +86,7 @@ export default async function Projects() {
             "
             icon={<MdArrowRightAlt size={24} className="[@media(min-width:3500px)]:!w-12 [@media(min-width:3500px)]:!h-12" />}
             text={t("seeAll")}
+            ariaLabel={`${t("seeAll")} ${t("title")}`}
           />
         </Link>
       </div>

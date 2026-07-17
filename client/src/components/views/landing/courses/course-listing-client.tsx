@@ -31,7 +31,7 @@ const CourseListingClient = ({ courses, locale = "az" }: ICoursesSlider) => {
           }
         }
         .scrolling-tags {
-          animation: scroll-tags 15s linear infinite;
+          animation: scroll-tags linear infinite;
           will-change: transform;
         }
         .scrolling-tags:hover {
@@ -178,7 +178,10 @@ const CourseListingClient = ({ courses, locale = "az" }: ICoursesSlider) => {
                     {/* ------- KAYAN TAGLAR (Marquee) ------- */}
                     {tags.length > 0 && (
                       <div className="mt-2 sm:mt-3 relative -mx-4 px-4 sm:-mx-5 sm:px-5 lg:-mx-6 lg:px-6 overflow-hidden">
-                        <div className="scrolling-tags flex gap-1.5 sm:gap-2 w-max">
+                        <div 
+                          className="scrolling-tags flex gap-1.5 sm:gap-2 w-max"
+                          style={{ animationDuration: `${tags.length * 2}s` }}
+                        >
                           {tags.map((tag, i) => (
                             <span
                               key={i}

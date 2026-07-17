@@ -79,7 +79,7 @@ export default async function Footer() {
       ? coursesData.items.slice().sort(sortCoursesByOrder)
       : [];
     const footerLinkClass =
-      "text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200 hover:text-white/90 leading-relaxed [@media(min-width:3500px)]:leading-relaxed";
+      "text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200 hover:text-jsblack/90 leading-relaxed [@media(min-width:3500px)]:leading-relaxed";
     const exploreLinks = [
       { href: "/", label: t("home") },
       { href: "/about-us", label: t("about") },
@@ -100,7 +100,7 @@ export default async function Footer() {
     return (
       <footer
         id="contacts"
-        className="relative w-full min-w-0 max-w-full shrink-0 self-stretch overflow-hidden bg-jsyellow text-white mt-12 sm:mt-16 md:mt-20"
+        className="relative w-full min-w-0 max-w-full shrink-0 self-stretch overflow-hidden bg-jsyellow text-jsblack mt-12 sm:mt-16 md:mt-20"
       >
         <div
           className="pointer-events-none absolute inset-0 z-0 overflow-hidden mix-blend-soft-light opacity-30 sm:opacity-40 lg:opacity-50 blur-[1px] sm:blur-[2px]"
@@ -152,7 +152,7 @@ export default async function Footer() {
               <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl [@media(min-width:2500px)]:!text-5xl [@media(min-width:3500px)]:!text-6xl font-bold">
                 JET School
               </p>
-              <p className="max-w-xs sm:max-w-sm lg:max-w-md [@media(min-width:2500px)]:max-w-lg [@media(min-width:3500px)]:max-w-xl text-white/80 text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl leading-relaxed [@media(min-width:3500px)]:leading-relaxed">
+              <p className="max-w-xs sm:max-w-sm lg:max-w-md [@media(min-width:2500px)]:max-w-lg [@media(min-width:3500px)]:max-w-xl text-jsblack/80 text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl leading-relaxed [@media(min-width:3500px)]:leading-relaxed">
                 {t("tagline")}
               </p>
 
@@ -216,7 +216,7 @@ export default async function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Facebook"
-                      className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
+                      className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaFacebook className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
                     </a>
@@ -227,7 +227,7 @@ export default async function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Instagram"
-                      className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
+                      className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaInstagram className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
                     </a>
@@ -238,7 +238,7 @@ export default async function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="YouTube"
-                      className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
+                      className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaYoutube className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
                     </a>
@@ -249,7 +249,7 @@ export default async function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="TikTok"
-                      className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110"
+                      className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaTiktok className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
                     </a>
@@ -296,14 +296,14 @@ export default async function Footer() {
                             pathname: "/course/[slug]",
                             params: { slug: c.slug[lang] },
                           }} 
-                          className="max-w-full text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200 hover:text-white/90 leading-relaxed [@media(min-width:3500px)]:leading-relaxed block break-words"
+                          className="max-w-full text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200 hover:text-jsblack/90 leading-relaxed [@media(min-width:3500px)]:leading-relaxed block break-words"
                         >
                           {c.title[lang]}
                         </Link>
                       </li>
                     ))
                   ) : (
-                    <li className="text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl text-white/70">
+                    <li className="text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl text-jsblack/70">
                       {t("noCourses")}
                     </li>
                   )}
@@ -329,8 +329,8 @@ export default async function Footer() {
           </div>
 
           {/* Copyright Section */}
-          <div className="mt-8 sm:mt-10 lg:mt-12 [@media(min-width:2500px)]:mt-16 [@media(min-width:3500px)]:mt-20 pt-6 sm:pt-8 [@media(min-width:2500px)]:pt-10 [@media(min-width:3500px)]:pt-12 border-t border-white/20 text-center lg:text-left">
-            <p className="text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl text-white/90 leading-relaxed [@media(min-width:3500px)]:leading-relaxed">
+          <div className="mt-8 sm:mt-10 lg:mt-12 [@media(min-width:2500px)]:mt-16 [@media(min-width:3500px)]:mt-20 pt-6 sm:pt-8 [@media(min-width:2500px)]:pt-10 [@media(min-width:3500px)]:pt-12 border-t border-jsblack/20 text-center lg:text-left">
+            <p className="text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl text-jsblack/90 leading-relaxed [@media(min-width:3500px)]:leading-relaxed">
               © 2021 – {currentYear} JET School. {t("copyright")}
             </p>
           </div>
@@ -340,7 +340,7 @@ export default async function Footer() {
   } catch (err) {
     console.error("Footer error:", err);
     return (
-      <footer className="w-full min-w-0 max-w-full shrink-0 overflow-hidden bg-jsyellow px-4 py-6 text-center text-white sm:px-6">
+      <footer className="w-full min-w-0 max-w-full shrink-0 overflow-hidden bg-jsyellow px-4 py-6 text-center text-jsblack sm:px-6">
         <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-6">
           <p className="text-sm sm:text-base [@media(min-width:3500px)]:!text-2xl">
             © 2021 – {new Date().getFullYear()} JET School

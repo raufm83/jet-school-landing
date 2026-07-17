@@ -69,12 +69,13 @@ export default async function Reviews() {
         ))}
       </div>
 
-      <Link href="/reviews">
+      <Link href="/reviews" aria-label={`${t("seeAll")} ${t("homeSectionTitle")}`}>
         <Button
           iconPosition="right"
           className="items-center mx-auto py-3 4xl:py-4 px-6 4xl:px-8"
           icon={<MdArrowRightAlt size={24} />}
           text={t("seeAll")}
+          ariaLabel={`${t("seeAll")} ${t("homeSectionTitle")}`}
         />
       </Link>
     </div>

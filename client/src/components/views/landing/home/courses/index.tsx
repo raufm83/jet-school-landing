@@ -128,7 +128,7 @@ export default async function CoursesSlider() {
 
                 {tags.length > 0 && (
                   <div className="mt-3 sm:mt-4 relative -mx-4 sm:-mx-5 lg:-mx-6 px-4 sm:px-5 lg:px-6 overflow-hidden">
-                    <div className="scrolling-tags flex gap-1.5 sm:gap-2 w-max" style={{ animationDuration: `${tags.length * 3.5}s` }}>
+                    <div className="scrolling-tags flex gap-1.5 sm:gap-2 w-max" style={{ animationDuration: `${tags.length * 2}s` }}>
                       {[...tags, ...tags].map((tag, i) => (
                         <span
                           key={i}

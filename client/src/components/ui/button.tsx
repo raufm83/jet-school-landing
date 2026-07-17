@@ -13,6 +13,7 @@ interface IButton {
   iconPosition?: "left" | "right";
   className?: string;
   fontWeight?: "normal" | "bold" | "semibold" | "extrabold";
+  ariaLabel?: string;
 }
 
 export default function Button({
@@ -25,6 +26,7 @@ export default function Button({
   iconSize = 16,
   fontWeight = "semibold",
   onClick,
+  ariaLabel,
 }: IButton) {
   const renderIcon = () => {
     if (!Icon) return null;
@@ -42,10 +44,11 @@ export default function Button({
 
   return (
     <button
+      aria-label={ariaLabel}
       className={cn(
         variant === "primary" &&
-          "bg-jsyellow hover:bg-white border hover:border-jsyellow hover:text-jsyellow text-white hover:opacity-70",
-        variant === "secondary" && "bg-white text-jsyellow hover:bg-gray-50",
+          "bg-jsyellow hover:bg-white border-2 border-transparent hover:border-jsyellow text-jsblack hover:text-[#D97706]",
+        variant === "secondary" && "bg-white text-[#D97706] hover:bg-gray-50 border-2 border-[#D97706]",
         "py-3 px-8 rounded-[30px]",
         "flex items-center transition-all duration-300 justify-center gap-2 group",
         iconPosition === "right" && "flex-row-reverse",

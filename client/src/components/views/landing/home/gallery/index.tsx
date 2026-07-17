@@ -50,12 +50,13 @@ export default async function Gallery() {
           previewCount={PREVIEW_COUNT}
         />
 
-        <Link href="/gallery">
+        <Link href="/gallery" aria-label={`${t("seeAll")} - Qalereya`}>
           <Button
             iconPosition="right"
             className="items-center mx-auto py-3 px-6 4xl:py-4 4xl:px-8 [@media(min-width:3500px)]:!text-2xl"
             icon={<MdArrowRightAlt size={24} className="[@media(min-width:3500px)]:!w-12 [@media(min-width:3500px)]:!h-12" />}
             text={t("seeAll")}
+            ariaLabel={`${t("seeAll")} - Qalereya`}
           />
         </Link>
       </div>

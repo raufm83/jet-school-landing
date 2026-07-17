@@ -34,12 +34,13 @@ export default async function Blogs() {
           <PostsSlider data={posts} />
         </div>
 
-        <Link href="/news">
+        <Link href="/news" aria-label={`${t("seeAll")} ${t("title")}`}>
           <Button
             iconPosition="right"
             className="items-center mx-auto py-3 [@media(min-width:3500px)]:!text-2xl px-6 4xl:py-4 4xl:px-8"
             icon={<MdArrowRightAlt size={24} className="[@media(min-width:3500px)]:!w-12 [@media(min-width:3500px)]:!h-12" />}
             text={t("seeAll")}
+            ariaLabel={`${t("seeAll")} ${t("title")}`}
           />
         </Link>
       </div>

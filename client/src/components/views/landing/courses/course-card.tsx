@@ -63,7 +63,7 @@ export default function CourseCard({ course, locale }: CourseCardProps) {
 
         {tags.length > 0 && (
           <div className="relative z-0 mt-auto mb-6 -mx-6 overflow-hidden px-6">
-            <div className="scrolling-tags flex w-max gap-2" style={{ animationDuration: `${tags.length * 3.5}s` }}>
+            <div className="scrolling-tags flex w-max gap-2" style={{ animationDuration: `${tags.length * 2}s` }}>
               {[...tags, ...tags].map((tag, index) => (
                 <span
                   key={index}

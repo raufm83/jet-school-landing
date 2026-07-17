@@ -78,8 +78,8 @@ export default function SwiperCourses({
                   lg:min-h-[460px]
                   transition-all
                   duration-300
-                  hover:-translate-y-2
-                  hover:shadow-2xl
+                  hover:-translate-y-1
+                  hover:shadow-md
                   hover:shadow-black/20
                 "
                 style={{
@@ -194,7 +194,7 @@ export default function SwiperCourses({
                   {/* Tags */}
                   {tags.length > 0 && (
                     <div className="relative z-0 mt-auto pt-6 -mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6">
-                      <div className="scrolling-tags flex w-max gap-2" style={{ animationDuration: `${tags.length * 3.5}s` }}>
+                      <div className="scrolling-tags flex w-max gap-2" style={{ animationDuration: `${tags.length * 2}s` }}>
                         {[...tags, ...tags].map((tag, index) => (
                           <span
                             key={index}

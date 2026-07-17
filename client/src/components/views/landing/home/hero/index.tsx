@@ -59,6 +59,7 @@ export default async function Hero({ locale }: HeroProps) {
             prose-p:text-[#6B6B6B] prose-p:font-medium
             prose-p:leading-7 md:prose-p:leading-relaxed
             prose-a:text-jsyellow prose-strong:text-jsblack
+            [&_span[style*='color']]:!text-[#D97706]
             [@media(min-width:3000px)]:prose-headings:!text-[4.5rem]
             [@media(min-width:3000px)]:prose-p:!text-[35px] [@media(min-width:3000px)]:prose-p:!leading-10
           "

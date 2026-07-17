@@ -5,10 +5,10 @@ import Hero from "@/components/views/landing/home/hero";
 
 const CoursesSlider = dynamic(() => import("@/components/views/landing/home/courses"), { ssr: true });
 const AboutUs = dynamic(() => import("@/components/views/landing/home/about-us"), { ssr: true });
-const Reviews = dynamic(() => import("@/components/views/landing/home/reviews"), { ssr: true });
-const Projects = dynamic(() => import("@/components/views/landing/home/projects"), { ssr: true });
-const Gallery = dynamic(() => import("@/components/views/landing/home/gallery"), { ssr: true });
-const Blogs = dynamic(() => import("@/components/views/landing/home/blogs"), { ssr: true });
+const Reviews = dynamic(() => import("@/components/views/landing/home/reviews"), { ssr: false });
+const Projects = dynamic(() => import("@/components/views/landing/home/projects"), { ssr: false });
+const Gallery = dynamic(() => import("@/components/views/landing/home/gallery"), { ssr: false });
+const Blogs = dynamic(() => import("@/components/views/landing/home/blogs"), { ssr: false });
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Locale } from "@/i18n/request";
