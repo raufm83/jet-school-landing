@@ -223,6 +223,11 @@ const middlewares = withAuth(
       return NextResponse.redirect(newUrl);
     }
 
+    if (pathname.startsWith("/en/") || pathname === "/en") {
+      const newUrl = new URL(pathname.replace(/^\/en/, "/az"), request.url);
+      return NextResponse.redirect(newUrl);
+    }
+
     /* ?letter=… (lüğət hərfi və s.) axtarış nəticələri indekslənməsin */
     if (request.nextUrl.searchParams.has("letter") && !pathname.startsWith("/dashboard")) {
       const intlRes = intlMiddleware(

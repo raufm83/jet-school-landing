@@ -66,7 +66,7 @@ export default async function CoursesSlider() {
                 pathname: "/course/[slug]",
                 params: { slug: course.slug[normalizedLocale] },
               }}
-              className="relative z-20 flex flex-col w-full border-2 rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden p-4 sm:p-5 lg:p-5 xl:p-6 min-h-[200px] sm:min-h-[260px] md:min-h-[280px] lg:min-h-[300px] justify-between transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:z-[50] group"
+              className="relative z-20 flex flex-col w-full border-2 rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden p-4 sm:p-5 lg:p-5 xl:p-6 min-h-[200px] sm:min-h-[260px] md:min-h-[280px] lg:min-h-[300px] justify-between transition-all duration-300 hover:shadow-md hover:shadow-black/20 hover:scale-[1.02] hover:z-[50] group"
               style={{
                 backgroundColor: cardStyle.backgroundColor,
                 borderColor: cardStyle.borderColor,
@@ -80,9 +80,9 @@ export default async function CoursesSlider() {
 
               <div className="relative z-10 flex flex-col gap-2 sm:gap-3 pb-3 sm:pb-4 min-w-0">
                 <div>
-                  <h2 className="text-base sm:text-lg lg:text-xl font-bold leading-tight mb-1 sm:mb-2 text-black">
+                  <h3 className="text-base sm:text-lg lg:text-xl font-bold leading-tight mb-1 sm:mb-2 text-black">
                     {course.title[normalizedLocale]}
-                  </h2>
+                  </h3>
                   <p
                     className="text-sm font-normal lg:text-base leading-relaxed line-clamp-2"
                     style={{ color: course.textColor || "#1F2937" }}
@@ -128,7 +128,7 @@ export default async function CoursesSlider() {
 
                 {tags.length > 0 && (
                   <div className="mt-3 sm:mt-4 relative -mx-4 sm:-mx-5 lg:-mx-6 px-4 sm:px-5 lg:px-6 overflow-hidden">
-                    <div className="scrolling-tags flex gap-1.5 sm:gap-2 w-max">
+                    <div className="scrolling-tags flex gap-1.5 sm:gap-2 w-max" style={{ animationDuration: `${tags.length * 3.5}s` }}>
                       {[...tags, ...tags].map((tag, i) => (
                         <span
                           key={i}

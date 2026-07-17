@@ -1,12 +1,14 @@
 // src/app/[locale]/page.tsx
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import Hero from "@/components/views/landing/home/hero";
-import CoursesSlider from "@/components/views/landing/home/courses";
-import AboutUs from "@/components/views/landing/home/about-us";
-import Reviews from "@/components/views/landing/home/reviews";
-import Projects from "@/components/views/landing/home/projects";
-import Gallery from "@/components/views/landing/home/gallery";
-import Blogs from "@/components/views/landing/home/blogs";
+
+const CoursesSlider = dynamic(() => import("@/components/views/landing/home/courses"), { ssr: true });
+const AboutUs = dynamic(() => import("@/components/views/landing/home/about-us"), { ssr: true });
+const Reviews = dynamic(() => import("@/components/views/landing/home/reviews"), { ssr: true });
+const Projects = dynamic(() => import("@/components/views/landing/home/projects"), { ssr: true });
+const Gallery = dynamic(() => import("@/components/views/landing/home/gallery"), { ssr: true });
+const Blogs = dynamic(() => import("@/components/views/landing/home/blogs"), { ssr: true });
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Locale } from "@/i18n/request";

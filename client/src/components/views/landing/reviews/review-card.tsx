@@ -80,11 +80,11 @@ export default function ReviewCard({
         <div
           className="absolute inset-x-0 bottom-0 flex h-[30%] flex-col justify-center bg-gradient-to-t from-black/85 to-black/55 px-6 backdrop-blur-[2px] transition-all duration-300 delay-[50ms] md:translate-y-full md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
         >
-          <h2
+          <h3
             className="mb-2 line-clamp-1 text-lg font-semibold text-white transition-all duration-300 delay-100 md:translate-y-5 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
           >
             {locale === "az" ? title.az : title.ru}
-          </h2>
+          </h3>
           <p
             className="line-clamp-2 text-sm text-gray-200 transition-all duration-300 delay-150 md:translate-y-5 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
           >

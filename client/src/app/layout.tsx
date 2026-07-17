@@ -4,6 +4,7 @@ import "./globals.css";
 import Script from "next/script";
 import dynamic from "next/dynamic";
 import { GoogleAnalytics } from '@next/third-parties/google';
+import Preloader from "@/components/ui/preloader";
 
 const ContentProtection = dynamic(
   () => import("@/components/content-protection"),
@@ -39,14 +40,13 @@ export default function RootLayout({
   return (
     <html lang="az" suppressHydrationWarning>
       <head>
-        {/* Yalnız API — üçüncü tərəf skriptlər lazyOnload; əlavə preconnect LCP ilə şəbəkə yarışı yaradır */}
-        <link rel="preconnect" href="https://api.jetschool.az" />
-        <link rel="dns-prefetch" href="https://api.jetschool.az" />
+        {/* Yalnız lazımi prefetch */}
         <link rel="dns-prefetch" href="https://img.youtube.com" />
       </head>
       <body
         className={`${manrope.className} scroll-smooth antialiased max-w-full bg-white`}
       >
+        <Preloader />
         <Script
           id="sync-html-lang-from-path"
           strategy="beforeInteractive"

@@ -116,7 +116,7 @@ export default function ContactModal() {
           >
             <MdClose className="text-xl" />
           </button>
-          <h2 className="font-semibold text-2xl">{t("messageSent")}</h2>
+          <div className="font-semibold text-2xl text-center">{t("messageSent")}</div>
           <div
             className="bg-green-100 rounded-full p-4"
             style={{ animation: "checkIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) 0.2s both" }}
@@ -143,7 +143,7 @@ export default function ContactModal() {
             className="absolute -left-[9999px] w-px h-px opacity-0 pointer-events-none overflow-hidden"
           />
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-semibold text-2xl">{t("title")}</h2>
+            <div className="font-semibold text-2xl">{t("title")}</div>
             <button
               className="p-2 hover:bg-jsyellow/10 rounded-full"
               onClick={() => {

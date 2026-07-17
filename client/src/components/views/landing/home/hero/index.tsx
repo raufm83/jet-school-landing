@@ -13,8 +13,11 @@ type HeroProps = {
 };
 
 export default async function Hero({ locale }: HeroProps) {
-  const t = await getTranslations({ locale, namespace: "hero" });
-  const remote = await getHomeHero();
+  const [t, tContact, remote] = await Promise.all([
+    getTranslations({ locale, namespace: "hero" }),
+    getTranslations({ locale, namespace: "contact" }),
+    getHomeHero()
+  ]);
 
   const rawHtml =
     remote?.bodyHtml?.[locale]?.trim() ?? defaultHeroBodyHtml(locale);
@@ -61,6 +64,7 @@ export default async function Hero({ locale }: HeroProps) {
           "
           dangerouslySetInnerHTML={{ __html: html }}
         />
+        <h2 className="sr-only">{tContact("form.title")}</h2>
 
         <HeroConsultDeferred />
       </div>

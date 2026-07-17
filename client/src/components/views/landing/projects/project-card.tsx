@@ -90,13 +90,13 @@ export default function ProjectCard({
                     transition-all duration-300 delay-[50ms]
                     md:translate-y-full md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
       >
-        <h2
+        <h3
           className="text-white font-semibold text-lg mb-2 line-clamp-1
                      transition-all duration-300 delay-100
                      md:translate-y-5 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
         >
           {locale === "az" ? title.az : title.ru}
-        </h2>
+        </h3>
         <p
           className="text-gray-200 text-sm line-clamp-2
                     transition-all duration-300 delay-150

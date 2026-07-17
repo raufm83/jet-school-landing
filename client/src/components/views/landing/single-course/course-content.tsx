@@ -41,6 +41,11 @@ export default function CourseContent({
 
   return (
     <div className="w-full mx-auto sm:py-8 md:py-6 px-0 max-w-none">
+      {title && (
+        <h3 className="font-bold text-xl sm:text-2xl lg:text-3xl mb-4 text-jsblack">
+          {title}
+        </h3>
+      )}
       <div className="space-y-3 sm:space-y-4 flex flex-col">
         {modules.map((module, index) => {
           const isOpen = openIndex === index;
@@ -65,9 +70,9 @@ export default function CourseContent({
                   <div className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 bg-jsyellow text-white flex items-center justify-center mr-3 sm:mr-4 rounded-full text-[12px] sm:text-[13px] md:text-[14px] font-semibold [@media(min-width:2500px)]:w-10 [@media(min-width:2500px)]:h-10 [@media(min-width:2500px)]:text-base [@media(min-width:3500px)]:w-12 [@media(min-width:3500px)]:h-12">
                     {index + 1}
                   </div>
-                  <h3 className="font-semibold text-[clamp(14px,1.4vw,18px)] md:text-[clamp(16px,1.2vw,20px)] [@media(min-width:2500px)]:!text-2xl [@media(min-width:3500px)]:!text-3xl truncate" title={module?.module?.title?.[locale] ?? ""}>
+                  <h4 className="font-semibold text-[clamp(14px,1.4vw,18px)] md:text-[clamp(16px,1.2vw,20px)] [@media(min-width:2500px)]:!text-2xl [@media(min-width:3500px)]:!text-3xl truncate" title={module?.module?.title?.[locale] ?? ""}>
                     {module?.module?.title?.[locale]}
-                  </h3>
+                  </h4>
                 </div>
                 <span className={`ml-3 flex-shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`} aria-hidden="true">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-black/70 [@media(min-width:2500px)]:w-7 [@media(min-width:2500px)]:h-7 [@media(min-width:3500px)]:w-8 [@media(min-width:3500px)]:h-8">

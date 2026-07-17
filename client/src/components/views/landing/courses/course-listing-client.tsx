@@ -77,7 +77,7 @@ const CourseListingClient = ({ courses, locale = "az" }: ICoursesSlider) => {
                     p-4 sm:p-5 lg:p-6
                     min-h-[200px] sm:min-h-[280px] lg:min-h-[320px]
                     justify-between
-                    transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:z-[50]
+                    transition-all duration-300 hover:shadow-md hover:shadow-black/20 hover:scale-[1.02] hover:z-[50]
                     group
                   "
                   style={{
