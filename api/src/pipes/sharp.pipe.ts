@@ -86,7 +86,6 @@ export class SharpPipe
           fit: 'inside',
           withoutEnlargement: true,
         })
-        .flatten({ background: '#ffffff' })
         .webp({
           quality: this.quality,
           effort: this.effort,
