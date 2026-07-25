@@ -364,7 +364,7 @@
   "singleCoursePage": {
     "courseDescription": "Описание курса",
     "contactFormTitle": "Заполните форму чтобы узнать больше о наших IT курсах",
-    "courseModules": "Модули курса",
+    "courseModules": "Модули данного курса",
     "ageRangeCardTitle": "Возрастной диапазон",
     "whoIsEligibleToEnroll": "Требуемые навыки",
     "teachers": "Преподавательский состав",

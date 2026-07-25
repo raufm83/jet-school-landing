@@ -89,7 +89,6 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
               <div className="min-w-0 w-full flex-1">
                 <CourseHero
                   title={data.title[locale]}
-                  courseOverviewText={t("courseDescription")}
                   tags={data.newTags[locale]}
                   description={data.description[locale]}
                   params={params}
