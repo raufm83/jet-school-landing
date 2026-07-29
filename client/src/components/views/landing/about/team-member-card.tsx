@@ -37,6 +37,8 @@ const TeamMemberCard = memo(
       "teacher" in member
         ? member.courseTeacher?.description?.[lang] ||
           member.courseTeacher?.description?.az ||
+          bio?.[lang] ||
+          bio?.az ||
           ""
         : bio?.[lang] || bio?.az || "";
 
