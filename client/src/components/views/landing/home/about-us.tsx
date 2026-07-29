@@ -21,11 +21,12 @@ async function AboutUs() {
     >
       <SectionTitle home title={t("title")} description={t("description")} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 xl:gap-6 4xl:gap-6 relative">
+      <div className="flex sm:grid overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 xl:gap-6 4xl:gap-6 relative pb-4 sm:pb-0">
         {aboutPoints.map((point, index) => (
           <div
             key={index}
             className="
+              w-[85vw] sm:w-full shrink-0 snap-start
               border flex items-start gap-3 4xl:gap-6
               bg-white border-jsyellow rounded-[32px]
               p-6 4xl:p-8 text-jsblack
@@ -39,6 +40,7 @@ async function AboutUs() {
                 rounded-full
                 p-4
                 h-10 w-10 4xl:h-12 4xl:w-12
+                shrink-0
                 [@media(min-width:3500px)]:!text-2xl
               "
             >
