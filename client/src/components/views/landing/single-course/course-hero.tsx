@@ -64,7 +64,8 @@ export default async function CourseHero({
           {data?.imageUrl && (
             <Image
               src={buildImageUrl(data.imageUrl)}
-              alt=""
+              alt={title || "Course"}
+              title={title || undefined}
               fill
               priority
               quality={85}

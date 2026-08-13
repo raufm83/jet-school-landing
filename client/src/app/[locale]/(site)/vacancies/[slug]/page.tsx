@@ -352,8 +352,9 @@ export default async function VacancyDetailPage({
         </div>
       </BreadcrumbContextWrapper>
     );
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
     console.error("Vacancy detail page error:", error);
-    return notFound();
+    permanentRedirect(`/${locale}/vacancies`);
   }
 }

@@ -65,6 +65,7 @@ export default function PostCard({ post, locale, t, loadEager = false }: PostCar
   return (
     <Link
       href={{ pathname: postPathname, params: { slug } }}
+      title={title}
       className="group relative flex flex-col h-full bg-[#fef7eb] border border-jsyellow/50 rounded-[32px] overflow-hidden transition-all duration-300 ease-out
         hover:border-jsyellow hover:shadow-lg hover:shadow-jsyellow/20 hover:-translate-y-1"
     >
@@ -80,10 +81,11 @@ export default function PostCard({ post, locale, t, loadEager = false }: PostCar
         src={imageSrc}
         alt={
           stripHtmlEntitiesToPlain(
-            post.imageAlt?.[locale] ?? (title || "Post image"),
+            post.imageAlt?.[locale] || title || "Post image",
             { stripHtmlTags: false },
-          ) || "Post image"
+          ) || title || "Post image"
         }
+        title={title || undefined}
         fill
         priority={loadEager}
         loading={loadEager ? undefined : "lazy"}
@@ -121,9 +123,9 @@ export default function PostCard({ post, locale, t, loadEager = false }: PostCar
       )}
     </div>
 
-    <h3 className="text-xl font-bold mb-3 [@media(min-width:3500px)]:!text-4xl line-clamp-2">
+    <p className="text-xl font-bold mb-3 [@media(min-width:3500px)]:!text-4xl line-clamp-2">
       {title}
-    </h3>
+    </p>
 
     <p className="text-gray-600 [@media(min-width:3500px)]:!text-2xl mb-4 line-clamp-3 flex-grow">
       {contentPreview}

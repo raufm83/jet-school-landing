@@ -4,7 +4,7 @@ import { Post } from "@/types/post";
 import { getAllPosts, getPostDetails, getPostsByType } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
 import SinglePostView from "@/components/views/landing/post/view";
@@ -68,7 +68,7 @@ export default async function SinglePostPage({
       !data.content[locale] ||
       data.postType !== PostType.BLOG
     ) {
-      notFound();
+      permanentRedirect(`/${locale}/blog`);
     }
 
     let relatedPosts: Post[] = [];
@@ -125,8 +125,9 @@ export default async function SinglePostPage({
         <SinglePostView post={data} locale={locale} t={t} relatedPosts={relatedPosts} />
       </>
     );
-  } catch {
-    notFound();
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
+    permanentRedirect(`/${locale}/blog`);
   }
 }
 

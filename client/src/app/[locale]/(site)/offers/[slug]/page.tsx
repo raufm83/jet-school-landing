@@ -96,7 +96,8 @@ export default async function SinglePostPage({ params }: ISinglePostPageProps) {
         <SinglePostView post={data} locale={locale} t={t} />
       </>
     );
-  } catch {
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
     permanentRedirect(`/${params.locale}/offers`);
   }
 }

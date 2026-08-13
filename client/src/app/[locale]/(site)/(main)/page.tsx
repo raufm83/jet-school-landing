@@ -50,18 +50,18 @@ export async function generateMetadata({
     title,
     description,
     keywords: t("keywords"),
+    publisher: "JET School",
     alternates: {
       canonical,
       languages: {
         az: `${baseUrl}/az/`,
         ru: `${baseUrl}/ru/`,
-        "x-default": `${baseUrl}/az/`,
       },
     },
     openGraph: {
       title: ogTitle,
       description: ogDescription,
-      url: canonical,
+      url: `${baseUrl}/${locale}/`, // Use explicit string to avoid next.js base URL resolution issues
       siteName: "JET School",
       images: [{ url: SITE_SCHEMA.ogImagePath, width: 1200, height: 630, alt: t("ogImageAlt") }],
       locale: params.locale === "az" ? "az_AZ" : "ru_RU",

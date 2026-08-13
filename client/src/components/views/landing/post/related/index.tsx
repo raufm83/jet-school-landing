@@ -255,6 +255,7 @@ function RelatedPostCard({ post, locale, t, loadEager = false }: RelatedPostCard
   return (
     <Link
       href={{ pathname: postPathname, params: { slug } }}
+      title={post.title?.[locale] || "Post"}
       className="group relative flex flex-col h-full min-h-[450px] bg-[#fef7eb] border border-jsyellow/50 rounded-[32px] overflow-hidden transition-all duration-300 ease-out hover:border-jsyellow hover:shadow-md hover:-translate-y-1"
     >
       {getPostImageUrl(post.imageUrl, locale) && (
@@ -262,6 +263,7 @@ function RelatedPostCard({ post, locale, t, loadEager = false }: RelatedPostCard
           <Image
             src={buildImageUrl(getPostImageUrl(post.imageUrl, locale))}
             alt={post.title?.[locale] || "Post image"}
+            title={post.title?.[locale] || undefined}
             fill
             placeholder="blur"
             blurDataURL={BLUR_PLACEHOLDER_SVG}
@@ -270,7 +272,7 @@ function RelatedPostCard({ post, locale, t, loadEager = false }: RelatedPostCard
             priority={loadEager}
             loading={loadEager ? undefined : "lazy"}
             decoding="async"
-            className="object-cover object-center"
+            className="object-cover sm:object-contain object-center"
           />
         </div>
       )}
@@ -295,9 +297,9 @@ function RelatedPostCard({ post, locale, t, loadEager = false }: RelatedPostCard
             {getPostTypeLabel(post.postType)}
           </span>
         </div>
-        <h3 className="font-semibold text-xl mb-3 line-clamp-2">
+        <p className="font-semibold text-xl mb-3 line-clamp-2">
           {post.title?.[locale] || "Title not available"}
-        </h3>
+        </p>
         <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
           {contentPreview}
         </p>

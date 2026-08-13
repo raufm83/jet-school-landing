@@ -48,9 +48,9 @@ async function AboutUs() {
             </div>
 
             <div className="flex flex-col gap-4 4xl:gap-6">
-              <h3 className="font-semibold text-xl sm:text-[22px] lg:text-lg xl:text-xl [@media(min-width:3000px)]:!text-3xl">
+              <p className="font-semibold text-xl sm:text-[22px] lg:text-lg xl:text-xl [@media(min-width:3000px)]:!text-3xl">
                 {point.title}
-              </h3>
+              </p>
               <p className="text-base 4xl:text-lg [@media(min-width:3000px)]:!text-2xl">{point.description}</p>
             </div>
           </div>

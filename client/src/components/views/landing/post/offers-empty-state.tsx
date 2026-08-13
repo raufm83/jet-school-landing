@@ -21,7 +21,8 @@ export default function OffersEmptyState({
       >
         <Image
           src={imageSrc}
-          alt=""
+          alt={title || "Empty State"}
+          title={title || undefined}
           width={400}
           height={300}
           className="h-auto w-full [filter:drop-shadow(0_10px_28px_rgba(252,174,30,0.12))]"

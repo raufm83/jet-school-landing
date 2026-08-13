@@ -6,6 +6,7 @@ import { PostType } from "@/types/enums";
 import { getAllPosts } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { getPageMeta } from "@/utils/api/page-meta";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { buildCollectionPageGraph } from "@/data/site-schema";
@@ -26,6 +27,13 @@ interface PostsPageProps {
   };
 }
 
+const PAGE_META_KEY_BY_TYPE: Record<string, string> = {
+  [PostType.BLOG]: "blog",
+  [PostType.NEWS]: "news",
+  [PostType.EVENT]: "events",
+  [PostType.OFFERS]: "offers",
+};
+
 export async function generateMetadata({
   params,
   searchParams,
@@ -38,22 +46,25 @@ export async function generateMetadata({
   const typePath = `news/category/${params.type || "news"}`;
   const canonicalUrl = buildHreflangUrl(baseUrl, locale, typePath);
 
-  let title = t("metaTitle") || "Bloq";
-  let description =
+  const pageKey = type ? PAGE_META_KEY_BY_TYPE[type] : "news";
+  const meta = await getPageMeta(pageKey || "news", locale);
+
+  let defaultTitle = t("metaTitle") || "Bloq";
+  let defaultDescription =
     t("metaDescription") ||
     "JET School-un ən son məqalələrini, xəbərlərini və tədbirlərini kəşf edin";
 
   if (type) {
     switch (type) {
       case PostType.BLOG:
-        title = t("blogMetaTitle") || "Bloq Məqalələri";
-        description =
+        defaultTitle = t("blogMetaTitle") || "Bloq Məqalələri";
+        defaultDescription =
           t("blogMetaDescription") ||
           "Ən son bloq məqalələrimizi və fikirlərimizi oxuyun";
         break;
       case PostType.NEWS:
-        title = t("newsMetaTitle") || "Xəbərlər";
-        description =
+        defaultTitle = t("newsMetaTitle") || "Xəbərlər";
+        defaultDescription =
           t("newsMetaDescription") ||
           "JET School-un ən son xəbərləri ilə tanış olun";
         break;
@@ -65,13 +76,16 @@ export async function generateMetadata({
             : eventStatus === "UPCOMING"
               ? t("upcoming")
               : t("all");
-        title = `${t("eventMetaTitle") || "Tədbirlər"} - ${statusText}`;
-        description =
+        defaultTitle = `${t("eventMetaTitle") || "Tədbirlər"} - ${statusText}`;
+        defaultDescription =
           t("eventMetaDescription") ||
           "JET School-da keçirilən və gələcək tədbirləri kəşf edin";
         break;
     }
   }
+
+  const title = meta?.title ? meta.title : defaultTitle;
+  const description = meta?.description ? meta.description : defaultDescription;
 
   const trimmedTitle = trimMetaTitle(title);
   const trimmedDescription = trimMetaDescription(description);

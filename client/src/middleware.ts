@@ -103,7 +103,7 @@ const ROLE_HOME_PAGES = {
   [Role.ADMIN]: "/dashboard/requests",
   [Role.AUTHOR]: "/dashboard/posts",
   [Role.STAFF]: "/dashboard/requests",
-  [Role.USER]: "/dashboard/requests",
+  [Role.USER]: "/dashboard/settings",
   [Role.CRMOPERATOR]: "/dashboard/requests",
   [Role.CONTENTMANAGER]: "/dashboard/student-projects",
   [Role.HRMANAGER]: "/dashboard/vacancies",
@@ -119,7 +119,7 @@ function normalizePathname(pathname: string): string {
   return pathname.replace(/\/+$/, "") || "/";
 }
 
-const DASHBOARD_LOGIN_PATH = "/dashboard/login/";
+const DASHBOARD_LOGIN_PATH = "/dashboard/login";
 
 function htmlLangFromPathname(pathname: string): "az" | "ru" {
   const p = pathname.replace(/\/+$/, "") || "/";
@@ -198,8 +198,7 @@ const hasRouteAccess = (pathname: string, role: Role): boolean => {
  * Gets the appropriate home page URL for a given role
  */
 const getRoleHomePage = (role: Role, request: Request): URL => {
-  let homePath = ROLE_HOME_PAGES[role] || "/dashboard/profile";
-  if (!homePath.endsWith("/")) homePath += "/";
+  let homePath = ROLE_HOME_PAGES[role] || "/dashboard/settings";
   return new URL(homePath, request.url);
 };
 
@@ -283,7 +282,7 @@ const middlewares = withAuth(
       authorized: ({ token }) => true,
     },
     pages: {
-      signIn: "/dashboard/login/",
+      signIn: "/dashboard/login",
     },
   }
 );

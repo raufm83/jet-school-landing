@@ -161,6 +161,7 @@ export default async function Footer() {
                   href={`https://maps.google.com?q=${encodeURIComponent(contact.address[lang])}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  title={contact.address[lang]}
                   className="flex items-start gap-2 sm:gap-3 [@media(min-width:2500px)]:gap-4 [@media(min-width:3500px)]:gap-6 text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200"
                 >
                   <FaMapMarkerAlt className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-6 [@media(min-width:2500px)]:!h-6 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8 mt-1 flex-shrink-0" />
@@ -172,6 +173,7 @@ export default async function Footer() {
                 <div className="flex flex-col gap-2 sm:gap-3 [@media(min-width:2500px)]:gap-4 [@media(min-width:3500px)]:gap-6">
                   <a
                     href={`tel:${contact.phone.replace(/\D/g, "")}`}
+                    title={contact.phone}
                     className="flex items-center gap-2 sm:gap-3 [@media(min-width:2500px)]:gap-4 [@media(min-width:3500px)]:gap-6 text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200"
                   >
                     <FaPhone className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-6 [@media(min-width:2500px)]:!h-6 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8 flex-shrink-0" />
@@ -182,6 +184,7 @@ export default async function Footer() {
                     href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    title={contact.whatsapp}
                     className="flex items-center gap-2 sm:gap-3 [@media(min-width:2500px)]:gap-4 [@media(min-width:3500px)]:gap-6 text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200"
                   >
                     <FaWhatsapp className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-6 [@media(min-width:2500px)]:!h-6 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8 flex-shrink-0" />
@@ -190,6 +193,7 @@ export default async function Footer() {
                   
                   <a
                     href={`mailto:${contact.email}`}
+                    title={contact.email}
                     className="flex items-center gap-2 sm:gap-3 [@media(min-width:2500px)]:gap-4 [@media(min-width:3500px)]:gap-6 text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200"
                   >
                     <FaEnvelope className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-6 [@media(min-width:2500px)]:!h-6 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8 flex-shrink-0" />
@@ -216,6 +220,7 @@ export default async function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Facebook"
+                      title="Facebook"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaFacebook className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
@@ -227,6 +232,7 @@ export default async function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Instagram"
+                      title="Instagram"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaInstagram className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
@@ -238,6 +244,7 @@ export default async function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="YouTube"
+                      title="YouTube"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaYoutube className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
@@ -249,6 +256,7 @@ export default async function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="TikTok"
+                      title="TikTok"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
                       <FaTiktok className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
@@ -274,7 +282,7 @@ export default async function Footer() {
                 <ul className="flex min-w-0 flex-col gap-4 sm:gap-5 lg:gap-[1.125rem] [@media(min-width:2500px)]:gap-6 [@media(min-width:3500px)]:gap-8">
                   {exploreLinks.map((item) => (
                     <li key={item.href}>
-                      <Link href={item.href as never} className={footerLinkClass}>
+                      <Link href={item.href as never} className={footerLinkClass} title={item.label}>
                         {item.label}
                       </Link>
                     </li>
@@ -296,6 +304,7 @@ export default async function Footer() {
                             pathname: "/course/[slug]",
                             params: { slug: c.slug[lang] },
                           }} 
+                          title={c.title[lang]}
                           className="max-w-full text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200 hover:text-jsblack/90 leading-relaxed [@media(min-width:3500px)]:leading-relaxed block break-words"
                         >
                           {c.title[lang]}
@@ -318,7 +327,7 @@ export default async function Footer() {
                 <ul className="flex min-w-0 flex-col gap-4 sm:gap-5 lg:gap-[1.125rem] [@media(min-width:2500px)]:gap-6 [@media(min-width:3500px)]:gap-8">
                   {resourceLinks.map((item) => (
                     <li key={item.href}>
-                      <Link href={item.href as never} className={footerLinkClass}>
+                      <Link href={item.href as never} className={footerLinkClass} title={item.label}>
                         {item.label}
                       </Link>
                     </li>

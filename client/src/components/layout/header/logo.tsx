@@ -21,6 +21,7 @@ export default function Logo({ className = "" }: LogoProps) {
     >
       <Image
         alt="Logo of Jet School"
+        title="Logo of Jet School"
         src={src}
         width={1024}
         height={246}

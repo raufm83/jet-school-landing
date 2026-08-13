@@ -10,7 +10,7 @@ import { getFaqByPage } from "@/utils/api/faq";
 import { getPageMeta } from "@/utils/api/page-meta";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import BreadcrumbContextWrapper from "@/hooks/BreadcrumbContextWrapper";
 import TeamSection from "@/components/views/landing/about/team-section";
 import { CONTENT_ISR_SECONDS } from "@/constants/content-isr";
@@ -38,7 +38,7 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
       getAllCourses({}),
     ]);
 
-    if (!data) notFound();
+    if (!data) permanentRedirect(`/${locale}/courses`);
 
     // FAQ page key həmişə AZ slug ilə saxlanılır, buna görə AZ slug istifadə edirik
     const faqSlug = data.slug?.az || params.slug;
@@ -128,8 +128,9 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
         </div>
       </BreadcrumbContextWrapper>
     );
-  } catch {
-    notFound();
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
+    permanentRedirect(`/${params.locale}/courses`);
   }
 }
 
