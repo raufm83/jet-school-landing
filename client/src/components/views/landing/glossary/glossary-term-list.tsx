@@ -59,7 +59,7 @@ export default function GlossaryTermList({
                 term.slug[language as keyof typeof term.slug]
               }`}
             >
-              <div className="border rounded-xl sm:rounded-2xl lg:rounded-[16px] p-3 sm:p-4 lg:p-6 hover:shadow-md transition-all duration-300 hover:scale-[1.01] cursor-pointer bg-[#fef9e7] border-jsblack/20">
+              <div className="border rounded-xl sm:rounded-2xl lg:rounded-[16px] p-3 sm:p-4 lg:p-6 hover:shadow-md hover:shadow-black/20 transition-all duration-300 hover:scale-[1.01] cursor-pointer bg-[#fef9e7] border-jsblack/20">
                 <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-jsblack mb-1 sm:mb-2 [@media(min-width:3500px)]:!text-3xl">
                   {term.term[language as keyof typeof term.term]} 
                 </h2>

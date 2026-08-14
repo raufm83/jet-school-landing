@@ -67,7 +67,7 @@ export default function PostCard({ post, locale, t, loadEager = false }: PostCar
       href={{ pathname: postPathname, params: { slug } }}
       title={title}
       className="group relative flex flex-col h-full bg-[#fef7eb] border border-jsyellow/50 rounded-[32px] overflow-hidden transition-all duration-300 ease-out
-        hover:border-jsyellow hover:shadow-lg hover:shadow-jsyellow/20 hover:-translate-y-1"
+        hover:border-jsyellow hover:shadow-md hover:shadow-black/20 hover:-translate-y-2"
     >
   {imageSrc && (
     <div

@@ -40,7 +40,7 @@ const CourseModules = () => {
                 {moduleSubKeys.map((subKey) => (
                   <div
                     key={subKey}
-                    className="border border-jsyellow rounded-[32px] p-6 bg-[#fef7eb] text-jsblack transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_4px_15px_rgba(252,174,30,0.15)] active:scale-[0.98]"
+                    className="border border-jsyellow rounded-[32px] p-6 bg-[#fef7eb] text-jsblack transition-all duration-200 hover:scale-[1.02] hover:shadow-md hover:shadow-black/20 active:scale-[0.98]"
                   >
                     <div className="flex flex-col gap-4">
                       <h3 className="font-semibold text-xl">

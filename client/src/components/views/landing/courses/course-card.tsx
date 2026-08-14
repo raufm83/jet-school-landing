@@ -43,7 +43,7 @@ export default function CourseCard({ course, locale }: CourseCardProps) {
       params: { slug: course.slug[locale] },
     }}
       className="relative flex flex-col h-full w-full md:w-full [@media(min-width:1440px)]:!w-[49%] [@media(min-width:2500px)]:!w-[24%] bg-[#fef9e7] border border-jsyellow/50 rounded-[32px] overflow-hidden 
-        transition-all duration-300 ease-out hover:border-jsyellow hover:shadow-md hover:shadow-black/20 hover:-translate-y-1"
+        transition-all duration-300 ease-out hover:border-jsyellow hover:shadow-md hover:shadow-black/20 hover:-translate-y-2"
     >
       <div className="absolute inset-x-0 top-0 z-0 h-24 bg-gradient-to-b from-jsyellow/10 to-transparent pointer-events-none" />
 

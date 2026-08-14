@@ -49,7 +49,7 @@ const TeamMemberCard = memo(
           "[@media(min-width:2500px)]:h-full",
           noHover
             ? ""
-            : "hover:scale-[1.02] hover:border-jsyellow hover:shadow-md hover:shadow-jsyellow/15"
+            : "hover:scale-[1.02] hover:border-jsyellow hover:shadow-md hover:shadow-black/20"
         )}
       >
         <div className="mb-2.5 aspect-square max-h-[160px] w-full max-w-[160px] overflow-hidden rounded-2xl shadow-sm mx-auto sm:mb-3 sm:max-h-[180px] sm:max-w-[180px] sm:rounded-3xl md:max-h-[200px] md:max-w-[200px] md:rounded-[28px]">

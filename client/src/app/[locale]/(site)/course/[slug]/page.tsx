@@ -10,7 +10,7 @@ import { getFaqByPage } from "@/utils/api/faq";
 import { getPageMeta } from "@/utils/api/page-meta";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound, permanentRedirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import BreadcrumbContextWrapper from "@/hooks/BreadcrumbContextWrapper";
 import TeamSection from "@/components/views/landing/about/team-section";
 import { CONTENT_ISR_SECONDS } from "@/constants/content-isr";

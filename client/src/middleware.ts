@@ -198,7 +198,7 @@ const hasRouteAccess = (pathname: string, role: Role): boolean => {
  * Gets the appropriate home page URL for a given role
  */
 const getRoleHomePage = (role: Role, request: Request): URL => {
-  let homePath = ROLE_HOME_PAGES[role] || "/dashboard/settings";
+  const homePath = ROLE_HOME_PAGES[role] || "/dashboard/settings";
   return new URL(homePath, request.url);
 };
 

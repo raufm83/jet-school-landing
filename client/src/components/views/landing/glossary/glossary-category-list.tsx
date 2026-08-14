@@ -48,7 +48,7 @@ export default function GlossaryCategoryList({
               }`}
             >
               <div
-                className="border h-[190.6px]  rounded-[16px] p-6 hover:shadow-md transition-shadow duration-300 cursor-pointer bg-[#fef7eb]
+                className="border h-[190.6px]  rounded-[16px] p-6 hover:shadow-md hover:shadow-black/20 transition-shadow duration-300 cursor-pointer bg-[#fef7eb]
 border-jsblack/20"
               >
                 <h3 className="text-2xl font-bold text-jsblack mb-2">

@@ -11,7 +11,7 @@ import {
 } from "@/utils/seo";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound, permanentRedirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
 import BreadcrumbContextWrapper from "@/hooks/BreadcrumbContextWrapper";
 import { getFaqByPage } from "@/utils/api/faq";

@@ -16,7 +16,7 @@ import {
 const CARD_ACCENT = {
   hero: "bg-jsyellow",
   icon: "text-jsyellow",
-  hoverShadow: "hover:shadow-[0_18px_48px_-12px_rgba(252,174,30,0.45)]",
+  hoverShadow: "hover:shadow-md hover:shadow-black/20",
   btn: "bg-jsyellow text-white shadow-jsyellow/25 hover:bg-[#e59d10]",
 } as const;
 

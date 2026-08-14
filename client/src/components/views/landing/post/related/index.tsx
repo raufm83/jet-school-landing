@@ -256,7 +256,7 @@ function RelatedPostCard({ post, locale, t, loadEager = false }: RelatedPostCard
     <Link
       href={{ pathname: postPathname, params: { slug } }}
       title={post.title?.[locale] || "Post"}
-      className="group relative flex flex-col h-full min-h-[450px] bg-[#fef7eb] border border-jsyellow/50 rounded-[32px] overflow-hidden transition-all duration-300 ease-out hover:border-jsyellow hover:shadow-md hover:-translate-y-1"
+      className="group relative flex flex-col h-full min-h-[450px] bg-[#fef7eb] border border-jsyellow/50 rounded-[32px] overflow-hidden transition-all duration-300 ease-out hover:border-jsyellow hover:shadow-md hover:shadow-black/20 hover:-translate-y-2"
     >
       {getPostImageUrl(post.imageUrl, locale) && (
         <div className="w-full relative h-[200px] overflow-hidden">

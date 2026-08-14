@@ -4,7 +4,7 @@ import { Post } from "@/types/post";
 import { getAllPosts, getPostDetails, getPostsByType } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound, permanentRedirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
 import SinglePostView from "@/components/views/landing/post/view";
