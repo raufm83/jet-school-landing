@@ -136,8 +136,12 @@ export default function StudentProjectsPage() {
               : project.description.az}
           </p>
         );
-      case "category":
-        return <p className="text-small">{project.category?.title?.az || project.category?.title?.ru || project.category?.title || project.category?.name || "—"}</p>;
+      case "category": {
+        const catTitle = project.category?.title as any;
+        const catName = project.category?.name as any;
+        const displayCategory = catTitle?.az || catTitle?.ru || (typeof catTitle === "string" ? catTitle : null) || catName?.az || catName?.ru || (typeof catName === "string" ? catName : null) || "—";
+        return <p className="text-small">{displayCategory}</p>;
+      }
       case "order": {
         const idx = projects.findIndex((p) => p.id === project.id);
         const globalPos = (page - 1) * rowsPerPage + idx;
