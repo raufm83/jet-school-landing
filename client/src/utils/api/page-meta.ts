@@ -7,6 +7,7 @@ export interface PageMetaResponse {
   locale: string;
   title: string;
   description: string | null;
+  keywords?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -35,6 +36,7 @@ export async function getPageMeta(
       locale: String(obj.locale ?? ""),
       title: String(obj.title ?? ""),
       description: obj.description != null ? String(obj.description) : null,
+      keywords: obj.keywords != null ? String(obj.keywords) : null,
       createdAt: obj.createdAt != null ? String(obj.createdAt) : "",
       updatedAt: obj.updatedAt != null ? String(obj.updatedAt) : "",
     };
