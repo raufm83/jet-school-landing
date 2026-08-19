@@ -22,7 +22,11 @@ interface ProjectCardProps {
   };
   category: {
     id: string;
-    name: string;
+    name?: string;
+    title?: {
+      az: string;
+      ru: string;
+    };
   };
 }
 
@@ -74,7 +78,7 @@ export default function ProjectCard({
         )}
       </div>
       <div className="absolute top-2 right-2 z-[1] bg-jsyellow/50 text-white px-3 py-1 rounded-full text-sm font-medium">
-        {category.name}
+        {category?.title?.[locale as "az" | "ru"] || category?.title?.az || category?.name || "—"}
       </div>
       {/* Play button */}
       <div className="absolute inset-0 flex items-center justify-center">

@@ -25,10 +25,10 @@ export default function ProjectForm({
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await api.get("/student-project-categories");
-        setCategories(data.items);
+        const { data } = await api.get("/courses?limit=100");
+        setCategories(data.items || []);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching courses:", error);
       } finally {
         setIsLoadingCategories(false);
       }
@@ -166,7 +166,7 @@ export default function ProjectForm({
               >
                 {categories.map((category: any) => (
                   <SelectItem key={category.id} value={category.id}>
-                    {category.name}
+                    {category.title?.az || category.title?.ru || category.title || category.name}
                   </SelectItem>
                 ))}
               </Select>

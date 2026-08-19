@@ -39,9 +39,9 @@ export default function CourseCard({ course, locale }: CourseCardProps) {
   return (
     <Link
       href={{
-      pathname: "/course/[slug]",
-      params: { slug: course.slug[locale] },
-    }}
+        pathname: "/course/[slug]",
+        params: { slug: course.slug[locale] },
+      }}
       className="relative flex flex-col h-full w-full md:w-full [@media(min-width:1440px)]:!w-[49%] [@media(min-width:2500px)]:!w-[24%] bg-[#fef9e7] border border-jsyellow/50 rounded-[32px] overflow-hidden 
         transition-all duration-300 ease-out hover:border-jsyellow hover:shadow-md hover:shadow-black/20 hover:-translate-y-2"
     >
@@ -51,7 +51,7 @@ export default function CourseCard({ course, locale }: CourseCardProps) {
         <div className="relative z-10 flex justify-end">
           <div className="flex justify-end mb-4 border border-black rounded-3xl ">{getLevelLabel()} </div>
         </div>
-        
+
         <div className="relative z-[50] flex items-start gap-3 sm:gap-4 mb-4">
           <div className="relative z-[100] isolate flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-black bg-jsyellow text-white shadow-lg shadow-jsyellow/20 sm:h-[4.5rem] sm:w-[4.5rem] md:h-12 md:w-12 [&>svg]:h-10 [&>svg]:w-10 sm:[&>svg]:h-9 sm:[&>svg]:w-9 md:[&>svg]:h-6 md:[&>svg]:w-6">
             <IconComponent className="relative z-[101]" aria-hidden />

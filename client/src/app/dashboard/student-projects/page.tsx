@@ -137,7 +137,7 @@ export default function StudentProjectsPage() {
           </p>
         );
       case "category":
-        return <p className="text-small">{project.category.name}</p>;
+        return <p className="text-small">{project.category?.title?.az || project.category?.title?.ru || project.category?.title || project.category?.name || "—"}</p>;
       case "order": {
         const idx = projects.findIndex((p) => p.id === project.id);
         const globalPos = (page - 1) * rowsPerPage + idx;

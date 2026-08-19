@@ -8,7 +8,7 @@ import { getAllCourses } from "@/utils/api/course";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 
 interface PageProps {
@@ -28,12 +28,19 @@ export async function generateMetadata({
 
   let termName = "";
   let termDefinition = "";
+  let term;
   try {
     const res = await fetch(
       `${PUBLIC_API_BASE}/glossary/slug/${slug}`
     );
     if (res.ok) {
-      const term = await res.json();
+      term = await res.json();
+      
+      const correctSlug = term.slug?.[locale];
+      if (correctSlug && correctSlug !== slug) {
+        permanentRedirect(`/${locale}/glossary/term/${correctSlug}`);
+      }
+
       termName = term.term[locale] || "";
       termDefinition = term.definition[locale]
         ? term.definition[locale].replace(/<[^>]*>/g, "")
@@ -118,6 +125,11 @@ export default async function GlossaryTermPage({ params }: PageProps) {
   } catch (error) {
     console.error("Error fetching term:", error);
     notFound();
+  }
+
+  const correctSlug = term.slug?.[language];
+  if (correctSlug && correctSlug !== slug) {
+    permanentRedirect(`/${language}/glossary/term/${correctSlug}`);
   }
 
   const termContent = term.term[language];

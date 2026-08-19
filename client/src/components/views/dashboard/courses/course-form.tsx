@@ -532,21 +532,7 @@ export default function CourseForm({
               {...register("icon")}
             />
 
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-800 mt-6 border-b pb-2">SEO Ayarları</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input type="text" label="Meta Title (AZ)" variant="bordered" isDisabled={isSubmitting} {...register("metaTitle.az")} />
-                <Input type="text" label="Meta Title (RU)" variant="bordered" isDisabled={isSubmitting} {...register("metaTitle.ru")} />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input type="text" label="Meta Description (AZ)" variant="bordered" isDisabled={isSubmitting} {...register("metaDescription.az")} />
-                <Input type="text" label="Meta Description (RU)" variant="bordered" isDisabled={isSubmitting} {...register("metaDescription.ru")} />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input type="text" label="Meta Keywords (AZ) [vergüllə ayırın]" variant="bordered" isDisabled={isSubmitting} {...register("metaKeywords.az")} />
-                <Input type="text" label="Meta Keywords (RU) [через запятую]" variant="bordered" isDisabled={isSubmitting} {...register("metaKeywords.ru")} />
-              </div>
-            </div>
+
 
             <div className="space-y-4 mt-6">
               <label className="text-sm font-medium flex items-center gap-2">

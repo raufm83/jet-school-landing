@@ -388,7 +388,7 @@ export default function GlossaryForm({
                   label="Slug (AZ)"
                   variant="bordered"
                   startContent={<MdTitle className="text-gray-400" />}
-                  isDisabled={true}
+                  isReadOnly={true}
                   {...register("slug.az")}
                   isInvalid={!!errors.slug?.az}
                   errorMessage={errors.slug?.az?.message}
@@ -407,7 +407,7 @@ export default function GlossaryForm({
                   label="Slug (RU)"
                   variant="bordered"
                   startContent={<MdTitle className="text-gray-400" />}
-                  isDisabled={true}
+                  isReadOnly={true}
                   {...register("slug.ru")}
                   isInvalid={!!errors.slug?.ru}
                   errorMessage={errors.slug?.ru?.message}

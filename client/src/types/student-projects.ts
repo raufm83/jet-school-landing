@@ -22,7 +22,11 @@ export interface Project {
   updatedAt: Date;
   category: {
     id: string;
-    name: string;
+    name?: string;
+    title?: {
+      az: string;
+      ru: string;
+    };
   };
   order: number;
 }

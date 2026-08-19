@@ -12,4 +12,5 @@ export const STATIC_PAGE_META_KEYS = [
   { key: "offers", label: "Kampaniyalar" },
   { key: "glossary", label: "Texnoloji Lüğət" },
   { key: "glossary/terms", label: "Bütün Terminlər" },
+  { key: "projects", label: "Layihələr" },
 ] as const;

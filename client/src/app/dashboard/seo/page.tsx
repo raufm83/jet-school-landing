@@ -8,8 +8,8 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { MdSearch } from "react-icons/md";
 
-type StaticFormRow = { titleAz: string; titleRu: string; descAz: string; descRu: string };
-type CourseFormRow = { titleAz: string; titleRu: string; descAz: string; descRu: string };
+type StaticFormRow = { titleAz: string; titleRu: string; descAz: string; descRu: string; keywordsAz: string; keywordsRu: string };
+type CourseFormRow = { titleAz: string; titleRu: string; descAz: string; descRu: string; keywordsAz: string; keywordsRu: string };
 
 export default function SeoPage() {
   const [loading, setLoading] = useState(true);
@@ -78,6 +78,8 @@ export default function SeoPage() {
         titleRu: metaRu?.title ?? "",
         descAz: metaAz?.description ?? "",
         descRu: metaRu?.description ?? "",
+        keywordsAz: metaAz?.keywords ?? "",
+        keywordsRu: metaRu?.keywords ?? "",
       };
     });
     setStaticForm(staticState);
@@ -95,6 +97,8 @@ export default function SeoPage() {
         titleRu: metaRu?.title ?? "",
         descAz: metaAz?.description ?? "",
         descRu: metaRu?.description ?? "",
+        keywordsAz: metaAz?.keywords ?? "",
+        keywordsRu: metaRu?.keywords ?? "",
       };
     });
     setCourseForm(courseState);
@@ -115,12 +119,14 @@ export default function SeoPage() {
           locale: "az",
           title: (form.titleAz ?? "").trim() || "",
           description: (form.descAz ?? "").trim() || undefined,
+          keywords: (form.keywordsAz ?? "").trim() || undefined,
         }),
         api.post("/page-meta", {
           pageKey,
           locale: "ru",
           title: (form.titleRu ?? "").trim() || "",
           description: (form.descRu ?? "").trim() || undefined,
+          keywords: (form.keywordsRu ?? "").trim() || undefined,
         }),
       ]);
       toast.success("Meta saxlanıldı");
@@ -157,12 +163,14 @@ export default function SeoPage() {
           locale: "az",
           title: (form.titleAz ?? "").trim() || "",
           description: (form.descAz ?? "").trim() || undefined,
+          keywords: (form.keywordsAz ?? "").trim() || undefined,
         }),
         api.post("/page-meta", {
           pageKey: `course:${slugRu}`,
           locale: "ru",
           title: (form.titleRu ?? "").trim() || "",
           description: (form.descRu ?? "").trim() || undefined,
+          keywords: (form.keywordsRu ?? "").trim() || undefined,
         }),
       ]);
       toast.success("Meta saxlanıldı");
@@ -184,7 +192,7 @@ export default function SeoPage() {
     setStaticForm((prev) => ({
       ...prev,
       [pageKey]: {
-        ...(prev[pageKey] ?? { titleAz: "", titleRu: "", descAz: "", descRu: "" }),
+        ...(prev[pageKey] ?? { titleAz: "", titleRu: "", descAz: "", descRu: "", keywordsAz: "", keywordsRu: "" }),
         [field]: value,
       },
     }));
@@ -194,7 +202,7 @@ export default function SeoPage() {
     setCourseForm((prev) => ({
       ...prev,
       [courseId]: {
-        ...(prev[courseId] ?? { titleAz: "", titleRu: "", descRu: "", descAz: "" }),
+        ...(prev[courseId] ?? { titleAz: "", titleRu: "", descRu: "", descAz: "", keywordsAz: "", keywordsRu: "" }),
         [field]: value,
       },
     }));
@@ -248,6 +256,14 @@ export default function SeoPage() {
                       onValueChange={(v) => updateStaticForm(pageKey, "descAz", v)}
                       variant="bordered"
                     />
+                    <Input
+                      key={`${pageKey}-keywordsAz`}
+                      label="Meta açar sözlər (Keywords)"
+                      placeholder="AZ (vergüllə ayrılmış)"
+                      value={staticForm[pageKey]?.keywordsAz ?? ""}
+                      onValueChange={(v) => updateStaticForm(pageKey, "keywordsAz", v)}
+                      variant="bordered"
+                    />
                   </div>
                 </Tab>
                 <Tab key="ru" title="Rus">
@@ -266,6 +282,14 @@ export default function SeoPage() {
                       placeholder="RU"
                       value={staticForm[pageKey]?.descRu ?? ""}
                       onValueChange={(v) => updateStaticForm(pageKey, "descRu", v)}
+                      variant="bordered"
+                    />
+                    <Input
+                      key={`${pageKey}-keywordsRu`}
+                      label="Meta açar sözlər (Keywords)"
+                      placeholder="RU (vergüllə ayrılmış)"
+                      value={staticForm[pageKey]?.keywordsRu ?? ""}
+                      onValueChange={(v) => updateStaticForm(pageKey, "keywordsRu", v)}
                       variant="bordered"
                     />
                   </div>
@@ -317,6 +341,14 @@ export default function SeoPage() {
                         onValueChange={(v) => updateCourseForm(c.id, "descAz", v)}
                         variant="bordered"
                       />
+                      <Input
+                        key={`${c.id}-keywordsAz`}
+                        label="Meta açar sözlər (Keywords)"
+                        placeholder="AZ (vergüllə ayrılmış)"
+                        value={courseForm[c.id]?.keywordsAz ?? ""}
+                        onValueChange={(v) => updateCourseForm(c.id, "keywordsAz", v)}
+                        variant="bordered"
+                      />
                     </div>
                   </Tab>
                   <Tab key="ru" title="Rus">
@@ -335,6 +367,14 @@ export default function SeoPage() {
                         placeholder="RU"
                         value={courseForm[c.id]?.descRu ?? ""}
                         onValueChange={(v) => updateCourseForm(c.id, "descRu", v)}
+                        variant="bordered"
+                      />
+                      <Input
+                        key={`${c.id}-keywordsRu`}
+                        label="Meta açar sözlər (Keywords)"
+                        placeholder="RU (vergüllə ayrılmış)"
+                        value={courseForm[c.id]?.keywordsRu ?? ""}
+                        onValueChange={(v) => updateCourseForm(c.id, "keywordsRu", v)}
                         variant="bordered"
                       />
                     </div>

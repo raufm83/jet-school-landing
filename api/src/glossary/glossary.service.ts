@@ -13,7 +13,9 @@ const normalizeText = (text: string): string => {
   };
   return text
     .replace(/[üöğıəşçÜÖĞIƏŞÇİi]/g, (match) => charMap[match] || match)
-    .toLowerCase();
+    .toLowerCase()
+    .replace(/brouzer/g, 'brauzer')
+    .replace(/browser/g, 'brauzer');
 };
 
 @Injectable()
@@ -123,15 +125,23 @@ export class GlossaryService {
       const createdDir =
         useCreatedAt && sortOrder === 'asc' ? 'asc' : 'desc';
 
-      const sorted = useCreatedAt
-        ? [...filteredItems].sort((a, b) => {
-            const ta = new Date(a.createdAt).getTime();
-            const tb = new Date(b.createdAt).getTime();
-            return createdDir === 'desc' ? tb - ta : ta - tb;
-          })
-        : [...filteredItems].sort(
-            (a, b) => a.term?.az?.localeCompare(b.term?.az || '') || 0,
-          );
+      const sorted = [...filteredItems].sort((a, b) => {
+        if (search) {
+          const lowerSearch = normalizeText(search.trim());
+          const titleMatchA = normalizeText(a.term?.az).includes(lowerSearch) || normalizeText(a.term?.ru).includes(lowerSearch);
+          const titleMatchB = normalizeText(b.term?.az).includes(lowerSearch) || normalizeText(b.term?.ru).includes(lowerSearch);
+          if (titleMatchA && !titleMatchB) return -1;
+          if (!titleMatchA && titleMatchB) return 1;
+        }
+
+        if (useCreatedAt) {
+          const ta = new Date(a.createdAt).getTime();
+          const tb = new Date(b.createdAt).getTime();
+          return createdDir === 'desc' ? tb - ta : ta - tb;
+        } else {
+          return a.term?.az?.localeCompare(b.term?.az || '') || 0;
+        }
+      });
 
       const paginated = sorted.slice(skip, skip + limit);
 
@@ -280,7 +290,19 @@ export class GlossaryService {
         });
       }
 
-      const paginated = filteredItems.slice(skip, skip + limit);
+      let sortedItems = filteredItems;
+      if (search) {
+        const lowerSearch = normalizeText(search.trim());
+        sortedItems = [...filteredItems].sort((a, b) => {
+          const titleMatchA = normalizeText(a.term?.az).includes(lowerSearch) || normalizeText(a.term?.ru).includes(lowerSearch);
+          const titleMatchB = normalizeText(b.term?.az).includes(lowerSearch) || normalizeText(b.term?.ru).includes(lowerSearch);
+          if (titleMatchA && !titleMatchB) return -1;
+          if (!titleMatchA && titleMatchB) return 1;
+          return 0; // Default ordering from Prisma (createdAt desc) remains
+        });
+      }
+
+      const paginated = sortedItems.slice(skip, skip + limit);
 
       return {
         items: paginated,
@@ -515,6 +537,14 @@ export class GlossaryService {
 
           if (aSameCategory && !bSameCategory) return -1;
           if (!aSameCategory && bSameCategory) return 1;
+        }
+
+        if (query) {
+          const lowerSearch = normalizeText(query.trim());
+          const titleMatchA = normalizeText(a.term?.az).includes(lowerSearch) || normalizeText(a.term?.ru).includes(lowerSearch);
+          const titleMatchB = normalizeText(b.term?.az).includes(lowerSearch) || normalizeText(b.term?.ru).includes(lowerSearch);
+          if (titleMatchA && !titleMatchB) return -1;
+          if (!titleMatchA && titleMatchB) return 1;
         }
 
         // Secondary sort: Alphabetical
