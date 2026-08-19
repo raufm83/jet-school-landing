@@ -22,7 +22,7 @@ export default function GlossaryPagination({
   const createPageURL = (pageNumber: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", pageNumber.toString());
-    const base = pathname.endsWith("/") ? pathname : `${pathname}/`;
+    const base = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
     return `${base}?${params.toString()}`;
   };
 

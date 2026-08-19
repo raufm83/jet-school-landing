@@ -9,6 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         "/dashboard",
         "/az/registration",
         "/ru/registration",
+        "/*tag=*//*",
       ],
     },
     sitemap: "https://jetschool.az/sitemap.xml",

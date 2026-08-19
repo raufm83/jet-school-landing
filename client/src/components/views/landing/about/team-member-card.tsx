@@ -7,6 +7,7 @@ import Image from "next/image";
 import { memo } from "react";
 import { BLUR_PLACEHOLDER_SVG } from "@/utils/imagePlaceholder";
 import type { Locale } from "@/i18n/request";
+import { FaLinkedin } from "react-icons/fa";
 
 const TeamMemberCard = memo(
   ({
@@ -42,6 +43,9 @@ const TeamMemberCard = memo(
           ""
         : bio?.[lang] || bio?.az || "";
 
+    const linkedinUrl =
+      "teacher" in member ? member.teacher.linkedinUrl : member.linkedinUrl;
+
     return (
       <div
         className={cn(
@@ -71,8 +75,21 @@ const TeamMemberCard = memo(
             }}
           />
         </div>
-        <div className="text-center text-sm font-semibold leading-snug text-jsblack sm:text-base">
-          {fullName}
+        <div className="flex items-center justify-center gap-2">
+          <div className="text-center text-sm font-semibold leading-snug text-jsblack sm:text-base">
+            {fullName}
+          </div>
+          {linkedinUrl && (
+            <a
+              href={linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#0A66C2] hover:text-blue-800 transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <FaLinkedin size={16} />
+            </a>
+          )}
         </div>
         <p className="mt-1.5 line-clamp-3 min-h-0 text-center text-xs leading-snug text-neutral-600 sm:mt-2 sm:line-clamp-2 sm:text-[13px]">
           {description}

@@ -23,8 +23,7 @@ export default function GlossaryAlphabetNav({
     const p = new URLSearchParams();
     if (letter) p.set("letter", letter);
     const q = p.toString();
-    /* trailingSlash: true — sorğudan əvvəl son / olmalıdır */
-    return q ? `/glossary/terms/?${q}` : "/glossary/terms/";
+    return q ? `/glossary/terms?${q}` : "/glossary/terms";
   };
 
   const getAlphabet = () => {
