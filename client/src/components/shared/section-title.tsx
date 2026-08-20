@@ -12,10 +12,10 @@ interface ISectionTitle {
 
 /** Bütün səhifələrdə oxşar vizual ierarxiya: mobil → desktop → ultra geniş */
 const titleDefault =
-  "mt-8 px-2 text-2xl font-bold leading-[1.15] text-jsblack sm:mt-12 sm:px-0 sm:text-3xl md:text-[1.65rem] lg:mt-14 lg:text-[1.75rem] xl:text-4xl 2xl:text-[2.125rem] [@media(min-width:3000px)]:!text-[2.5rem]";
+  "mt-8 px-2 text-xl font-bold leading-[1.15] text-jsblack sm:mt-12 sm:px-0 sm:text-2xl md:text-[1.35rem] lg:mt-14 lg:text-[1.4rem] xl:text-3xl 2xl:text-[1.75rem] [@media(min-width:3000px)]:!text-[2rem]";
 
 const titleHome =
-  "mt-8 px-2 text-2xl font-bold leading-[1.15] text-jsblack sm:mt-12 sm:px-0 sm:text-[1.65rem] md:text-3xl lg:mt-14 lg:text-4xl xl:text-[2rem] [@media(min-width:3000px)]:!text-5xl";
+  "mt-8 px-2 text-xl font-bold leading-[1.15] text-jsblack sm:mt-12 sm:px-0 sm:text-[1.35rem] md:text-2xl lg:mt-14 lg:text-3xl xl:text-[1.6rem] [@media(min-width:3000px)]:!text-4xl";
 
 const descDefault =
   "mt-2 max-w-prose whitespace-pre-line text-sm text-jsblack/90 sm:mt-3 sm:text-base md:text-[0.95rem] lg:text-base xl:text-lg [@media(min-width:3000px)]:!text-2xl";
@@ -33,9 +33,10 @@ function SectionTitle({
   if (compact) {
     return (
       <div className="mx-auto mb-4 flex w-full max-w-full flex-col items-center justify-center gap-2 text-center text-jsblack">
-        <Tag className="px-1 text-xl font-bold leading-tight sm:text-2xl lg:text-[1.65rem] xl:text-3xl">
-          {title}
-        </Tag>
+        <Tag 
+          className="px-1 text-lg font-bold leading-tight sm:text-xl lg:text-2xl xl:text-[1.65rem]"
+          dangerouslySetInnerHTML={{ __html: title }}
+        />
         {description && (
           <p className="mt-1 max-w-full whitespace-pre-line text-sm leading-snug text-neutral-700 sm:text-base">
             {description}
@@ -50,7 +51,7 @@ function SectionTitle({
 
   return (
     <div className="mx-auto mb-5 flex w-full flex-col items-center justify-center gap-3 text-center text-jsblack sm:w-11/12 md:w-10/12 lg:w-1/2 lg:gap-4 [@media(min-width:3500px)]:!gap-6">
-      <Tag className={titleClass}>{title}</Tag>
+      <Tag className={titleClass} dangerouslySetInnerHTML={{ __html: title }} />
       {description && <p className={descClass}>{description}</p>}
     </div>
   );

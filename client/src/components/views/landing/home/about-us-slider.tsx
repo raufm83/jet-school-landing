@@ -40,10 +40,10 @@ export default function AboutUsSlider({ points }: AboutUsSliderProps) {
       </div>
 
       <div className="flex flex-col gap-4 4xl:gap-6">
-        <p className="font-semibold text-xl sm:text-[22px] lg:text-lg xl:text-xl [@media(min-width:3000px)]:!text-3xl">
+        <p className="font-semibold text-lg sm:text-xl lg:text-base xl:text-lg [@media(min-width:3000px)]:!text-[22px]">
           {point.title}
         </p>
-        <p className="text-base 4xl:text-lg [@media(min-width:3000px)]:!text-2xl">
+        <p className="text-sm md:text-base 4xl:text-lg [@media(min-width:3000px)]:!text-xl">
           {point.description}
         </p>
       </div>
