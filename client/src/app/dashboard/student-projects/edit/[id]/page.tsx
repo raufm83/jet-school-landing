@@ -29,8 +29,12 @@ export default function EditProjectPage({
     const fetchProject = async () => {
       try {
         const { data } = await api.get(`/student-projects/${params.id}`);
-        setOriginalData(data);
-        reset(data);
+        const formData = {
+          ...data,
+          categoryId: data.category?.id || data.categoryId,
+        };
+        setOriginalData(formData);
+        reset(formData);
       } catch (error) {
         console.error("Layihə məlumatlarını yükləmə xətası:", error);
         toast.error("Layihə məlumatları yüklənə bilmədi");
@@ -97,6 +101,11 @@ export default function EditProjectPage({
     // Compare link
     if (original.link !== updated.link) {
       changes.link = updated.link;
+    }
+
+    // Compare category
+    if (original.categoryId !== updated.categoryId) {
+      changes.categoryId = updated.categoryId;
     }
 
     return changes;

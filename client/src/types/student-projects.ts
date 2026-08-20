@@ -1,8 +1,9 @@
 export interface ProjectFormInputs {
-  title: string;
-  description: string;
-  imageUrl: string;
+  title: { az: string; ru: string };
+  description: { az: string; ru: string };
+  imageUrl?: string;
   link: string;
+  categoryId?: string;
 }
 
 export interface Project {
