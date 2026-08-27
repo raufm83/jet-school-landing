@@ -223,7 +223,8 @@ export default async function Footer() {
                       title="Facebook"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
-                      <FaFacebook className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
+                      <span className="sr-only">Facebook</span>
+                      <FaFacebook aria-hidden="true" className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
                     </a>
                   )}
                   {contact.socialLinks?.instagram?.trim() && (
@@ -235,7 +236,8 @@ export default async function Footer() {
                       title="Instagram"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
-                      <FaInstagram className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
+                      <span className="sr-only">Instagram</span>
+                      <FaInstagram aria-hidden="true" className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
                     </a>
                   )}
                   {contact.socialLinks?.youtube?.trim() && (
@@ -247,7 +249,8 @@ export default async function Footer() {
                       title="YouTube"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
-                      <FaYoutube className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
+                      <span className="sr-only">YouTube</span>
+                      <FaYoutube aria-hidden="true" className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
                     </a>
                   )}
                   {contact.socialLinks?.tiktok?.trim() && (
@@ -259,7 +262,8 @@ export default async function Footer() {
                       title="TikTok"
                       className="w-8 h-8 sm:w-10 sm:h-10 [@media(min-width:2500px)]:!w-14 [@media(min-width:2500px)]:!h-14 [@media(min-width:3500px)]:!w-16 [@media(min-width:3500px)]:!h-16 flex items-center justify-center rounded-full bg-jsblack/10 hover:bg-jsblack/20 transition-all duration-200 hover:scale-110"
                     >
-                      <FaTiktok className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
+                      <span className="sr-only">TikTok</span>
+                      <FaTiktok aria-hidden="true" className="w-4 h-4 sm:w-5 sm:h-5 [@media(min-width:2500px)]:!w-7 [@media(min-width:2500px)]:!h-7 [@media(min-width:3500px)]:!w-8 [@media(min-width:3500px)]:!h-8" />
                     </a>
                   )}
                 </div>
