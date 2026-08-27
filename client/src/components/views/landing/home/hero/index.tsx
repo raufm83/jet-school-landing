@@ -56,11 +56,12 @@ export default async function Hero({ locale }: HeroProps) {
             w-full mx-auto lg:mx-0 lg:max-w-none
             prose prose-lg lg:prose-xl max-w-none text-center lg:text-left
             prose-headings:font-bold prose-headings:text-jsblack
+            [&_h1]:!text-[1.8em] [&_h2]:!text-[1.2em] [&_h3]:!text-[1em]
             prose-p:text-[#6B6B6B] prose-p:font-medium
             prose-p:leading-7 md:prose-p:leading-relaxed
             prose-a:text-jsyellow prose-strong:text-jsblack
             [&_span[style*='color']]:!text-[#D97706]
-            [@media(min-width:3000px)]:prose-headings:!text-[4.5rem]
+            [@media(min-width:3000px)]:prose-headings:!text-[3.6rem]
             [@media(min-width:3000px)]:prose-p:!text-[35px] [@media(min-width:3000px)]:prose-p:!leading-10
           "
           dangerouslySetInnerHTML={{ __html: html }}
