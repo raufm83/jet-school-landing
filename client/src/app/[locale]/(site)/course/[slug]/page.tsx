@@ -13,6 +13,13 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { permanentRedirect } from "next/navigation";
 import BreadcrumbContextWrapper from "@/hooks/BreadcrumbContextWrapper";
 import TeamSection from "@/components/views/landing/about/team-section";
+import CourseModules from "@/components/views/landing/single-course/course-modules";
+import CourseProjects from "@/components/views/landing/single-course/course-projects";
+import CourseReviews from "@/components/views/landing/single-course/course-reviews";
+import { isDisplayablePublicReview } from "@/utils/displayable-review";
+import { PUBLIC_API_BASE } from "@/constants/public-api-base";
+import { StudentReview } from "@/types/student-reviews";
+import { Project } from "@/types/student-projects";
 import { CONTENT_ISR_SECONDS } from "@/constants/content-isr";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
@@ -20,6 +27,32 @@ import { buildCoursePageGraph } from "@/data/site-schema";
 import { cache } from "react";
 
 const cachedGetCourseDetails = cache((slug: string) => getCourseDetails(slug));
+
+const fetchProjects = cache(async () => {
+  try {
+    const response = await fetch(
+      `${PUBLIC_API_BASE}/student-projects?limit=10&sortBy=order&order=desc`,
+      { next: { revalidate: 120 } },
+    );
+    if (!response.ok) return { items: [] };
+    return (await response.json()) ?? { items: [] };
+  } catch (error) {
+    return { items: [] };
+  }
+});
+
+const fetchReviews = cache(async () => {
+  try {
+    const response = await fetch(
+      `${PUBLIC_API_BASE}/student-reviews?limit=20&sortBy=order&order=desc`,
+      { next: { revalidate: 120 } },
+    );
+    if (!response.ok) return { items: [] };
+    return (await response.json()) ?? { items: [] };
+  } catch (error) {
+    return { items: [] };
+  }
+});
 
 interface ISingleCoursePageProps {
   params: {
@@ -32,11 +65,18 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
   try {
     const locale = params.locale as Locale;
     setRequestLocale(locale);
-    const [data, t, courses] = await Promise.all([
+    const [data, t, courses, projectsData, reviewsData] = await Promise.all([
       cachedGetCourseDetails(params.slug),
       getTranslations("singleCoursePage"),
       getAllCourses({}),
+      fetchProjects(),
+      fetchReviews(),
     ]);
+
+    const projects: Project[] = projectsData?.items ?? [];
+    const reviews: StudentReview[] = (reviewsData?.items ?? []).filter((r: StudentReview) =>
+      isDisplayablePublicReview(r)
+    );
 
     if (!data) permanentRedirect(`/${locale}/courses`);
 
@@ -84,7 +124,8 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
         </div>
         <div className="container mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 3xl:px-28 4xl:px-32 my-10 md:my-16 lg:my-10 4xl:my-24 [@media(min-width:2500px)]:!px-[111px] [@media(min-width:3500px)]:px-32">
 
-          <div className="mb-16 flex flex-col gap-8 lg:gap-12 2xl:gap-16">
+          <div className="mb-16 flex flex-col gap-12 lg:gap-16 2xl:gap-20">
+            {/* 1. Kurs Haqqında (Course Hero) */}
             <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8 xl:gap-10 2xl:gap-12">
               <div className="min-w-0 w-full flex-1">
                 <CourseHero
@@ -96,11 +137,9 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
                   locale={locale}
                 />
               </div>
-              <aside className="hidden shrink-0 lg:block lg:sticky lg:top-8 lg:self-start lg:flex-none lg:w-96 xl:w-[26rem] 2xl:w-[28rem]">
-                <ContactFormFloat />
-              </aside>
             </div>
 
+            {/* Who can join (Optional, kept below Hero if exists) */}
             {showEligibilityBlock && (
               <EligibilitySection
                 locale={locale}
@@ -109,18 +148,38 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
               />
             )}
 
+            {/* 2. Kursun Modulları */}
+            {data.modules && data.modules.length > 0 && (
+              <CourseModules modules={data.modules} locale={locale} />
+            )}
+
+            {/* 3. Təlimçi */}
             <TeamSection
               title={t("teachers")}
               teamMembers={data.teachers ?? []}
               isCoursePage
             />
 
+            {/* 4. Layihələr */}
+            {projects.length > 0 && (
+              <CourseProjects projects={projects} locale={locale} />
+            )}
+
+            {/* 5. Valideyn rəyləri */}
+            {reviews.length > 0 && (
+              <CourseReviews reviews={reviews} locale={locale} />
+            )}
+
+            {/* 6. FAQ */}
             {faqItems.length > 0 && (
               <FaqSection items={faqItems} locale={locale} />
             )}
 
-            <div className="lg:hidden">
-              <ContactFormFloat />
+            {/* 7. Qeydiyyat formu (Desktop only, at the bottom) */}
+            <div className="hidden lg:flex w-full justify-center">
+              <div className="w-full max-w-lg">
+                <ContactFormFloat />
+              </div>
             </div>
           </div>
 
