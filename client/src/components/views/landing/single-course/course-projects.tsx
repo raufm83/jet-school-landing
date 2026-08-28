@@ -73,7 +73,7 @@ export default function CourseProjects({ projects, locale }: CourseProjectsProps
         <Link
           href={`/${locale}/projects`}
           target="_blank"
-          className="inline-block text-jsyellow font-semibold border-b-[2px] border-jsyellow hover:text-jsblack hover:border-jsblack transition-colors text-lg pb-1"
+          className="inline-block text-jsyellow font-semibold underline decoration-2 underline-offset-8 [text-decoration-skip-ink:none] hover:text-jsblack transition-colors text-lg"
         >
           {t("seeAllProjects") || "Bütün layihələrə bax"}
         </Link>
