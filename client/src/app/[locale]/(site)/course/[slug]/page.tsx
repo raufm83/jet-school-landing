@@ -1,5 +1,4 @@
 import ContactFormFloat from "@/components/views/landing/single-course/contact-form-float";
-import EligibilitySection from "@/components/views/landing/single-course/course-eligibility";
 import CourseHero from "@/components/views/landing/single-course/course-hero";
 import CoursesSlider from "@/components/views/landing/single-course/courses-slider";
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
@@ -13,7 +12,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { permanentRedirect } from "next/navigation";
 import BreadcrumbContextWrapper from "@/hooks/BreadcrumbContextWrapper";
 import TeamSection from "@/components/views/landing/about/team-section";
-import CourseModules from "@/components/views/landing/single-course/course-modules";
 import CourseProjects from "@/components/views/landing/single-course/course-projects";
 import CourseReviews from "@/components/views/landing/single-course/course-reviews";
 import { isDisplayablePublicReview } from "@/utils/displayable-review";
@@ -96,7 +94,6 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
     const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
 
     const rawTags = data.newTags?.[locale as "az" | "ru"] ?? [];
-    const showEligibilityBlock = Boolean(data.eligibility && data.eligibility.length > 0);
 
     const schemaGraph = buildCoursePageGraph({
       name: courseTitle,
