@@ -140,18 +140,15 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
             </div>
 
             {/* Who can join (Optional, kept below Hero if exists) */}
-            {showEligibilityBlock && (
+            {/* showEligibilityBlock && (
               <EligibilitySection
                 locale={locale}
                 title={t("whoIsEligibleToEnroll")}
                 eligibility={data.eligibility ?? []}
               />
-            )}
+            ) */}
 
-            {/* 2. Kursun Modulları */}
-            {data.modules && data.modules.length > 0 && (
-              <CourseModules modules={data.modules} locale={locale} />
-            )}
+            {/* 2. Kursun Modulları (Removed as it's already in CourseHero) */}
 
             {/* 3. Təlimçi */}
             <TeamSection
