@@ -8,6 +8,8 @@ import {
   interpolatePathnameDynamicSegments,
   fetchCourseSlugsFromApi,
   fetchBlogSlugsFromApi,
+  fetchGlossaryCategorySlugsFromApi,
+  fetchGlossaryTermSlugsFromApi,
 } from "@/utils/intl/language-switch-target";
 import { Link, usePathname } from "@/i18n/routing";
 import {
@@ -66,6 +68,16 @@ function LanguageSwitcherInner({ className }: { className?: string }) {
     (pathStr === "/blog/[slug]" ||
       /^\/blog\/[^/]+\/?$/.test(normalizedPathInternal));
 
+  const isGlossaryCategory =
+    Boolean(slugParam) &&
+    (pathStr === "/glossary/category/[slug]" ||
+      /^\/glossary\/category\/[^/]+\/?$/.test(normalizedPathInternal));
+
+  const isGlossaryTerm =
+    Boolean(slugParam) &&
+    (pathStr === "/glossary/term/[slug]" ||
+      /^\/glossary\/term\/[^/]+\/?$/.test(normalizedPathInternal));
+
   const [vacancySlugs, setVacancySlugs] = useState<VacancySlugPair | null>(
     null
   );
@@ -80,6 +92,16 @@ function LanguageSwitcherInner({ className }: { className?: string }) {
     Partial<Record<"az" | "ru", string>> | null
   >(null);
   const [blogFetchDone, setBlogFetchDone] = useState(false);
+
+  const [glossaryCategorySlugs, setGlossaryCategorySlugs] = useState<
+    Partial<Record<"az" | "ru", string>> | null
+  >(null);
+  const [glossaryCategoryFetchDone, setGlossaryCategoryFetchDone] = useState(false);
+
+  const [glossaryTermSlugs, setGlossaryTermSlugs] = useState<
+    Partial<Record<"az" | "ru", string>> | null
+  >(null);
+  const [glossaryTermFetchDone, setGlossaryTermFetchDone] = useState(false);
 
   const qs = searchParams.toString();
 
@@ -172,6 +194,54 @@ function LanguageSwitcherInner({ className }: { className?: string }) {
     };
   }, [isBlogDetail, slugParam]);
 
+  useEffect(() => {
+    if (!isGlossaryCategory || !slugParam) {
+      setGlossaryCategorySlugs(null);
+      setGlossaryCategoryFetchDone(false);
+      return;
+    }
+    let cancelled = false;
+    setGlossaryCategoryFetchDone(false);
+    setGlossaryCategorySlugs(null);
+    (async () => {
+      try {
+        const slugs = await fetchGlossaryCategorySlugsFromApi(slugParam);
+        if (!cancelled && slugs) setGlossaryCategorySlugs(slugs);
+      } catch {
+        // Handle error if needed
+      } finally {
+        if (!cancelled) setGlossaryCategoryFetchDone(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isGlossaryCategory, slugParam]);
+
+  useEffect(() => {
+    if (!isGlossaryTerm || !slugParam) {
+      setGlossaryTermSlugs(null);
+      setGlossaryTermFetchDone(false);
+      return;
+    }
+    let cancelled = false;
+    setGlossaryTermFetchDone(false);
+    setGlossaryTermSlugs(null);
+    (async () => {
+      try {
+        const slugs = await fetchGlossaryTermSlugsFromApi(slugParam);
+        if (!cancelled && slugs) setGlossaryTermSlugs(slugs);
+      } catch {
+        // Handle error if needed
+      } finally {
+        if (!cancelled) setGlossaryTermFetchDone(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isGlossaryTerm, slugParam]);
+
   function hrefForTargetLocale(code: (typeof locales)[number]): never {
     if (vacancySlugs) {
       const slug = code === "az" ? vacancySlugs.az : vacancySlugs.ru;
@@ -218,13 +288,47 @@ function LanguageSwitcherInner({ className }: { className?: string }) {
       } as never;
     }
 
+    if (glossaryCategorySlugs) {
+      const slug =
+        (code === "az" ? glossaryCategorySlugs.az : glossaryCategorySlugs.ru) ??
+        slugParam ??
+        "";
+      const base = {
+        pathname: "/glossary/category/[slug]" as const,
+        params: { slug },
+      };
+      if (!qs) return base as never;
+      return {
+        ...base,
+        query: Object.fromEntries(searchParams.entries()),
+      } as never;
+    }
+
+    if (glossaryTermSlugs) {
+      const slug =
+        (code === "az" ? glossaryTermSlugs.az : glossaryTermSlugs.ru) ??
+        slugParam ??
+        "";
+      const base = {
+        pathname: "/glossary/term/[slug]" as const,
+        params: { slug },
+      };
+      if (!qs) return base as never;
+      return {
+        ...base,
+        query: Object.fromEntries(searchParams.entries()),
+      } as never;
+    }
+
     return defaultHref;
   }
 
   const linkPending =
     (isVacancyDetail && !vacancyFetchDone) ||
     (isCourseDetail && !courseFetchDone) ||
-    (isBlogDetail && !blogFetchDone);
+    (isBlogDetail && !blogFetchDone) ||
+    (isGlossaryCategory && !glossaryCategoryFetchDone) ||
+    (isGlossaryTerm && !glossaryTermFetchDone);
 
   useEffect(() => {
     function handlePointerDown(event: Event) {
