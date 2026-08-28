@@ -25,7 +25,7 @@ export default function CourseModules({ modules, locale }: CourseModulesProps) {
   };
 
   return (
-    <div className="w-full">
+    <div className="hidden w-full">
       <h2 className="text-[clamp(28px,3vw,46px)] [@media(min-width:3500px)]:!text-6xl font-bold text-jsblack mb-6 md:mb-8">
         {t("courseModules") || "Kursun modulları"}
       </h2>

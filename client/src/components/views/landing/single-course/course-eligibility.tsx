@@ -20,7 +20,7 @@ export default function EligibilitySection({
   });
 
   return (
-    <div className="mt-10 pt-4 sm:mt-14 sm:pt-6 lg:mt-20 lg:pt-10">
+    <div className="hidden mt-10 pt-4 sm:mt-14 sm:pt-6 lg:mt-20 lg:pt-10">
       <SectionTitle title={title} />
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
         {sorted.map((criteria, index) => {

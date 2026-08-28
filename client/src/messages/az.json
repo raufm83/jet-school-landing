@@ -325,13 +325,14 @@
     "ageRangeCardTitle": "Yaş aralığı",
     "whoIsEligibleToEnroll": "Kurs kimlər üçün uyğundur?",
     "teachers": "Təlimçi Heyəti",
-    "teachersDescription": "Peşəkar və təcrübəli müəllimlərimiz",
+    "teachersDescription": "JET Academy-nin bütün təlimçiləri öz sahəsində yüksək təcrübəyə malik, pedaqoji bacarıqları ilə seçilən peşəkar mütəxəssislərdir",
     "enroll": "Qeydiyyatdan keç",
-    "contactFormTitle": "IT kurslarımız barədə məlumat almaq üçün formu doldurun",
-    "faq": "Tez-tez verilən suallar",
-    "projects": "Tələbə Layihələri",
+    "contactFormTitle": "Tədris sahələrimiz barədə məlumat almaq üçün qeydiyyatdan keçin",
     "seeAllProjects": "Bütün layihələrə bax",
-    "reviews": "Valideyn Rəyləri"
+    "projects": "Layihələr",
+    "reviews": "Valideyn Rəyləri",
+    "seeAllReviews": "Bütün rəylərə bax",
+    "faq": "Tez-tez verilən suallar"
   },
   "coursesPage": {
     "title": "Tədris Proqramları",
