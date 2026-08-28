@@ -36,7 +36,7 @@ const fetchProjects = cache(async () => {
     );
     if (!response.ok) return { items: [] };
     return (await response.json()) ?? { items: [] };
-  } catch (error) {
+  } catch {
     return { items: [] };
   }
 });
@@ -49,7 +49,7 @@ const fetchReviews = cache(async () => {
     );
     if (!response.ok) return { items: [] };
     return (await response.json()) ?? { items: [] };
-  } catch (error) {
+  } catch {
     return { items: [] };
   }
 });
