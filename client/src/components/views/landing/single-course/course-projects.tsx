@@ -28,7 +28,7 @@ export default function CourseProjects({ projects, locale }: CourseProjectsProps
       </h2>
 
       {/* Desktop Grid (Hidden on Mobile) */}
-      <div className="hidden lg:grid lg:grid-cols-3 [@media(min-width:1920px)]:grid-cols-4 gap-6">
+      <div className="hidden lg:grid lg:grid-cols-4 gap-6">
         {displayProjects.map((project, index) => (
           <ProjectCard
             key={project.id}
@@ -73,7 +73,7 @@ export default function CourseProjects({ projects, locale }: CourseProjectsProps
         <Link
           href={`/${locale}/projects`}
           target="_blank"
-          className="inline-block text-jsyellow font-semibold underline underline-offset-4 hover:text-jsblack transition-colors text-lg"
+          className="inline-block text-jsyellow font-semibold border-b-[2px] border-jsyellow hover:text-jsblack hover:border-jsblack transition-colors text-lg pb-1"
         >
           {t("seeAllProjects") || "Bütün layihələrə bax"}
         </Link>

@@ -28,7 +28,7 @@ export default function CourseReviews({ reviews, locale }: CourseReviewsProps) {
       </h2>
 
       {/* Desktop Grid (Hidden on Mobile) */}
-      <div className="hidden lg:grid lg:grid-cols-3 [@media(min-width:1920px)]:grid-cols-4 gap-6">
+      <div className="hidden lg:grid lg:grid-cols-4 gap-6">
         {displayReviews.map((review, index) => (
           <ReviewCard
             key={review.id}
@@ -73,7 +73,7 @@ export default function CourseReviews({ reviews, locale }: CourseReviewsProps) {
         <Link
           href={`/${locale}/${locale === "ru" ? "otzyvy" : "reyler"}`}
           target="_blank"
-          className="inline-block text-jsyellow font-semibold underline underline-offset-4 hover:text-jsblack transition-colors text-lg"
+          className="inline-block text-jsyellow font-semibold border-b-[2px] border-jsyellow hover:text-jsblack hover:border-jsblack transition-colors text-lg pb-1"
         >
           {t("seeAllReviews") || "Bütün rəylərə bax"}
         </Link>

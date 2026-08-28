@@ -57,7 +57,7 @@ export default async function TeamSection({
 
   if (!isSlider) {
     return (
-      <section className="container mx-auto mt-10 px-4">
+      <section className={isCoursePage ? "mt-10" : "container mx-auto mt-10 px-4"}>
         <SectionTitle home={home} title={finalTitle} description={description} />
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
           {finalTeamMembers.map((teamMember, index) => (
@@ -75,7 +75,7 @@ export default async function TeamSection({
   }
 
   return (
-    <section className="container mx-auto mt-10 w-full overflow-hidden px-4">
+    <section className={isCoursePage ? "mt-10 w-full overflow-hidden" : "container mx-auto mt-10 w-full overflow-hidden px-4"}>
       <SectionTitle home={home} title={finalTitle} description={description} />
       <TeamSlider
         teamMembers={finalTeamMembers}
