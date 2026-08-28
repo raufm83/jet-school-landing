@@ -6,6 +6,42 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useMemo } from "react";
+
+const ensureCategoryId = async (
+  categoryId: string,
+  categories?: any[]
+) => {
+  if (!categoryId) return categoryId;
+
+  const categoryName = categories?.find((c: any) => c.id === categoryId)?.title?.az || 
+                       categories?.find((c: any) => c.id === categoryId)?.title?.ru || 
+                       categories?.find((c: any) => c.id === categoryId)?.name;
+
+  if (!categoryName) return categoryId;
+
+  try {
+    const { data } = await api.get("/student-project-categories");
+    const existingCategory = data.items?.find(
+      (c: any) => c.name.toLowerCase() === categoryName.toLowerCase()
+    );
+
+    if (existingCategory) {
+      return existingCategory.id;
+    }
+
+    const { data: newCategory } = await api.post(
+      "/student-project-categories",
+      {
+        name: categoryName,
+      }
+    );
+    return newCategory.id;
+  } catch (error) {
+    console.error("Kateqoriya xətası:", error);
+    return categoryId; // fallback to sending the original id
+  }
+};
 
 export default function EditProjectPage({
   params,
@@ -29,9 +65,33 @@ export default function EditProjectPage({
     const fetchProject = async () => {
       try {
         const { data } = await api.get(`/student-projects/${params.id}`);
+        
+        let initialCategoryId = data.category?.id || data.categoryId;
+
+        // Fetch courses to find matching course by name for the dropdown
+        try {
+          const coursesRes = await api.get("/courses?limit=100");
+          const courses = coursesRes.data?.items || [];
+          const categoryName = data.category?.name;
+          
+          if (categoryName) {
+            const matchedCourse = courses.find((c: any) => 
+              (c.title?.az && c.title.az.toLowerCase() === categoryName.toLowerCase()) ||
+              (c.title?.ru && c.title.ru.toLowerCase() === categoryName.toLowerCase()) ||
+              (c.name && c.name.toLowerCase() === categoryName.toLowerCase())
+            );
+            
+            if (matchedCourse) {
+              initialCategoryId = matchedCourse.id;
+            }
+          }
+        } catch (e) {
+          console.error("Kursları yükləmə xətası:", e);
+        }
+
         const formData = {
           ...data,
-          categoryId: data.category?.id || data.categoryId,
+          categoryId: initialCategoryId,
         };
         setOriginalData(formData);
         reset(formData);
@@ -56,6 +116,12 @@ export default function EditProjectPage({
         toast.info("Heç bir dəyişiklik edilmədi");
         router.push("/dashboard/student-projects");
         return;
+      }
+
+      if (changedData.categoryId) {
+        const coursesRes = await api.get("/courses?limit=100");
+        const courses = coursesRes.data?.items || [];
+        changedData.categoryId = await ensureCategoryId(changedData.categoryId, courses);
       }
 
       const response = await api.patch(

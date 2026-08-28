@@ -19,6 +19,7 @@ export default function ProjectForm({
   isSubmitting,
   handleSubmit,
   router,
+  initialValues,
 }: any) {
   const [categories, setCategories] = useState([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
@@ -163,6 +164,9 @@ export default function ProjectForm({
                   value: "bg-transparent",
                 }}
                 isLoading={isLoadingCategories}
+                defaultSelectedKeys={
+                  initialValues?.categoryId ? [initialValues.categoryId] : []
+                }
               >
                 {categories.map((category: any) => (
                   <SelectItem key={category.id} value={category.id}>
