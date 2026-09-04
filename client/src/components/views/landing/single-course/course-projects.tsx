@@ -5,8 +5,9 @@ import Link from "next/link";
 import { Project } from "@/types/student-projects";
 import ProjectCard from "@/components/views/landing/projects/project-card";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
+import "swiper/css/navigation";
 import { useTranslations } from "next-intl";
 
 interface CourseProjectsProps {
@@ -19,42 +20,30 @@ export default function CourseProjects({ projects, locale }: CourseProjectsProps
   
   if (!projects || projects.length === 0) return null;
 
-  const displayProjects = projects.slice(0, 4);
-
   return (
     <div className="w-full flex flex-col gap-6 md:gap-8">
       <h2 className="text-3xl md:text-4xl font-bold text-jsblack">
         {t("projects") || "Layihələr"}
       </h2>
 
-      {/* Desktop Grid (Hidden on Mobile) */}
-      <div className="hidden lg:grid lg:grid-cols-4 gap-6">
-        {displayProjects.map((project, index) => (
-          <ProjectCard
-            key={project.id}
-            loadEager={index === 0}
-            imageUrl={project.imageUrl}
-            link={project.link}
-            title={project.title!}
-            description={project.description!}
-            category={project.category!}
-          />
-        ))}
-      </div>
-
-      {/* Mobile Carousel (Hidden on Desktop) */}
-      <div className="block lg:hidden w-full overflow-hidden">
+      <div className="w-full overflow-hidden">
         <Swiper
-          modules={[Autoplay]}
+          modules={[Autoplay, Navigation]}
           spaceBetween={16}
-          slidesPerView={1}
+          navigation={true}
+          style={{ "--swiper-navigation-color": "#ffb800", "--swiper-navigation-size": "24px" } as React.CSSProperties}
+          breakpoints={{
+            320: { slidesPerView: 1 },
+            640: { slidesPerView: 2 },
+            1024: { slidesPerView: 4 },
+          }}
           autoplay={{
             delay: 3000,
             disableOnInteraction: false,
           }}
           className="!overflow-hidden py-4"
         >
-          {displayProjects.map((project, index) => (
+          {projects.map((project, index) => (
             <SwiperSlide key={project.id}>
               <ProjectCard
                 loadEager={index === 0}
