@@ -23,7 +23,7 @@ export default function CourseReviews({ reviews, locale }: CourseReviewsProps) {
   return (
     <div className="w-full flex flex-col gap-6 md:gap-8">
       <h2 className="text-3xl md:text-4xl font-bold text-jsblack">
-        {t("reviews") || "Valideyn rəyləri"}
+        {t("reviews") || "Rəylər"}
       </h2>
 
       <div className="w-full overflow-hidden">
