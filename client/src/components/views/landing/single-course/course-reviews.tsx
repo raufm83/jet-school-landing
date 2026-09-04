@@ -23,7 +23,7 @@ export default function CourseReviews({ reviews, locale }: CourseReviewsProps) {
 
   return (
     <div className="w-full flex flex-col gap-6 md:gap-8">
-      <h2 className="text-[clamp(28px,3vw,46px)] [@media(min-width:3500px)]:!text-6xl font-bold text-jsblack">
+      <h2 className="text-3xl md:text-4xl font-bold text-jsblack">
         {t("reviews") || "Valideyn rəyləri"}
       </h2>
 
@@ -69,11 +69,11 @@ export default function CourseReviews({ reviews, locale }: CourseReviewsProps) {
         </Swiper>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-6 flex justify-center w-full">
         <Link
           href={`/${locale}/${locale === "ru" ? "otzyvy" : "reyler"}`}
           target="_blank"
-          className="inline-block text-jsyellow font-semibold underline decoration-2 underline-offset-8 [text-decoration-skip-ink:none] hover:text-jsblack transition-colors text-lg"
+          className="inline-flex items-center justify-center bg-jsyellow text-white px-8 py-3 rounded-full font-bold hover:bg-jsblack transition-all text-lg shadow-md hover:shadow-lg"
         >
           {t("seeAllReviews") || "Bütün rəylərə bax"}
         </Link>
