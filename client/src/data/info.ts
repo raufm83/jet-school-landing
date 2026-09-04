@@ -30,8 +30,20 @@ export const getAboutPoints = (t: any) => {
     {
       title: t("points.future.title"),
       description: t("points.future.description"),
+      position: "fixed",
+      top: "250",
+    },
+    {
+      title: t("points.parental.title"),
+      description: t("points.parental.description"),
+      position: "fixed",
+      top: "325",
+    },
+    {
+      title: t("points.certificate.title"),
+      description: t("points.certificate.description"),
       position: "sticky",
-      top: "300",
+      top: "400",
     },
   ];
 };

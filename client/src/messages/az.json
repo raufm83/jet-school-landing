@@ -51,6 +51,14 @@
       "future": {
         "title": "Gələcək Uğurlar",
         "description": "Proqramlarımız, uşaqların problem həll etmə, əməkdaşlıq və yaradıcılıq bacarıqlarını artıraraq, gələcək karyeraları üçün güclü bir təməl yaradır və onlara uğur qazanmaq üçün lazım olan resursları təqdim edir."
+      },
+      "parental": {
+        "title": "Valideyn Nəzarəti və Hesabatlıq",
+        "description": "Valideynlərə uşaqlarının inkişafını izləmək üçün mütəmadi hesabatlar təqdim edir, öyrənmə prosesini şəffaf şəkildə paylaşırıq."
+      },
+      "certificate": {
+        "title": "Beynəlxalq Sertifikat əldə etmək imkanı",
+        "description": "Kiber Təhlükəsizlik kursunda uşaqlar öz sertifikatımızla yanaşı, beynəlxalq sertifikatlara da hazırlaşır."
       }
     }
   },

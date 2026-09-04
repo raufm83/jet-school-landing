@@ -178,7 +178,14 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
 
               {/* 6. FAQ */}
               {faqItems.length > 0 && (
-                <FaqSection items={faqItems} locale={locale} />
+                <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 xl:gap-12 items-start relative">
+                  <div className="flex-1 min-w-0 w-full">
+                    <FaqSection items={faqItems} locale={locale} />
+                  </div>
+                  <div className="hidden lg:block w-[350px] xl:w-[400px] shrink-0 sticky top-28 lg:top-32 xl:top-36 z-10 mt-6 sm:mt-8 lg:mt-10">
+                    <ContactFormFloat />
+                  </div>
+                </div>
               )}
             </div>
           </div>
