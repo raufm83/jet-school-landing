@@ -1,6 +1,6 @@
 import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { buildHreflangUrl } from "@/utils/seo";
 import GlossaryTermDetail from "@/components/views/landing/glossary/glossary-term-detail";
 import GlossaryBreadcrumbSetter from "@/components/views/landing/glossary/glossary-breadcrumb-setter";
@@ -74,7 +74,7 @@ export default async function GlossaryTermPage({ params }: PageProps) {
     term = await getGlossaryTerm(params.slug);
   } catch (error) {
     console.error("Error fetching glossary term:", error);
-    notFound();
+    redirect(`/${language}/glossary/terms`);
   }
 
   const termContent = term.term[language];

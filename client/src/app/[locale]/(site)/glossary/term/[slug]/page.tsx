@@ -8,7 +8,7 @@ import { getAllCourses } from "@/utils/api/course";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 
 interface PageProps {
@@ -124,7 +124,7 @@ export default async function GlossaryTermPage({ params }: PageProps) {
     term = await getGlossaryTerm(slug);
   } catch (error) {
     console.error("Error fetching term:", error);
-    notFound();
+    redirect(`/${language}/glossary/terms`);
   }
 
   const correctSlug = term.slug?.[language];
