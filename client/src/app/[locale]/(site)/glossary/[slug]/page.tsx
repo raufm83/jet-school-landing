@@ -1,6 +1,6 @@
 import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 import { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { buildHreflangUrl } from "@/utils/seo";
 import GlossaryTermDetail from "@/components/views/landing/glossary/glossary-term-detail";
 import GlossaryBreadcrumbSetter from "@/components/views/landing/glossary/glossary-breadcrumb-setter";

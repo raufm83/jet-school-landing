@@ -8,7 +8,7 @@ import { getAllCourses } from "@/utils/api/course";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
-import { notFound, permanentRedirect, redirect } from "next/navigation";
+import { permanentRedirect, redirect } from "next/navigation";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 
 interface PageProps {
