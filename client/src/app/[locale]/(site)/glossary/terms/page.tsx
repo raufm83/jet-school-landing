@@ -1,5 +1,5 @@
 import { PUBLIC_API_BASE } from "@/constants/public-api-base";
-import GlossaryAlphabetNav from "@/components/views/landing/glossary/glossary-alphabet-nav";
+import GlossarySearchFilter from "@/components/views/landing/glossary/glossary-search-filter";
 import GlossaryPagination from "@/components/views/landing/glossary/glossary-pagination";
 import GlossaryTermList from "@/components/views/landing/glossary/glossary-term-list";
 import JsonLd from "@/components/seo/json-ld";
@@ -9,12 +9,6 @@ import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { getPageMeta } from "@/utils/api/page-meta";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
-import { normalizeGlossaryLetterParam } from "@/utils/glossary-letter";
-
-/** Middleware ilə eyni: URL-də `letter` sorğu açarı varsa indekslənməsin */
-function hasLetterSearchParam(searchParams: { letter?: string }): boolean {
-  return searchParams.letter !== undefined;
-}
 
 export async function generateMetadata({
   params: { locale },
@@ -35,25 +29,9 @@ export async function generateMetadata({
     ""
   );
 
-  const hasLetterFilter = hasLetterSearchParam(searchParams);
-  const letterDisplay =
-    normalizeGlossaryLetterParam(
-      typeof searchParams.letter === "string" ? searchParams.letter : undefined
-    ) ?? null;
+  const canonicalUrl = buildHreflangUrl(baseUrl, locale, "glossary/terms");
 
-  const termsIndexCanonical = buildHreflangUrl(baseUrl, locale, "glossary/terms");
-
-  const canonicalUrl = hasLetterFilter
-    ? termsIndexCanonical
-    : (letterDisplay != null
-        ? `${termsIndexCanonical}?letter=${encodeURIComponent(letterDisplay)}`
-        : termsIndexCanonical);
-
-  const pageTitle =
-    letterDisplay != null
-      ? t("glossaryTermsLetterPageTitle", { letter: letterDisplay }) ||
-        `"${letterDisplay}" ilə başlayan terminlər`
-      : t("glossaryTermsPageTitle") || "Bütün Terminlər";
+  const pageTitle = t("glossaryTermsPageTitle") || "Bütün Terminlər";
 
   const title = meta?.title
     ? trimMetaTitle(meta.title)
@@ -89,37 +67,35 @@ export async function generateMetadata({
       title,
       description,
     },
-    robots: hasLetterFilter
-      ? {
-          index: false,
-          follow: true,
-          googleBot: { index: false, follow: true },
-        }
-      : {
-          index: true,
-          follow: true,
-          googleBot: {
-            index: true,
-            follow: true,
-            "max-snippet": -1,
-          },
-        },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-snippet": -1,
+      },
+    },
   };
 }
 
 interface SearchParams {
-  letter?: string;
+  search?: string;
+  category?: string;
   page?: string;
 }
 
-async function getGlossaryTerms(letter?: string, page = 1, limit = 24) {
+async function getGlossaryTerms(search?: string, category?: string, page = 1, limit = 24) {
   try {
     const params = new URLSearchParams();
     params.append("page", page.toString());
     params.append("limit", limit.toString());
 
-    if (letter) {
-      params.append("letter", letter);
+    if (search) {
+      params.append("search", search);
+    }
+    if (category) {
+      params.append("categoryId", category);
     }
 
     const res = await fetch(
@@ -140,6 +116,26 @@ async function getGlossaryTerms(letter?: string, page = 1, limit = 24) {
   }
 }
 
+async function getGlossaryCategories() {
+  try {
+    const res = await fetch(
+      `${PUBLIC_API_BASE}/glossary-categories`,
+      {
+        next: { revalidate: 120 },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch glossary categories");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("Error loading glossary categories:", error);
+    return [];
+  }
+}
+
 export default async function GlossaryTermsPage({
   params: { locale },
   searchParams,
@@ -150,11 +146,15 @@ export default async function GlossaryTermsPage({
   const cookieStore = cookies();
   const language = locale || cookieStore.get("NEXT_LOCALE")?.value || "az";
 
-  const letter = normalizeGlossaryLetterParam(searchParams.letter);
+  const search = typeof searchParams.search === "string" ? searchParams.search : undefined;
+  const category = typeof searchParams.category === "string" ? searchParams.category : undefined;
   const page = parseInt(searchParams.page || "1", 10);
-  const suppressIndexedExtras = hasLetterSearchParam(searchParams);
+  const suppressIndexedExtras = false; // Always index this page since we removed letter search param blocker if needed
 
-  const { items: terms, meta } = await getGlossaryTerms(letter, page, 24);
+  const [ { items: terms, meta }, categories ] = await Promise.all([
+    getGlossaryTerms(search, category, page, 24),
+    getGlossaryCategories()
+  ]);
   
   const glossaryT = await getTranslations({
     locale: language,
@@ -165,20 +165,17 @@ export default async function GlossaryTermsPage({
     namespace: "glossary.pagination",
   });
 
-  const title = letter
-    ? `"${letter}" ilə başlayan terminlər`
-    : glossaryT("title");
+  const title = glossaryT("title");
 
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(
     /\/+$/,
     ""
   );
   const base = language === "az" ? baseUrl : `${baseUrl}/${language}`;
-  const letterQs = letter ? `?letter=${encodeURIComponent(letter)}` : "";
   const termsUrl =
     language === "az"
-      ? `${baseUrl}/glossary/terms/${letterQs}`
-      : `${baseUrl}/${language}/glossary/terms/${letterQs}`;
+      ? `${baseUrl}/glossary/terms`
+      : `${baseUrl}/${language}/glossary/terms`;
   const homeLabel = language === "az" ? "Ana Səhifə" : "Главная";
   const glossaryLabel = language === "az" ? "Texnoloji Lüğət" : "Технологический Глоссарий";
   const termsLabel = language === "az" ? "Terminlər" : "Термины";
@@ -207,7 +204,14 @@ export default async function GlossaryTermsPage({
   return (
     <div className="container mx-auto px-4 py-12">
       {!suppressIndexedExtras ? <JsonLd data={schemaGraph} /> : null}
-      <GlossaryAlphabetNav language={language} allText={glossaryT("allText")} />
+      <GlossarySearchFilter
+        language={language}
+        categories={categories}
+        searchPlaceholder={glossaryT("searchPlaceholder") || "Termin axtar..."}
+        allCategoriesText={glossaryT("allText") || "Hamısı"}
+        initialSearch={search}
+        initialCategory={category}
+      />
 
       <GlossaryTermList
         terms={terms}
