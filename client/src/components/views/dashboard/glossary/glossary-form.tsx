@@ -302,7 +302,18 @@ export default function GlossaryForm({
   };
 
   const handleTermChange = (lang: string, value: string) => {
-    const slugValue = slugifyText(value);
+    if (!setValue) return;
+    
+    let textToSlugify = value;
+    if (value.trim()) {
+      if (lang === "az") {
+        textToSlugify = `${value} nədir`;
+      } else if (lang === "ru") {
+        textToSlugify = `что такое ${value}`;
+      }
+    }
+    
+    const slugValue = slugifyText(textToSlugify);
     setValue(`slug.${lang}`, slugValue);
   };
 
