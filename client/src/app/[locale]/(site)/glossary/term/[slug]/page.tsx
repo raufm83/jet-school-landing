@@ -50,7 +50,19 @@ export async function generateMetadata({
     console.error("Error fetching term:", error);
   }
 
-  const pageTitle = termName ? `${termName}` : "Glossariy Termini";
+  const glossaryT = await getTranslations({ locale, namespace: "glossary" });
+
+  let pageTitle = "Glossariy Termini";
+  if (termName) {
+    if (locale === "az") {
+      pageTitle = `${termName} ${glossaryT("whats")}`;
+    } else if (locale === "ru") {
+      pageTitle = `${glossaryT("whats")} ${termName}?`;
+    } else {
+      pageTitle = termName;
+    }
+  }
+
   const defaultDescription = t("glossaryTermDefaultDescription") || "IT və proqramlaşdırma termini haqqında məlumat";
 
   const canonicalUrl = buildHreflangUrl(baseUrl, locale, `glossary/term/${slug}`);
