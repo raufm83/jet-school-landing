@@ -152,7 +152,7 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
               </div>
 
               {/* 7. Qeydiyyat formu (Sticky Desktop) */}
-              <div className="hidden lg:block w-[350px] xl:w-[400px] shrink-0 sticky top-28 lg:top-32 xl:top-36 z-10">
+              <div className="block w-full lg:w-[350px] xl:w-[400px] shrink-0 lg:sticky lg:top-28 xl:top-36 z-10 mt-8 lg:mt-0">
                 <ContactFormFloat />
               </div>
             </div>

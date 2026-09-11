@@ -59,7 +59,7 @@ export default async function CourseHero({
 
       <div className="flex flex-col gap-6 w-full">
         <div
-          className="relative bg-[#fef7eb]/60 border border-jsyellow rounded-xl sm:rounded-2xl lg:rounded-[32px] p-3 sm:p-4 lg:p-6 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg w-full min-h-[200px]"
+          className="relative bg-[#fef7eb]/60 border border-jsyellow rounded-xl sm:rounded-2xl lg:rounded-[32px] p-3 sm:p-4 lg:p-6 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg w-full min-h-[200px] overflow-hidden break-words"
         >
           {data?.imageUrl && (
             <Image
@@ -78,10 +78,10 @@ export default async function CourseHero({
             />
           )}
           <div className="absolute inset-0 bg-white/20 rounded-xl sm:rounded-2xl lg:rounded-[32px]" />
-          <div className="relative z-10">
+          <div className="relative z-10 w-full overflow-hidden">
             <LazyHtmlContent
               html={deferEmbedsInHtml(description)}
-              className="prose prose-xs sm:prose-sm lg:prose-base max-w-none text-[clamp(14px,1.35vw,18px)] font-normal leading-relaxed text-jsblack/90 [&_p]:font-normal [&_li]:font-normal [&_strong]:font-semibold [@media(min-width:2500px)]:!text-2xl [@media(min-width:3500px)]:!text-3xl"
+              className="prose prose-xs sm:prose-sm lg:prose-base max-w-none w-full break-words text-[clamp(14px,1.35vw,18px)] font-normal leading-relaxed text-jsblack/90 [&_p]:font-normal [&_li]:font-normal [&_strong]:font-semibold [&_*]:!max-w-full [@media(min-width:2500px)]:!text-2xl [@media(min-width:3500px)]:!text-3xl"
               skipClean
             />
           </div>
