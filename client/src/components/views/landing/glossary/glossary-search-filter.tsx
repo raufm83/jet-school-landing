@@ -118,11 +118,14 @@ export default function GlossarySearchFilter({
           className="w-full px-6 py-3.5 bg-white border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-jsyellow/50 transition-all appearance-none cursor-pointer text-sm sm:text-base"
         >
           <option value="">{allCategoriesText}</option>
-          {categories.map((cat) => (
-            <option key={cat._id} value={cat._id}>
-              {cat.name?.[language] || cat.name?.az || cat.slug}
-            </option>
-          ))}
+          {categories.map((cat) => {
+            const catId = (cat as any).id || cat._id;
+            return (
+              <option key={catId} value={catId}>
+                {cat.name?.[language] || cat.name?.az || cat.slug}
+              </option>
+            );
+          })}
         </select>
       </div>
     </div>
