@@ -12,10 +12,8 @@ import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/se
 
 export async function generateMetadata({
   params: { locale },
-  searchParams,
 }: {
   params: { locale: string };
-  searchParams: { letter?: string };
 }): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "Metadata" });
   const glossaryT = await getTranslations({
