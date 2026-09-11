@@ -116,81 +116,72 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
     return (
       <BreadcrumbContextWrapper title={courseTitle}>
         <JsonLd data={schemaGraph} />
-        <div className="container mx-auto px-4 pt-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 3xl:px-28 4xl:px-32 [@media(min-width:2500px)]:!px-[111px] [@media(min-width:3500px)]:px-32">
-          <Breadcrumbs dynamicTitle={courseTitle} />
-        </div>
-        <div className="container mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 3xl:px-28 4xl:px-32 my-10 md:my-16 lg:my-10 4xl:my-24 [@media(min-width:2500px)]:!px-[111px] [@media(min-width:3500px)]:px-32">
-
-          <div className="mb-16 flex flex-col gap-12 lg:gap-16 2xl:gap-20">
-            {/* Top Block: Hero & Form */}
-            <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 xl:gap-12 items-start relative">
-              <div className="flex-1 min-w-0 flex flex-col gap-12 lg:gap-16 2xl:gap-20">
-                {/* 1. Kurs Haqqında (Course Hero) */}
-                <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8 xl:gap-10 2xl:gap-12 min-w-0">
-                  <div className="min-w-0 w-full flex-1">
-                    <CourseHero
-                      title={data.title[locale]}
-                      tags={data.newTags[locale]}
-                      description={data.description[locale]}
-                      params={params}
-                      data={data}
-                      locale={locale}
-                    />
-                  </div>
-                </div>
-
-                {/* Who can join (Optional, kept below Hero if exists) */}
-                {/* showEligibilityBlock && (
-                  <EligibilitySection
-                    locale={locale}
-                    title={t("whoIsEligibleToEnroll")}
-                    eligibility={data.eligibility ?? []}
-                  />
-                ) */}
-
-                {/* 2. Kursun Modulları (Removed as it's already in CourseHero) */}
-              </div>
-
-              {/* 7. Qeydiyyat formu (Sticky Desktop) */}
-              <div className="block w-full lg:w-[350px] xl:w-[400px] shrink-0 lg:sticky lg:top-28 xl:top-36 z-10 mt-8 lg:mt-0">
-                <ContactFormFloat />
-              </div>
-            </div>
-
-            {/* Bottom Block: Full width sections */}
-            <div className="flex flex-col gap-12 lg:gap-16 2xl:gap-20 w-full">
-              {/* 3. Təlimçi */}
-              <TeamSection
-                title={t("teachers")}
-                teamMembers={data.teachers ?? []}
-                isCoursePage
-              />
-
-              {/* 4. Layihələr */}
-              {projects.length > 0 && (
-                <CourseProjects projects={projects} locale={locale} />
-              )}
-
-              {/* 5. Valideyn rəyləri */}
-              {reviews.length > 0 && (
-                <CourseReviews reviews={reviews} locale={locale} />
-              )}
-
-              {/* 6. FAQ */}
-              {faqItems.length > 0 && (
-                <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 xl:gap-12 items-start relative">
-                  <div className="flex-1 min-w-0 w-full">
-                    <FaqSection items={faqItems} locale={locale} />
-                  </div>
-                  <div className="hidden lg:block w-[350px] xl:w-[400px] shrink-0 sticky top-28 lg:top-32 xl:top-36 z-10 mt-6 sm:mt-8 lg:mt-10">
-                    <ContactFormFloat />
-                  </div>
-                </div>
-              )}
-            </div>
+        <div className="overflow-x-hidden w-full">
+          <div className="container mx-auto px-4 pt-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 3xl:px-28 4xl:px-32 [@media(min-width:2500px)]:!px-[111px] [@media(min-width:3500px)]:px-32">
+            <Breadcrumbs dynamicTitle={courseTitle} />
           </div>
+          <div className="container mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 3xl:px-28 4xl:px-32 my-10 md:my-16 lg:my-10 4xl:my-24 [@media(min-width:2500px)]:!px-[111px] [@media(min-width:3500px)]:px-32">
 
-          <CoursesSlider courses={courses} locale={locale} />
+            <div className="mb-16 flex flex-col gap-12 lg:gap-16 2xl:gap-20">
+              {/* Top Block: Hero & Form */}
+              <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 xl:gap-12 items-start relative">
+                <div className="flex-1 min-w-0 flex flex-col gap-12 lg:gap-16 2xl:gap-20">
+                  {/* 1. Kurs Haqqında (Course Hero) */}
+                  <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8 xl:gap-10 2xl:gap-12 min-w-0">
+                    <div className="min-w-0 w-full flex-1">
+                      <CourseHero
+                        title={data.title[locale]}
+                        tags={data.newTags[locale]}
+                        description={data.description[locale]}
+                        params={params}
+                        data={data}
+                        locale={locale}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 7. Qeydiyyat formu (Sticky Desktop) */}
+                <div className="block w-full lg:w-[350px] xl:w-[400px] shrink-0 lg:sticky lg:top-28 xl:top-36 z-10 mt-8 lg:mt-0">
+                  <ContactFormFloat />
+                </div>
+              </div>
+
+              {/* Bottom Block: Full width sections */}
+              <div className="flex flex-col gap-12 lg:gap-16 2xl:gap-20 w-full">
+                {/* 3. Təlimçi */}
+                <TeamSection
+                  title={t("teachers")}
+                  teamMembers={data.teachers ?? []}
+                  isCoursePage
+                />
+
+                {/* 4. Layihələr */}
+                {projects.length > 0 && (
+                  <CourseProjects projects={projects} locale={locale} />
+                )}
+
+                {/* 5. Valideyn rəyləri */}
+                {reviews.length > 0 && (
+                  <CourseReviews reviews={reviews} locale={locale} />
+                )}
+
+                {/* 6. FAQ */}
+                {faqItems.length > 0 && (
+                  <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 xl:gap-12 items-start relative">
+                    <div className="flex-1 min-w-0 w-full">
+                      <FaqSection items={faqItems} locale={locale} />
+                    </div>
+                    <div className="hidden lg:block w-[350px] xl:w-[400px] shrink-0 sticky top-28 lg:top-32 xl:top-36 z-10 mt-6 sm:mt-8 lg:mt-10">
+                      <ContactFormFloat />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <CoursesSlider courses={courses} locale={locale} />
+          </div>
         </div>
       </BreadcrumbContextWrapper>
     );

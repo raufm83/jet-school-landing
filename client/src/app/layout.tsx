@@ -45,7 +45,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://img.youtube.com" />
       </head>
       <body
-        className={`${manrope.className} scroll-smooth antialiased max-w-full overflow-x-hidden bg-white`}
+        className={`${manrope.className} scroll-smooth antialiased max-w-full bg-white`}
       >
         {/* Google Tag Manager (noscript) */}
         <noscript>
