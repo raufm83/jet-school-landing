@@ -98,8 +98,9 @@ export default async function GlossaryTermDetail({
         <LazyHtmlContent
           html={deferEmbedsInHtml(definition)}
           className="
-            flex-1 text-gray-600 prose max-w-none 
+            flex-1 text-gray-600 prose max-w-none break-words
             prose-headings:text-jsblack prose-li:list-disc prose-li:ml-4
+            [&_p]:!whitespace-normal [&_*]:!whitespace-normal [&_*]:!max-w-full
             [@media(min-width:2500px)]:text-2xl
             [@media(min-width:3500px)]:text-3xl
             [@media(min-width:2500px)]:leading-relaxed

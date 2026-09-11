@@ -153,6 +153,20 @@ export default async function GlossaryTermsPage({
     getGlossaryTerms(search, category, page, 24),
     getGlossaryCategories()
   ]);
+
+  if (search && terms && terms.length > 0) {
+    const searchLower = search.toLowerCase();
+    terms.sort((a: any, b: any) => {
+      const aTerm = a.term?.[language]?.toLowerCase() || "";
+      const bTerm = b.term?.[language]?.toLowerCase() || "";
+      const aStarts = aTerm.startsWith(searchLower) ? -1 : 1;
+      const bStarts = bTerm.startsWith(searchLower) ? -1 : 1;
+      if (aStarts !== bStarts) {
+        return aStarts - bStarts;
+      }
+      return 0;
+    });
+  }
   
   const glossaryT = await getTranslations({
     locale: language,
