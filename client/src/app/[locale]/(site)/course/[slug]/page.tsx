@@ -126,7 +126,7 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
             <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 xl:gap-12 items-start relative">
               <div className="flex-1 min-w-0 flex flex-col gap-12 lg:gap-16 2xl:gap-20">
                 {/* 1. Kurs Haqqında (Course Hero) */}
-                <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8 xl:gap-10 2xl:gap-12">
+                <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8 xl:gap-10 2xl:gap-12 min-w-0">
                   <div className="min-w-0 w-full flex-1">
                     <CourseHero
                       title={data.title[locale]}

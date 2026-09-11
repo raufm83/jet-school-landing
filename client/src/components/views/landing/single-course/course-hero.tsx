@@ -31,8 +31,8 @@ export default async function CourseHero({
   const t = await getTranslations("singleCoursePage");
 
   return (
-    <div className="w-full flex flex-col gap-4 sm:gap-5 lg:gap-6 animate-fadeIn">
-      <h1 className="font-bold leading-relaxed text-pretty text-jsblack text-[clamp(20px,2.2vw,34px)] lg:text-[clamp(28px,2vw,40px)] [@media(min-width:2500px)]:!text-5xl [@media(min-width:3500px)]:!text-6xl">
+    <div className="w-full min-w-0 flex flex-col gap-4 sm:gap-5 lg:gap-6 animate-fadeIn">
+      <h1 className="font-bold leading-relaxed text-pretty text-jsblack text-[clamp(20px,2.2vw,34px)] lg:text-[clamp(28px,2vw,40px)] [@media(min-width:2500px)]:!text-5xl [@media(min-width:3500px)]:!text-6xl break-words">
         {title}
       </h1>
 
@@ -57,9 +57,9 @@ export default async function CourseHero({
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 w-full">
+      <div className="flex flex-col gap-6 w-full min-w-0">
         <div
-          className="relative bg-[#fef7eb]/60 border border-jsyellow rounded-xl sm:rounded-2xl lg:rounded-[32px] p-3 sm:p-4 lg:p-6 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg w-full min-h-[200px] overflow-hidden break-words"
+          className="relative bg-[#fef7eb]/60 border border-jsyellow rounded-xl sm:rounded-2xl lg:rounded-[32px] p-3 sm:p-4 lg:p-6 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg w-full min-w-0 min-h-[200px] overflow-hidden break-words"
         >
           {data?.imageUrl && (
             <Image
