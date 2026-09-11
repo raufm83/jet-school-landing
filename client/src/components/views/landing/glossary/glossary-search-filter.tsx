@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
+import { debounce } from "lodash";
 
 interface Category {
   _id: string;
@@ -37,21 +38,10 @@ export default function GlossarySearchFilter({
     setSelectedCategory(searchParams.get("category") || "");
   }, [searchParams]);
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    updateQueryParams(searchQuery, selectedCategory);
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCategory = e.target.value;
-    setSelectedCategory(newCategory);
-    updateQueryParams(searchQuery, newCategory);
-  };
-
   const updateQueryParams = (search: string, category: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (search) {
-      params.set("search", search);
+    if (search.trim()) {
+      params.set("search", search.trim());
     } else {
       params.delete("search");
     }
@@ -67,13 +57,45 @@ export default function GlossarySearchFilter({
     router.push(`/glossary/terms?${params.toString()}`);
   };
 
+  const debouncedUpdate = useMemo(
+    () =>
+      debounce((search: string, category: string) => {
+        updateQueryParams(search, category);
+      }, 500),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [searchParams, router]
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedUpdate.cancel();
+    };
+  }, [debouncedUpdate]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    debouncedUpdate(value, selectedCategory);
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    updateQueryParams(searchQuery, selectedCategory);
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCategory = e.target.value;
+    setSelectedCategory(newCategory);
+    updateQueryParams(searchQuery, newCategory);
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto mb-10 flex flex-col md:flex-row gap-4">
       <form onSubmit={handleSubmit} className="relative flex-1">
         <input
           type="text"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleSearchChange}
           placeholder={searchPlaceholder}
           className="w-full px-6 py-3.5 pr-12 bg-white border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-jsyellow/50 transition-all text-sm sm:text-base"
         />
