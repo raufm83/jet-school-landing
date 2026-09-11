@@ -81,7 +81,7 @@ export default async function CourseHero({
           <div className="relative z-10 w-full overflow-hidden">
             <LazyHtmlContent
               html={deferEmbedsInHtml(description)}
-              className="prose prose-xs sm:prose-sm lg:prose-base max-w-none w-full break-words text-[clamp(14px,1.35vw,18px)] font-normal leading-relaxed text-jsblack/90 [&_p]:font-normal [&_li]:font-normal [&_strong]:font-semibold [&_*]:!max-w-full [@media(min-width:2500px)]:!text-2xl [@media(min-width:3500px)]:!text-3xl"
+              className="prose prose-xs sm:prose-sm lg:prose-base max-w-none w-full break-words text-[clamp(14px,1.35vw,18px)] font-normal leading-relaxed text-jsblack/90 [&_p]:font-normal [&_p]:!whitespace-normal [&_li]:font-normal [&_strong]:font-semibold [&_*]:!max-w-full [&_*]:!whitespace-normal [@media(min-width:2500px)]:!text-2xl [@media(min-width:3500px)]:!text-3xl"
               skipClean
             />
           </div>
