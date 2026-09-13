@@ -122,12 +122,12 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
           </div>
           <div className="container mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 3xl:px-28 4xl:px-32 my-10 md:my-16 lg:my-10 4xl:my-24 [@media(min-width:2500px)]:!px-[111px] [@media(min-width:3500px)]:px-32">
 
-            <div className="mb-16 flex flex-col gap-12 lg:gap-16 2xl:gap-20">
+            <div className="mb-16 flex flex-col gap-12 lg:gap-16 2xl:gap-20 w-full min-w-0">
               {/* Top Block: Hero & Form */}
-              <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 xl:gap-12 items-start relative">
-                <div className="flex-1 min-w-0 flex flex-col gap-12 lg:gap-16 2xl:gap-20">
+              <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 xl:gap-12 items-start relative w-full min-w-0">
+                <div className="flex-1 min-w-0 flex flex-col gap-12 lg:gap-16 2xl:gap-20 w-full">
                   {/* 1. Kurs Haqqında (Course Hero) */}
-                  <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8 xl:gap-10 2xl:gap-12 min-w-0">
+                  <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8 xl:gap-10 2xl:gap-12 min-w-0 w-full">
                     <div className="min-w-0 w-full flex-1">
                       <CourseHero
                         title={data.title[locale]}
@@ -142,7 +142,7 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
                 </div>
 
                 {/* 7. Qeydiyyat formu (Sticky Desktop) */}
-                <div className="block w-full lg:w-[350px] xl:w-[400px] shrink-0 lg:sticky lg:top-28 xl:top-36 z-10 mt-8 lg:mt-0">
+                <div className="block w-full lg:w-[350px] xl:w-[400px] shrink-0 lg:sticky lg:top-28 xl:top-36 z-10 mt-8 lg:mt-0 min-w-0">
                   <ContactFormFloat />
                 </div>
               </div>

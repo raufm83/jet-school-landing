@@ -47,7 +47,7 @@ export default function CourseContent({
           {title}
         </h3>
       )}
-      <div className="space-y-3 sm:space-y-4 flex flex-col">
+      <div className="space-y-3 sm:space-y-4 flex flex-col w-full min-w-0">
         {modules.map((module, index) => {
           const isOpen = openIndex === index;
           const panelId = `${idsRoot}-panel-${index}`;
@@ -58,7 +58,7 @@ export default function CourseContent({
           return (
             <div
               key={index}
-              className="border border-jsyellow rounded-[20px] md:rounded-[28px] bg-white overflow-hidden shadow-sm"
+              className="border border-jsyellow rounded-[20px] md:rounded-[28px] bg-white overflow-hidden shadow-sm min-w-0 w-full"
             >
               <button
                 id={buttonId}
