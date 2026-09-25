@@ -68,11 +68,6 @@ export function getMenuItems(session: Session | null): MenuItem[] {
   const role = session?.user?.role as Role | undefined;
   const baseMenuItemsStart: MenuItem[] = [
     getPrimarySidebarItem(role),
-    {
-      name: "Haqqımızda giriş hissəsi",
-      icon: <MdInfo size={24} />,
-      path: "/dashboard/about-hero",
-    },
   ];
 
   const settingsItem: MenuItem = {
