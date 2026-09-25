@@ -97,21 +97,48 @@ export default async function ContactPage({
   const lang = locale === "az" ? "az" : "ru";
   const streetAddress = SITE_SCHEMA.schemaAddress[lang];
 
-  const schemaGraph = buildContactPageGraph({
-    name: pageTitle,
-    description: pageDescription,
-    url: contactUrl,
-    locale,
-    baseUrl,
-    breadcrumbItems: [
-      { name: homeLabel, url: base },
-      { name: contactLabel, url: contactUrl },
-    ],
-    streetAddress,
-    email: contactData.email?.trim(),
-    telephone: contactData.phone?.trim(),
-    primaryImageUrl: SITE_SCHEMA.image,
-  });
+  const schemaGraph = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "url": contactUrl,
+    "name": pageTitle,
+    "description": pageDescription || "JET School ilə əlaqə saxlayın. Ünvan: Olimpiya küçəsi 6A, Bakı. Sınaq dərsinə qeydiyyat üçün zəng edin.",
+    "about": {
+      "@id": `${baseUrl}/#organization`
+    },
+    "mainEntity": {
+      "@type": "EducationalOrganization",
+      "@id": `${baseUrl}/#organization`,
+      "name": "JET School",
+      "url": baseUrl,
+      "email": contactData.email?.trim() || "info@jetschool.az",
+      "telephone": contactData.phone?.trim() || "+994709836699",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": streetAddress || "Olimpiya küçəsi 6A",
+        "addressLocality": "Bakı",
+        "addressCountry": "AZ"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "40.398557774992405",
+        "longitude": "49.85549367964268"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": contactData.phone?.trim() || "+994709836699",
+        "contactType": "customer service",
+        "areaServed": "AZ",
+        "availableLanguage": ["az", "ru"]
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "09:30",
+        "closes": "21:30"
+      }
+    }
+  };
 
   return (
     <main className="flex flex-col gap-12 pt-10 md:gap-12 md:pt-10">

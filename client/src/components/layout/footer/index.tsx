@@ -301,20 +301,23 @@ export default async function Footer() {
                 </h2>
                 <ul className="flex min-w-0 flex-col gap-4 sm:gap-5 lg:gap-[1.125rem] [@media(min-width:2500px)]:gap-6 [@media(min-width:3500px)]:gap-8">
                   {sortedCourses.length > 0 ? (
-                    sortedCourses.map((c) => (
-                      <li key={c.id}>
-                        <Link 
-                          href={{
-                            pathname: "/course/[slug]",
-                            params: { slug: c.slug[lang] },
-                          }} 
-                          title={c.title[lang]}
-                          className="max-w-full text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200 hover:text-jsblack/90 leading-relaxed [@media(min-width:3500px)]:leading-relaxed block break-words"
-                        >
-                          {c.title[lang]}
-                        </Link>
-                      </li>
-                    ))
+                    sortedCourses.map((c) => {
+                      const courseSlug = c.slug[lang].replace(/-+$/, "");
+                      return (
+                        <li key={c.id}>
+                          <Link 
+                            href={{
+                              pathname: "/course/[slug]",
+                              params: { slug: courseSlug },
+                            }} 
+                            title={c.title[lang]}
+                            className="max-w-full text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl hover:underline transition-all duration-200 hover:text-jsblack/90 leading-relaxed [@media(min-width:3500px)]:leading-relaxed block break-words"
+                          >
+                            {c.title[lang]}
+                          </Link>
+                        </li>
+                      );
+                    })
                   ) : (
                     <li className="text-sm sm:text-base [@media(min-width:2500px)]:!text-xl [@media(min-width:3500px)]:!text-3xl text-jsblack/70">
                       {t("noCourses")}

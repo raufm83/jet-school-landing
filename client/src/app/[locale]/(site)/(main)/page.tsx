@@ -96,15 +96,70 @@ export default async function Home({ params }: { params: { locale: string } }) {
     ? trimMetaDescription(homeMeta.description)
     : trimMetaDescription(metaT("description"));
 
-  const schemaGraph = buildHomePageGraph({
-    name: pageTitle,
-    description: pageDescription,
-    url: base,
-    locale,
-    baseUrl,
-    breadcrumbItems: [{ name: homeLabel, url: base }],
-    primaryImageUrl: SITE_SCHEMA.image,
-  });
+  const schemaGraph = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "EducationalOrganization",
+        "@id": `${baseUrl}/#organization`,
+        "name": "JET School",
+        "url": baseUrl,
+        "logo": `${baseUrl}/logos/JET_School_Yellowww.webp`,
+        "image": `${baseUrl}/logos/JET_School_Yellowww.webp`,
+        "description": locale === "az" 
+          ? "JET School 8-17 yaş uşaqlar və gənclər üçün IT və Proqramlaşdırma məktəbidir. Təcrübəli müəllimlər, fərdi yanaşma və kursun sonunda sertifikat təqdim olunur."
+          : "JET School — школа IT и программирования для детей и подростков 8-17 лет. Опытные преподаватели, индивидуальный подход и сертификат по окончании курса.",
+        "foundingDate": "2021",
+        "email": "info@jetschool.az",
+        "telephone": "+994709836699",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": locale === "az" ? "Olimpiya küçəsi 6A" : "ул. Олимпия 6А",
+          "addressLocality": locale === "az" ? "Bakı" : "Баку",
+          "addressCountry": "AZ"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "40.398557774992405",
+          "longitude": "49.85549367964268"
+        },
+        "areaServed": locale === "az" ? "Bakı" : "Баку",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+994709836699",
+          "contactType": "customer service",
+          "areaServed": "AZ",
+          "availableLanguage": ["az", "ru"]
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "09:30",
+          "closes": "21:30"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "reviewCount": "52"
+        },
+        "sameAs": [
+          "https://www.facebook.com/jetschool.az",
+          "https://www.instagram.com/jet.school.baku",
+          "https://www.youtube.com/@jetschoolbaku"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${baseUrl}/#website`,
+        "url": baseUrl,
+        "name": "JET School",
+        "inLanguage": locale,
+        "publisher": {
+          "@id": `${baseUrl}/#organization`
+        }
+      }
+    ]
+  };
 
   return (
     <main className="bg-background">

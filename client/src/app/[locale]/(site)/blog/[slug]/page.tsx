@@ -99,25 +99,35 @@ export default async function SinglePostPage({
     const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
     const blogLabel = locale === "az" ? "Bloq" : "Блог";
 
-    const schemaGraph = buildBlogSinglePageGraph({
-      headline: data.title[locale],
-      description: contentText.slice(0, 300),
-      url: canonicalUrl,
-      imageUrl: imageUrlFull ?? undefined,
-      datePublished: data.createdAt,
-      dateModified: data.updatedAt,
-      locale,
-      baseUrl,
-      author: data.author ? { name: data.author.name } : undefined,
-      wordCount,
-      keywords: Array.isArray(data.tags) ? data.tags : (data.tags?.[locale] ?? []),
-      articleSection,
-      breadcrumbItems: [
-        { name: homeLabel, url: localeBase },
-        { name: blogLabel, url: `${localeBase}/blog` },
-        { name: data.title[locale], url: canonicalUrl },
-      ],
-    });
+    const schemaGraph = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": data.title[locale],
+      "description": contentText.slice(0, 300),
+      "image": imageUrlFull || "https://jetschool.az/logos/JET_School_Yellowww.webp",
+      "datePublished": new Date(data.createdAt || Date.now()).toISOString(),
+      "dateModified": new Date(data.updatedAt || data.createdAt || Date.now()).toISOString(),
+      "inLanguage": locale,
+      "url": canonicalUrl,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": canonicalUrl
+      },
+      "articleSection": data.blogCategory?.name?.[locale] || (locale === "az" ? "Bloq" : "Блог"),
+      "author": {
+        "@type": "Organization",
+        "name": "JET School",
+        "url": "https://jetschool.az"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "JET School",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://jetschool.az/logos/JET_School_Yellowww.webp"
+        }
+      }
+    };
 
     return (
       <>

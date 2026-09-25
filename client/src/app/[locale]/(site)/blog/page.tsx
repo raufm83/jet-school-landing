@@ -156,18 +156,24 @@ export default async function BlogPage({
     name: p.title[locale],
     url: `${base}/blog/${p.slug?.[locale] ?? p.slug?.az ?? p.slug?.ru ?? ""}`,
   }));
-  const schemaGraph = buildCollectionPageGraph({
-    name: pageTitle,
-    description: pageDescription,
-    url: blogUrl,
-    locale,
-    baseUrl,
-    breadcrumbItems: [
-      { name: homeLabel, url: base },
-      { name: blogLabel, url: blogUrl },
-    ],
-    itemList,
-  });
+  const schemaGraph = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": pageTitle,
+    "description": pageDescription,
+    "url": blogUrl,
+    "about": { "@id": `${baseUrl}/#organization` },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": itemList.length,
+      "itemListElement": itemList.map((post, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "url": post.url,
+        "name": post.name
+      }))
+    }
+  };
 
   return (
     <div className="container py-20">

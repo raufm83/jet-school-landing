@@ -65,24 +65,34 @@ export default async function SinglePostPage({ params }: ISinglePostPageProps) {
     const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
     const newsLabel = locale === "az" ? "Xəbərlər" : "Новости";
 
-    const schemaGraph = buildNewsSinglePageGraph({
-      headline: data.title[locale],
-      description: contentText.slice(0, 300),
-      url: canonicalUrl,
-      imageUrl: imageUrlFull ?? undefined,
-      datePublished: (data as { createdAt?: string })?.createdAt,
-      dateModified: (data as { updatedAt?: string })?.updatedAt,
-      locale,
-      baseUrl,
-      author: data.author ? { name: data.author.name } : undefined,
-      wordCount,
-      keywords: Array.isArray((data as { tags?: unknown }).tags) ? (data as { tags: string[] }).tags : ((data as { tags?: { az?: string[]; ru?: string[] } }).tags?.[locale] ?? []),
-      breadcrumbItems: [
-        { name: homeLabel, url: localeBase },
-        { name: newsLabel, url: `${localeBase}/news` },
-        { name: data.title[locale], url: canonicalUrl },
-      ],
-    });
+    const schemaGraph = {
+      "@context": "https://schema.org",
+      "@type": "NewsArticle",
+      "headline": data.title[locale],
+      "description": contentText.slice(0, 300),
+      "image": imageUrlFull || "https://jetschool.az/logos/JET_School_Yellowww.webp",
+      "datePublished": new Date((data as { createdAt?: string })?.createdAt || Date.now()).toISOString(),
+      "dateModified": new Date((data as { updatedAt?: string })?.updatedAt || (data as { createdAt?: string })?.createdAt || Date.now()).toISOString(),
+      "inLanguage": locale,
+      "url": canonicalUrl,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": canonicalUrl
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "JET School",
+        "url": "https://jetschool.az"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "JET School",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://jetschool.az/logos/JET_School_Yellowww.webp"
+        }
+      }
+    };
 
     return (
       <>

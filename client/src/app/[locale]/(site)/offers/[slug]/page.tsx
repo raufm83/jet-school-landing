@@ -9,8 +9,6 @@ import { getPostImageUrl } from "@/utils/helpers/post";
 import { buildImageUrl } from "@/utils/imageUrl";
 import SinglePostView from "@/components/views/landing/post/view";
 import JsonLd from "@/components/seo/json-ld";
-import { buildOfferSinglePageGraph } from "@/data/site-schema";
-
 interface ISinglePostPageProps {
   params: {
     slug: string;
@@ -76,19 +74,27 @@ export default async function SinglePostPage({ params }: ISinglePostPageProps) {
     const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
     const offersLabel = locale === "az" ? "Kampaniyalar" : "Предложения";
 
-    const schemaGraph = buildOfferSinglePageGraph({
-      name: titleText,
-      description: contentText.slice(0, 300),
-      url: canonicalUrl,
-      imageUrl: imageUrlFull ?? undefined,
-      locale,
-      baseUrl,
-      breadcrumbItems: [
-        { name: homeLabel, url: localeBase },
-        { name: offersLabel, url: `${localeBase}/offers` },
-        { name: titleText, url: canonicalUrl },
-      ],
-    });
+    const isOfferActive = (endDate?: string | Date | null) => {
+      if (!endDate) return true;
+      return new Date(endDate) >= new Date();
+    };
+
+    const schemaGraph = {
+      "@context": "https://schema.org",
+      "@type": "Offer",
+      "name": titleText,
+      "description": contentText.slice(0, 300),
+      "url": canonicalUrl,
+      "priceCurrency": "AZN",
+      "availabilityStarts": data.offerStartDate ? new Date(data.offerStartDate).toISOString().split('T')[0] : undefined,
+      "availabilityEnds": data.offerEndDate ? new Date(data.offerEndDate).toISOString().split('T')[0] : undefined,
+      "availability": isOfferActive(data.offerEndDate)
+        ? "https://schema.org/InStock"
+        : "https://schema.org/Discontinued",
+      "seller": {
+        "@id": `${baseUrl}/#organization`
+      }
+    };
 
     return (
       <>

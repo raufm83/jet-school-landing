@@ -114,23 +114,76 @@ export default async function Projects({
     const pageDescription = t("description") || "";
     const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
     const projectsLabel = locale === "az" ? "Layihələr" : "Проекты";
-    const schemaGraph = buildCollectionPageGraph({
-      name: pageTitle,
-      description: pageDescription,
-      url: projectsUrl,
-      locale,
-      baseUrl,
-      breadcrumbItems: [
-        { name: homeLabel, url: base },
-        { name: projectsLabel, url: projectsUrl },
-      ],
-      itemList: items.slice(0, 50).map((p: Project) => ({
-        name: (typeof p.title === "object" && p.title !== null
-          ? (p.title as Record<string, string>)[locale] || Object.values(p.title as Record<string, string>)[0]
-          : p.title) || "Layihə",
-        url: p.link || projectsUrl,
-      })),
-    });
+    const extractYoutubeId = (url: string) => {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+      return match ? match[1] : null;
+    };
+
+    const schemaGraph = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": pageTitle,
+      "description": pageDescription,
+      "url": projectsUrl,
+      "about": {
+        "@id": `${baseUrl}/#organization`
+      },
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": items.length,
+        "itemListElement": items.slice(0, 50).map((p: Project, index: number) => {
+          const ytId = extractYoutubeId(p.link || "");
+          const pTitle = (typeof p.title === "object" && p.title !== null
+            ? (p.title as Record<string, string>)[locale] || Object.values(p.title as Record<string, string>)[0]
+            : p.title) || "Layihə";
+          const pDesc = (typeof p.description === "object" && p.description !== null
+            ? (p.description as Record<string, string>)[locale] || Object.values(p.description as Record<string, string>)[0]
+            : p.description) || "Tələbə layihəsi";
+
+          if (ytId) {
+            return {
+              "@type": "ListItem",
+              "position": index + 1,
+              "item": {
+                "@type": "VideoObject",
+                "name": pTitle,
+                "description": pDesc,
+                "thumbnailUrl": `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`,
+                "embedUrl": `https://www.youtube.com/embed/${ytId}`,
+                "contentUrl": `https://www.youtube.com/watch?v=${ytId}`,
+                "uploadDate": p.createdAt ? new Date(p.createdAt).toISOString().split("T")[0] : undefined,
+                ...(p.author ? {
+                  "creator": {
+                    "@type": "Person",
+                    "name": p.author
+                  }
+                } : {})
+              }
+            };
+          }
+
+          return {
+            "@type": "ListItem",
+            "position": index + 1,
+            "item": {
+              "@type": "CreativeWork",
+              "name": pTitle,
+              "description": pDesc,
+              "url": p.link || projectsUrl,
+              "image": p.imageUrl ? p.imageUrl : undefined,
+              "dateCreated": p.createdAt ? new Date(p.createdAt).toISOString().split("T")[0] : undefined,
+              ...(p.author ? {
+                "creator": {
+                  "@type": "Person",
+                  "name": p.author
+                }
+              } : {})
+            }
+          };
+        })
+      }
+    };
 
     if (!projectsData) {
       return null;

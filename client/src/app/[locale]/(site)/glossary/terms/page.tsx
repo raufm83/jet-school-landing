@@ -196,26 +196,18 @@ export default async function GlossaryTermsPage({
   const glossaryLabel = language === "az" ? "Texnoloji Lüğət" : "Технологический Глоссарий";
   const termsLabel = language === "az" ? "Terminlər" : "Термины";
 
-  const schemaGraph = buildCollectionPageGraph({
-    name: title,
-    description: glossaryT("description") || "JET School glossariy lüğətində bütün IT terminləri",
-    url: termsUrl,
-    locale: language,
-    baseUrl,
-    breadcrumbItems: [
-      { name: homeLabel, url: base },
-      { name: glossaryLabel, url: `${base}/glossary` },
-      { name: termsLabel, url: termsUrl },
-    ],
-    itemList: terms.map((term: { slug?: string | { az?: string; ru?: string }; term?: { az?: string; ru?: string } }) => {
-      const slug =
-        typeof term.slug === "string"
-          ? term.slug
-          : term.slug?.[language as "az" | "ru"] ?? term.slug?.az ?? "";
-      const name = term.term?.[language as "az" | "ru"] ?? term.term?.az ?? "";
-      return { name, url: `${base}/glossary/term/${slug}` };
-    }),
-  });
+  const schemaGraph = {
+    "@context": "https://schema.org",
+    "@type": "DefinedTermSet",
+    "@id": `${termsUrl}#termset`,
+    "name": title || "JET School Texnoloji Lüğəti",
+    "description": glossaryT("description") || "IT və proqramlaşdırma sahəsinə aid terminlərin izahlı lüğəti. Kod, alqoritm və texnologiya terminlərini sadə dildə izah edir.",
+    "url": termsUrl,
+    "inLanguage": language,
+    "publisher": {
+      "@id": `${baseUrl}/#organization`
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-12">

@@ -166,19 +166,20 @@ export default async function GlossaryTermPage({ params }: PageProps) {
   const glossaryLabel = language === "az" ? "Texnoloji Lüğət" : "Технологический Глоссарий";
   const termsLabel = language === "az" ? "Terminlər" : "Термины";
 
-  const schemaGraph = buildGlossaryTermPageGraph({
-    name: termContent,
-    description: definitionContent ? definitionContent.replace(/<[^>]*>/g, "").slice(0, 500) : undefined,
-    url: termUrl,
-    locale: language,
-    baseUrl,
-    breadcrumbItems: [
-      { name: homeLabel, url: base },
-      { name: glossaryLabel, url: `${base}/glossary` },
-      { name: termsLabel, url: `${base}/glossary/terms` },
-      { name: termContent, url: termUrl },
-    ],
-  });
+  const shortDesc = term.metaDescription?.[language] || (definitionContent ? definitionContent.replace(/<[^>]*>/g, "").trim().substring(0, 160) : "");
+  
+  const schemaGraph = {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    "name": termContent,
+    "description": shortDesc,
+    "url": termUrl,
+    "inLanguage": language,
+    "inDefinedTermSet": {
+      "@id": `${base}/glossary/terms#termset`
+    },
+    "termCode": categoryName || ""
+  };
 
   return (
     <div className="container flex flex-col gap-8 lg:gap-4 mx-auto px-4 py-12">

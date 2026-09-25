@@ -95,23 +95,78 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
 
     const rawTags = data.newTags?.[locale as "az" | "ru"] ?? [];
 
-    const schemaGraph = buildCoursePageGraph({
-      name: courseTitle,
-      description: descriptionText,
-      url: courseUrl,
-      locale,
-      baseUrl,
-      breadcrumbItems: [
-        { name: homeLabel, url: base },
-        { name: coursesLabel, url: `${base}/courses` },
-        { name: courseTitle, url: courseUrl },
+    const otherLocale = locale === "az" ? "ru" : "az";
+    const otherSlug = data.slug?.[otherLocale] || params.slug;
+
+    const instructors = data.teachers?.map((t: any) => {
+      const name = t.teacher?.fullName?.[locale] || t.teacher?.name?.[locale] || t.fullName?.[locale] || t.name?.[locale] || "";
+      return name ? { "@type": "Person", "name": name } : null;
+    }).filter(Boolean);
+
+    const descLower = descriptionText?.toLowerCase() || "";
+    const isOnline = descLower.includes("onlayn") || descLower.includes("online") || descLower.includes("онлайн");
+    const isOnsite = descLower.includes("əyani") || descLower.includes("offline") || descLower.includes("офлайн") || descLower.includes("очно");
+    const dynamicCourseMode = (isOnline && isOnsite) ? "Blended" : (isOnline ? "Online" : "Onsite");
+
+    const schemaGraph = {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": courseTitle,
+      "description": descriptionText,
+      "provider": {
+        "@type": "EducationalOrganization",
+        "name": "JET School",
+        "sameAs": "https://jetschool.az",
+        "url": baseUrl
+      },
+      "url": courseUrl,
+      "image": data.imageUrl ? data.imageUrl : undefined,
+      "inLanguage": locale,
+      "audience": {
+        "@type": "EducationalAudience",
+        "educationalRole": "student",
+        "audienceType": data.ageRange ? (data.ageRange.includes('yaş') || data.ageRange.includes('лет') ? data.ageRange : `${data.ageRange} ${locale === 'az' ? 'yaş' : 'лет'}`) : undefined
+      },
+      "hasCourseInstance": [
+        {
+          "@type": "CourseInstance",
+          "courseMode": dynamicCourseMode,
+          "duration": data.duration ? `P${data.duration}M` : undefined,
+          "location": {
+            "@type": "Place",
+            "name": "JET School",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": locale === "az" ? "Olimpiya küçəsi 6A" : "ул. Олимпия 6А",
+              "addressLocality": locale === "az" ? "Bakı" : "Баку",
+              "addressCountry": "AZ"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "40.398557774992405",
+              "longitude": "49.85549367964268"
+            }
+          },
+          ...(instructors?.length ? { instructor: instructors.length === 1 ? instructors[0] : instructors } : {})
+        }
       ],
-      educationalLevel: data.level?.[locale as "az" | "ru"],
-      courseMode: "onsite",
-      imageUrl: data.imageUrl ?? undefined,
-      tags: rawTags.length ? rawTags : undefined,
-      ageRange: data.ageRange ?? undefined,
-    });
+      ...(locale === "az" 
+        ? {
+            "workTranslation": {
+              "@type": "Course",
+              "url": `${baseUrl}/${otherLocale}/course/${otherSlug}`,
+              "inLanguage": otherLocale
+            }
+          }
+        : {
+            "translationOfWork": {
+              "@type": "Course",
+              "url": `${baseUrl}/${otherLocale}/course/${otherSlug}`,
+              "inLanguage": otherLocale
+            }
+          }
+      )
+    };
 
     return (
       <BreadcrumbContextWrapper title={courseTitle}>

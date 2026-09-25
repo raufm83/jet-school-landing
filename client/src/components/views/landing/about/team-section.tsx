@@ -8,15 +8,12 @@ import TeamMemberCard from "./team-member-card";
 
 const TeamSlider = dynamic(() => import("./team-slider"));
 
+import api from "@/utils/api/axios";
+
 const getTeamMembers = async (): Promise<TeamMember[]> => {
   try {
-    const res = await fetch(
-      `${PUBLIC_API_BASE}/team/active?limit=30`,
-      { next: { revalidate: 120 } }
-    );
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data;
+    const res = await api.get(`/team/active?limit=30`);
+    return res.data;
   } catch {
     return [];
   }

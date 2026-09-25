@@ -172,18 +172,39 @@ export default async function VacancyDetailPage({
       .replace(/\s+/g, " ")
       .trim();
 
-    const schemaGraph = buildHomePageGraph({
-      name: title,
-      description: excerpt(description, 200),
-      url: pageUrl,
-      locale,
-      baseUrl,
-      breadcrumbItems: [
-        { name: homeLabel, url: ensureTrailingSlash(`${base}/`) },
-        { name: listTitle, url: listPath },
-        { name: title, url: pageUrl },
-      ],
-    });
+    const expMatch = vacancy.experienceLevel?.match(/\d+/);
+    const experienceYears = expMatch ? parseInt(expMatch[0], 10) : undefined;
+
+    const schemaGraph = {
+      "@context": "https://schema.org",
+      "@type": "JobPosting",
+      "title": title,
+      "description": description,
+      "datePosted": vacancy.createdAt ? new Date(vacancy.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      "validThrough": vacancy.deadline ? new Date(vacancy.deadline).toISOString().split('T')[0] : undefined,
+      "employmentType": vacancy.employmentType,
+      "hiringOrganization": {
+        "@type": "Organization",
+        "name": "JET School",
+        "sameAs": "https://jetschool.az",
+        "logo": "https://jetschool.az/logos/JET_School_Yellowww.webp"
+      },
+      "jobLocation": {
+        "@type": "Place",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Olimpiya küçəsi 6A",
+          "addressLocality": "Bakı",
+          "addressCountry": "AZ"
+        }
+      },
+      ...(experienceYears ? {
+        "experienceRequirements": {
+          "@type": "OccupationalExperienceRequirements",
+          "monthsOfExperience": experienceYears * 12
+        }
+      } : {})
+    };
 
     const headingAbout = locale === "az" ? "İş Haqqında" : "О вакансии";
     const headingReq = locale === "az" ? "Namizədə Tələblər" : "Требования к кандидату";

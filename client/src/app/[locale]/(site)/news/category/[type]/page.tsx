@@ -185,20 +185,31 @@ export default async function AllPostsPage({
 
   const normalizedLocale = locale === "az" ? "az" : "ru";
 
-  const schemaGraph = buildCollectionPageGraph({
-    name: pageLabel,
-    url: pageUrl,
-    locale,
-    baseUrl,
-    breadcrumbItems: [
-      { name: homeLabel, url: base },
-      { name: pageLabel, url: pageUrl },
-    ],
-    itemList: posts.slice(0, 20).map((p) => ({
-      name: p.title?.[normalizedLocale] || p.title?.az || "",
-      url: `${pageUrl}/${p.slug?.[normalizedLocale] || p.slug?.az || ""}`,
-    })),
-  });
+  const itemList = posts.slice(0, 20).map((p) => ({
+    name: p.title?.[normalizedLocale] || p.title?.az || "",
+    url: `${pageUrl}/${p.slug?.[normalizedLocale] || p.slug?.az || ""}`,
+  }));
+
+  const schemaGraph = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": pageLabel,
+    "description": t("pageDescription") || "JET School-un ən son xəbərləri, tədbirləri və məqalələri.",
+    "url": pageUrl,
+    "about": {
+      "@id": `${baseUrl}/#organization`
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": itemList.length,
+      "itemListElement": itemList.map((post, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "url": post.url,
+        "name": post.name
+      }))
+    }
+  };
 
   return (
     <div className="container py-20">

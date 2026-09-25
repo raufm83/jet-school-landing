@@ -119,17 +119,22 @@ export default async function GalleryPage({
     "JET School-da uşaqlar üçün keçirilən IT və proqramlaşdırma dərslərindən görüntülər";
   const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
   const galleryLabel = locale === "az" ? "Qalereya" : "Галерея";
-  const schemaGraph = buildCollectionPageGraph({
-    name: pageTitle,
-    description: pageDescription,
-    url: galleryUrl,
-    locale,
-    baseUrl,
-    breadcrumbItems: [
-      { name: homeLabel, url: base },
-      { name: galleryLabel, url: galleryUrl },
-    ],
-  });
+  const schemaGraph = {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "name": pageTitle,
+    "description": pageDescription,
+    "url": galleryUrl,
+    "about": {
+      "@id": `${baseUrl}/#organization`
+    },
+    "image": initialGallery.items?.map((item) => ({
+      "@type": "ImageObject",
+      "contentUrl": item.imageUrl,
+      "name": item.title?.[locale] || pageTitle,
+      "caption": item.imageAlt?.[locale] || item.title?.[locale] || pageDescription
+    })) || []
+  };
 
   return (
     <div>

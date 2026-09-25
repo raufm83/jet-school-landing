@@ -33,11 +33,6 @@ export default function GlossarySearchFilter({
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    setSearchQuery(searchParams.get("search") || "");
-    setSelectedCategory(searchParams.get("category") || "");
-  }, [searchParams]);
-
   const updateQueryParams = (search: string, category: string) => {
     const params = new URLSearchParams(searchParams.toString());
     if (search.trim()) {

@@ -96,21 +96,39 @@ export default async function ReviewsPage({
   const pageDescription = t("description") || "";
   const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
   const reviewsLabel = locale === "az" ? "Rəylər" : "Отзывы";
-  const schemaGraph = buildCollectionPageGraph({
-    name: pageTitle,
-    description: pageDescription,
-    url: reviewsUrl,
-    locale,
-    baseUrl,
-    breadcrumbItems: [
-      { name: homeLabel, url: base },
-      { name: reviewsLabel, url: reviewsUrl },
-    ],
-    itemList: items.slice(0, 50).map((r) => ({
-      name: (r.title as { az?: string; ru?: string })?.[locale] || "Rəy",
-      url: r.link || reviewsUrl,
-    })),
-  });
+  const schemaGraph = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": pageTitle,
+    "description": pageDescription || "JET School-da təhsil alan tələbələrin və valideynlərin real video rəyləri.",
+    "url": reviewsUrl,
+    "about": {
+      "@id": `${baseUrl}/#organization`
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": items.length,
+      "itemListElement": items.map((r, index) => {
+        const match = r.link ? /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/.exec(r.link) : null;
+        const yId = match ? match[1] : null;
+        
+        return {
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "VideoObject",
+            "name": (r.title as { az?: string; ru?: string })?.[locale] || "Rəy",
+            "description": (r.description as { az?: string; ru?: string })?.[locale] || "",
+            ...(yId ? {
+              "thumbnailUrl": `https://img.youtube.com/vi/${yId}/maxresdefault.jpg`,
+              "embedUrl": `https://www.youtube.com/embed/${yId}`,
+              "contentUrl": `https://www.youtube.com/watch?v=${yId}`
+            } : {})
+          }
+        };
+      })
+    }
+  };
 
   return (
     <div id="reviews" className="container my-20 flex flex-col gap-8">
