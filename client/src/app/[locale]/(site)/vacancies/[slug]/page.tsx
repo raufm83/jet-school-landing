@@ -111,10 +111,7 @@ export default async function VacancyDetailPage({
       getFaqByPage("vacancies"),
     ]);
 
-    const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(
-      /\/+$/,
-      ""
-    );
+
 
 
     const title = vacancyPageHeading(locale, vacancy.title);
