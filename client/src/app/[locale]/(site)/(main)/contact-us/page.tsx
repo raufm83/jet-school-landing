@@ -1,7 +1,7 @@
 import ContactHero from "@/components/views/landing/contact-us/contact-hero";
 import ContactSection from "@/components/views/landing/contact-us/contact-section";
 import JsonLd from "@/components/seo/json-ld";
-import { buildContactPageGraph, SITE_SCHEMA } from "@/data/site-schema";
+import { SITE_SCHEMA } from "@/data/site-schema";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
@@ -79,8 +79,6 @@ export default async function ContactPage({
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
   const base = `${baseUrl}/${locale}`;
   const contactUrl = `${base}/contact-us`;
-  const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
-  const contactLabel = locale === "az" ? "Əlaqə" : "Контакты";
 
   const [t, contactT, contactData, faqItems] = await Promise.all([
     getTranslations({ locale, namespace: "Metadata" }),

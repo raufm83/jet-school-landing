@@ -5,7 +5,6 @@ import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 import { cache } from "react";
 import { notFound } from "next/navigation";
 import JsonLd from "@/components/seo/json-ld";
-import { buildCollectionPageGraph } from "@/data/site-schema";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
@@ -112,8 +111,6 @@ export default async function Projects({
     const projectsUrl = `${base}/projects`;
     const pageTitle = t("title");
     const pageDescription = t("description") || "";
-    const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
-    const projectsLabel = locale === "az" ? "Layihələr" : "Проекты";
     const extractYoutubeId = (url: string) => {
       if (!url) return null;
       const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);

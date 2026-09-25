@@ -14,7 +14,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Locale } from "@/i18n/request";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
-import { buildHomePageGraph, SITE_SCHEMA } from "@/data/site-schema";
+import { SITE_SCHEMA } from "@/data/site-schema";
 import { getPageMeta } from "@/utils/api/page-meta";
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
@@ -80,21 +80,13 @@ export default async function Home({ params }: { params: { locale: string } }) {
 
   const locale = params.locale as Locale;
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const base = `${baseUrl}/${locale}`;
-  const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
 
-  const [metaT, homeMeta, faqItems] = await Promise.all([
+  const [, , faqItems] = await Promise.all([
     getTranslations({ locale: params.locale, namespace: "Metadata" }),
     getPageMeta("home", locale),
     getFaqByPage("home"),
   ]);
 
-  const pageTitle = homeMeta?.title
-    ? trimMetaTitle(homeMeta.title)
-    : trimMetaTitle(metaT("title"));
-  const pageDescription = homeMeta?.description
-    ? trimMetaDescription(homeMeta.description)
-    : trimMetaDescription(metaT("description"));
 
   const schemaGraph = {
     "@context": "https://schema.org",

@@ -3,7 +3,7 @@ import GlossarySearchFilter from "@/components/views/landing/glossary/glossary-s
 import GlossaryPagination from "@/components/views/landing/glossary/glossary-pagination";
 import GlossaryTermList from "@/components/views/landing/glossary/glossary-term-list";
 import JsonLd from "@/components/seo/json-ld";
-import { buildCollectionPageGraph } from "@/data/site-schema";
+
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
@@ -187,14 +187,10 @@ export default async function GlossaryTermsPage({
     /\/+$/,
     ""
   );
-  const base = language === "az" ? baseUrl : `${baseUrl}/${language}`;
   const termsUrl =
     language === "az"
       ? `${baseUrl}/glossary/terms`
       : `${baseUrl}/${language}/glossary/terms`;
-  const homeLabel = language === "az" ? "Ana Səhifə" : "Главная";
-  const glossaryLabel = language === "az" ? "Texnoloji Lüğət" : "Технологический Глоссарий";
-  const termsLabel = language === "az" ? "Terminlər" : "Термины";
 
   const schemaGraph = {
     "@context": "https://schema.org",

@@ -9,7 +9,6 @@ import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/se
 import { getPostImageUrl } from "@/utils/helpers/post";
 import SinglePostView from "@/components/views/landing/post/view";
 import JsonLd from "@/components/seo/json-ld";
-import { buildBlogSinglePageGraph } from "@/data/site-schema";
 
 interface ISinglePostPageProps {
   params: {
@@ -93,11 +92,6 @@ export default async function SinglePostPage({
         : imageUrlRaw
       : undefined;
 
-    const wordCount = contentText.trim().split(/\s+/).filter(Boolean).length;
-    const articleSection = locale === "az" ? "Bloq" : "Блог";
-    const localeBase = `${baseUrl}/${locale}`;
-    const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
-    const blogLabel = locale === "az" ? "Bloq" : "Блог";
 
     const schemaGraph = {
       "@context": "https://schema.org",

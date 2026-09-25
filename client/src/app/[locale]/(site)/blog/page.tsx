@@ -5,7 +5,7 @@ import PostGrid from "@/components/views/landing/post/grid";
 import { getBlogCategories } from "@/utils/api/blog-category";
 import JsonLd from "@/components/seo/json-ld";
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
-import { buildCollectionPageGraph } from "@/data/site-schema";
+
 import { Locale } from "@/i18n/request";
 import { PostType } from "@/types/enums";
 import { getAllPosts } from "@/utils/api/post";
@@ -150,8 +150,6 @@ export default async function BlogPage({
   const pageTitle = t("pageTitle");
   
   const pageDescription = t("pageDescription");
-  const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
-  const blogLabel = locale === "az" ? "Bloq" : "Блог";
   const itemList = (posts ?? []).slice(0, 12).map((p) => ({
     name: p.title[locale],
     url: `${base}/blog/${p.slug?.[locale] ?? p.slug?.az ?? p.slug?.ru ?? ""}`,

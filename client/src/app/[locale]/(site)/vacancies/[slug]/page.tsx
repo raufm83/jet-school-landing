@@ -1,10 +1,9 @@
 import JsonLd from "@/components/seo/json-ld";
-import { buildHomePageGraph } from "@/data/site-schema";
+
 import type { Locale } from "@/i18n/request";
 import { getVacancyBySlugPublic } from "@/utils/api/vacancy";
 import { getPageMeta } from "@/utils/api/page-meta";
 import {
-  ensureTrailingSlash,
   trimMetaDescription,
   trimMetaTitle,
   buildHreflangUrl,
@@ -116,14 +115,11 @@ export default async function VacancyDetailPage({
       /\/+$/,
       ""
     );
-    const base = locale === "az" ? baseUrl : `${baseUrl}/${locale}`;
-    const listPath = ensureTrailingSlash(`${base}/vacancies`);
-    const pageUrl = ensureTrailingSlash(`${base}/vacancies/${params.slug}`);
+
 
     const title = vacancyPageHeading(locale, vacancy.title);
     const description =
       locale === "ru" ? vacancy.description.ru : vacancy.description.az;
-    const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
 
     const isExpired =
       vacancy.deadline && !Number.isNaN(new Date(vacancy.deadline).getTime())
@@ -153,7 +149,6 @@ export default async function VacancyDetailPage({
             expired: "Bu vakansiya üzrə müraciət müddəti bitmişdir.",
           };
     const a11y = (label: string, value: string) => `${label}: ${value}`;
-    const listTitle = tList("title");
 
     /** Başlıq panelində qırmızı pill (< 7 gün), kartlarla eyni məntiqlə. */
     const deadlineHeaderBadge = vacancyCardDeadlineCountdownText(

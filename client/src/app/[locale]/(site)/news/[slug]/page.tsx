@@ -8,7 +8,7 @@ import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/se
 import { getPostImageUrl } from "@/utils/helpers/post";
 import SinglePostView from "@/components/views/landing/post/view";
 import JsonLd from "@/components/seo/json-ld";
-import { buildNewsSinglePageGraph } from "@/data/site-schema";
+
 
 interface ISinglePostPageProps {
   params: {
@@ -60,10 +60,6 @@ export default async function SinglePostPage({ params }: ISinglePostPageProps) {
     const imageUrlRaw = getPostImageUrl(data.imageUrl, locale as Locale);
     const imageUrlFull = imageUrlRaw ? (cdn ? `${cdn.replace(/\/+$/, "")}/${imageUrlRaw.replace(/^\/+/, "")}` : imageUrlRaw) : undefined;
 
-    const wordCount = contentText.trim().split(/\s+/).filter(Boolean).length;
-    const localeBase = `${baseUrl}/${locale}`;
-    const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
-    const newsLabel = locale === "az" ? "Xəbərlər" : "Новости";
 
     const schemaGraph = {
       "@context": "https://schema.org",

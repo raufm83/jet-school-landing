@@ -1,6 +1,5 @@
 import GalleryClient from "@/components/views/landing/gallery/gallery-client";
 import JsonLd from "@/components/seo/json-ld";
-import { buildCollectionPageGraph } from "@/data/site-schema";
 import { GalleryResponse } from "@/types/gallery";
 import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 import { cache } from "react";
@@ -117,8 +116,6 @@ export default async function GalleryPage({
   const pageTitle = t("galleryPageTitle") || "Qalereya";
   const pageDescription =
     "JET School-da uşaqlar üçün keçirilən IT və proqramlaşdırma dərslərindən görüntülər";
-  const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
-  const galleryLabel = locale === "az" ? "Qalereya" : "Галерея";
   const schemaGraph = {
     "@context": "https://schema.org",
     "@type": "ImageGallery",

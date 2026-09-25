@@ -67,12 +67,6 @@ export default async function SinglePostPage({ params }: ISinglePostPageProps) {
     const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
     const canonicalUrl = `${baseUrl}/${locale}/offers/${params.slug}`;
     const contentText = contentHtml.replace(/<[^>]*>/g, "");
-    const imageUrlRaw = getPostImageUrl(data.imageUrl, locale as Locale);
-    const imageUrlFull = imageUrlRaw ? buildImageUrl(imageUrlRaw) : undefined;
-
-    const localeBase = `${baseUrl}/${locale}`;
-    const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
-    const offersLabel = locale === "az" ? "Kampaniyalar" : "Предложения";
 
     const isOfferActive = (endDate?: string | Date | null) => {
       if (!endDate) return true;

@@ -21,7 +21,6 @@ import { Project } from "@/types/student-projects";
 import { CONTENT_ISR_SECONDS } from "@/constants/content-isr";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
-import { buildCoursePageGraph } from "@/data/site-schema";
 import { cache } from "react";
 
 const cachedGetCourseDetails = cache((slug: string) => getCourseDetails(slug));
@@ -89,11 +88,6 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
       ? String(data.description[locale]).replace(/<[^>]*>/g, "").slice(0, 300)
       : undefined;
 
-    const base = `${baseUrl}/${locale}`;
-    const coursesLabel = locale === "az" ? "Kurslarımız" : "Курсы";
-    const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
-
-    const rawTags = data.newTags?.[locale as "az" | "ru"] ?? [];
 
     const otherLocale = locale === "az" ? "ru" : "az";
     const otherSlug = data.slug?.[otherLocale] || params.slug;

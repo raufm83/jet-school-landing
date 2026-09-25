@@ -3,7 +3,6 @@ import GlossaryTermDetail from "@/components/views/landing/glossary/glossary-ter
 import GlossaryBreadcrumbSetter from "@/components/views/landing/glossary/glossary-breadcrumb-setter";
 import CoursesSlider from "@/components/views/landing/single-course/courses-slider";
 import JsonLd from "@/components/seo/json-ld";
-import { buildGlossaryTermPageGraph } from "@/data/site-schema";
 import { getAllCourses } from "@/utils/api/course";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -162,9 +161,6 @@ export default async function GlossaryTermPage({ params }: PageProps) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az";
   const base = language === "az" ? baseUrl : `${baseUrl}/${language}`;
   const termUrl = `${base}/glossary/term/${slug}`;
-  const homeLabel = language === "az" ? "Ana Səhifə" : "Главная";
-  const glossaryLabel = language === "az" ? "Texnoloji Lüğət" : "Технологический Глоссарий";
-  const termsLabel = language === "az" ? "Terminlər" : "Термины";
 
   const shortDesc = term.metaDescription?.[language] || (definitionContent ? definitionContent.replace(/<[^>]*>/g, "").trim().substring(0, 160) : "");
   

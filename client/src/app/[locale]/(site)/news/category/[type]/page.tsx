@@ -9,7 +9,7 @@ import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
-import { buildCollectionPageGraph } from "@/data/site-schema";
+
 import Breadcrumbs from "@/components/views/landing/bread-crumbs/bread-crumbs";
 
 // Next.js'e bu sayfanın her istekte dinamik olarak render edilmesini söyle
@@ -166,7 +166,6 @@ export default async function AllPostsPage({
   const base = locale === "az" ? baseUrl : `${baseUrl}/${locale}`;
   const typePath = params.type || "news";
   const pageUrl = `${base}/${typePath}`;
-  const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
 
   let pageLabel: string;
   switch (type) {

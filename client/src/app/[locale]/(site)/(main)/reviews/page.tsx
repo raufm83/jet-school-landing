@@ -6,7 +6,6 @@ import { cache } from "react";
 import { isDisplayablePublicReview } from "@/utils/displayable-review";
 import { notFound } from "next/navigation";
 import JsonLd from "@/components/seo/json-ld";
-import { buildCollectionPageGraph } from "@/data/site-schema";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageMeta } from "@/utils/api/page-meta";
@@ -94,8 +93,6 @@ export default async function ReviewsPage({
   const reviewsUrl = `${base}/${getReviewsPathSegment(locale)}`;
   const pageTitle = t("homeSectionTitle");
   const pageDescription = t("description") || "";
-  const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
-  const reviewsLabel = locale === "az" ? "Rəylər" : "Отзывы";
   const schemaGraph = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",

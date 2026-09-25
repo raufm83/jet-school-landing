@@ -1,5 +1,5 @@
 import SectionTitle from "@/components/shared/section-title";
-import { PUBLIC_API_BASE } from "@/constants/public-api-base";
+
 import { TeamMember } from "@/types/team";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Locale } from "@/i18n/request";
