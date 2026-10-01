@@ -545,8 +545,10 @@ export default function PostForm({
   const slugFieldRu = register("slug.ru");
 
   const onFormSubmit = (data: any) => {
-    const slugAz = slugifyText(data.slug?.az ?? "");
-    const slugRu = slugifyText(data.slug?.ru ?? "");
+    const rawSlugAz = data.slug?.az?.trim() || data.title?.az || "";
+    const rawSlugRu = data.slug?.ru?.trim() || data.title?.ru || "";
+    const slugAz = slugifyText(rawSlugAz);
+    const slugRu = slugifyText(rawSlugRu);
     const newData = {
       ...data,
       slug: { az: slugAz, ru: slugRu },
