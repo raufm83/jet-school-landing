@@ -135,6 +135,7 @@ model StudentReview {
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   link        String?  // YouTube URL
   imageUrl    String?  // YouTube thumbnail (computed)
+  category    String   @default("STUDENT") // "STUDENT" or "PARENT"
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
