@@ -58,38 +58,37 @@ function ScrollItems() {
         rel="noopener noreferrer"
         aria-label="WhatsApp ilə əlaqə saxla"
         title="WhatsApp ilə əlaqə saxla"
-        className="flex items-center justify-center h-12 w-12 rounded-full bg-[#FFC726] hover:bg-[#FFD147] shadow-lg transition-all"
+        className="flex items-center justify-center h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-[#25D366] hover:bg-[#20b858] shadow-lg transition-all"
       >
         <span className="sr-only">WhatsApp ilə əlaqə saxla</span>
-        <FaWhatsapp className="h-6 w-6 text-black" aria-hidden="true" />
+        <FaWhatsapp className="h-8 w-8 lg:h-9 lg:w-9 text-white" aria-hidden="true" />
       </Link>
 
       <div className="relative">
         <svg
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90"
-          width="52"
-          height="52"
-          viewBox="0 0 52 52"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 w-[62px] h-[62px] lg:w-[70px] lg:h-[70px]"
+          viewBox="0 0 70 70"
         >
           <circle
-            cx="26"
-            cy="26"
-            r="24"
+            cx="35"
+            cy="35"
+            r="33"
             stroke="#FFE38B"
             strokeWidth="2"
             fill="none"
             strokeLinecap="round"
           />
           <circle
-            cx="26"
-            cy="26"
-            r="24"
+            cx="35"
+            cy="35"
+            r="33"
             stroke="#121212"
             strokeWidth="2"
             fill="none"
             strokeLinecap="round"
             style={{ opacity: 0.4 }}
             strokeDasharray={`${Math.max(progress, 0.0001)} 1`}
+            pathLength={1}
           />
         </svg>
 
@@ -97,10 +96,10 @@ function ScrollItems() {
           onClick={scrollToTop}
           aria-label="Səhifənin əvvəlinə qayıt"
           title="Səhifənin əvvəlinə qayıt"
-          className="flex items-center relative z-40 justify-center h-12 w-12 rounded-full bg-[#FFC726] hover:bg-[#FFD147] shadow-lg transition-all"
+          className="flex items-center relative z-40 justify-center h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-[#FFC726] hover:bg-[#FFD147] shadow-lg transition-all"
         >
           <span className="sr-only">Səhifənin əvvəlinə qayıt</span>
-          <FaArrowUp className="h-6 w-6 text-black" aria-hidden="true" />
+          <FaArrowUp className="h-6 w-6 lg:h-7 lg:w-7 text-black" aria-hidden="true" />
         </button>
       </div>
     </div>

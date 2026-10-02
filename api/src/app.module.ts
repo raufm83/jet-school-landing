@@ -27,6 +27,7 @@ import { CaptchaModule } from './captcha/captcha.module';
 import { HomeHeroModule } from './home-hero/home-hero.module';
 import { AboutHeroModule } from './about-hero/about-hero.module';
 import { BlogCategoryModule } from './blog-category/blog-category.module';
+import { AdvantageModule } from './advantage/advantage.module';
 
 @Module({
   imports: [
@@ -82,6 +83,7 @@ import { BlogCategoryModule } from './blog-category/blog-category.module';
     VacancyModule,
     HomeHeroModule,
     AboutHeroModule,
+    AdvantageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
