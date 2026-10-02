@@ -26,7 +26,7 @@ export default function CreateAdvantagePage() {
       });
       toast.success("Uğurla yaradıldı");
       router.push("/dashboard/advantages");
-    } catch (error) {
+    } catch {
       toast.error("Yaradılma zamanı xəta baş verdi");
     } finally {
       setIsSubmitting(false);

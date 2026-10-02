@@ -29,7 +29,7 @@ export default function EditAdvantagePage({ params }: { params: Promise<{ id: st
           description: { az: data.description?.az || "", ru: data.description?.ru || "" },
           order: data.order || 0,
         });
-      } catch (error) {
+      } catch {
         toast.error("Məlumatı yükləmək mümkün olmadı");
       } finally {
         setIsLoading(false);
@@ -50,7 +50,7 @@ export default function EditAdvantagePage({ params }: { params: Promise<{ id: st
       });
       toast.success("Uğurla yeniləndi");
       router.push("/dashboard/advantages");
-    } catch (error) {
+    } catch {
       toast.error("Yenilənmə zamanı xəta baş verdi");
     } finally {
       setIsSubmitting(false);

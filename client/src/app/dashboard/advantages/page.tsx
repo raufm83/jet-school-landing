@@ -36,7 +36,7 @@ export default function AdvantagesPage() {
       setIsLoading(true);
       const res = await api.get("/advantage");
       setAdvantages(res.data || []);
-    } catch (error) {
+    } catch {
       toast.error("Fərqimiz məlumatlarını yükləmək mümkün olmadı");
     } finally {
       setIsLoading(false);
@@ -53,7 +53,7 @@ export default function AdvantagesPage() {
       await api.delete(`/advantage/${selectedId}`);
       toast.success("Uğurla silindi");
       fetchAdvantages();
-    } catch (error) {
+    } catch {
       toast.error("Silmə zamanı xəta baş verdi");
     } finally {
       setSelectedId(null);
@@ -66,7 +66,7 @@ export default function AdvantagesPage() {
       await api.patch(`/advantage/${id}`, { isActive: !current });
       toast.success("Status yeniləndi");
       fetchAdvantages();
-    } catch (error) {
+    } catch {
       toast.error("Status yenilənərkən xəta baş verdi");
     }
   };
@@ -81,7 +81,7 @@ export default function AdvantagesPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Fərqimiz</h1>
           <p className="text-gray-500 text-sm mt-1">
-            "Fərqimiz nədir" bölməsinin məlumatlarını idarə edin
+            &quot;Fərqimiz nədir&quot; bölməsinin məlumatlarını idarə edin
           </p>
         </div>
         <Button
