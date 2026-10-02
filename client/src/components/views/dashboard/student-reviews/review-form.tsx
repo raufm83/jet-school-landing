@@ -180,6 +180,29 @@ export default function ReviewForm({
             </div>
 
             <div className="space-y-2">
+              <Select
+                label="Kateqoriya"
+                variant="bordered"
+                startContent={<MdCategory className="text-gray-400" />}
+                isDisabled={isSubmitting}
+                {...register("category")}
+                defaultSelectedKeys={["STUDENT"]}
+                classNames={{
+                  trigger:
+                    "bg-white border-2 hover:border-jsyellow focus:border-jsyellow",
+                  value: "bg-transparent",
+                }}
+              >
+                <SelectItem key="STUDENT" value="STUDENT">
+                  Tələbə
+                </SelectItem>
+                <SelectItem key="PARENT" value="PARENT">
+                  Valideyn
+                </SelectItem>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
               <Input
                 type="url"
                 label="Youtube Linki"

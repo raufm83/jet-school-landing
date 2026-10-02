@@ -38,6 +38,7 @@ export default function EditReviewPage() {
           },
           courseId: data.courseId ?? "",
           link: data.link ?? "",
+          category: data.category ?? "STUDENT",
         });
       } catch {
         toast.error("Rəy yüklənə bilmədi");
@@ -56,6 +57,7 @@ export default function EditReviewPage() {
         description: data.description,
         courseId: data.courseId,
         link: data.link,
+        category: data.category,
       };
       await api.patch(`/student-reviews/${id}`, payload);
       toast.success("Rəy yeniləndi");

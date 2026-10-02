@@ -21,7 +21,7 @@ interface ReviewItem {
 const fetchReviews = async () => {
   try {
     const res = await fetch(
-      `${PUBLIC_API_BASE}/student-reviews?sortBy=order&order=desc`,
+      `${PUBLIC_API_BASE}/student-reviews?category=PARENT&sortBy=order&order=desc`,
       { next: { revalidate: 120 } }
     );
     if (!res.ok) return null;

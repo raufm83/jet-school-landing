@@ -75,6 +75,7 @@ export class StudentReviewService {
           courseId: dto.courseId,
           link: normalizedLink,
           imageUrl,
+          category: dto.category || 'STUDENT',
           order: 0,
         },
         include: {
@@ -94,6 +95,7 @@ export class StudentReviewService {
     limit = 10,
     order: 'asc' | 'desc' = 'desc',
     sortBy: 'order' | 'createdAt' = 'createdAt',
+    category?: string,
   ) {
     try {
       const skip = (page - 1) * limit;
@@ -101,11 +103,13 @@ export class StudentReviewService {
         sortBy === 'createdAt'
           ? { createdAt: Prisma.SortOrder[order] }
           : { order: Prisma.SortOrder[order] };
+      const where = category ? { category } : {};
       const [total, items] = await Promise.all([
-        this.prisma.studentReview.count(),
+        this.prisma.studentReview.count({ where }),
         this.prisma.studentReview.findMany({
           skip,
           take: limit,
+          where,
           orderBy,
           include: {
             course: {
@@ -179,6 +183,7 @@ export class StudentReviewService {
       ...(dto.courseId && { courseId: dto.courseId }),
       ...(normalizedLink && { link: normalizedLink }),
       ...(imageUrl !== undefined && { imageUrl }),
+      ...(dto.category && { category: dto.category }),
     };
 
     if (typeof dto.order === 'number') {

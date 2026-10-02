@@ -22,6 +22,7 @@ export default function CreateReviewPage() {
         description: data.description,
         courseId: data.courseId,
         link: data.link,
+        category: data.category || "STUDENT",
       };
       const response = await api.post("/student-reviews", payload);
       if (response.status === 201) {

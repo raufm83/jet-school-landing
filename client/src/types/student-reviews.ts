@@ -3,6 +3,7 @@ export interface ReviewFormInputs {
   description: { az: string; ru: string };
   courseId: string;
   link: string;
+  category: string;
 }
 
 export interface StudentReview {
@@ -16,6 +17,7 @@ export interface StudentReview {
   } | null;
   link: string | null;
   imageUrl: string | null;
+  category: string;
   order: number;
   createdAt: string;
   updatedAt: string;

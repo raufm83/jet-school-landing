@@ -37,4 +37,8 @@ export class CreateStudentReviewDto {
   @IsOptional()
   @IsNumber()
   order?: number;
+
+  @ApiProperty({ required: false, description: 'Category: STUDENT or PARENT' })
+  @IsOptional()
+  category?: string;
 }
