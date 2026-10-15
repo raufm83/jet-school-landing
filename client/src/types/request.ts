@@ -13,7 +13,7 @@ export enum Language {
 export interface Request {
   id: string;
   name: string;
-  surname: string;
+  surname?: string;
   number: string;
   childAge: number;
   childLanguage: Language;
@@ -26,7 +26,7 @@ export interface Request {
 
 export interface RequestFormInputs {
   name: string;
-  surname: string;
+  surname?: string;
   number: string;
   childAge: number;
   childLanguage: Language;

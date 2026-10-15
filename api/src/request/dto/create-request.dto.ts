@@ -7,9 +7,10 @@ export class CreateRequestDto {
   @IsString()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
-  surname: string;
+  surname?: string;
 
   @ApiProperty()
   @IsString()
@@ -32,5 +33,4 @@ export class CreateRequestDto {
   @IsOptional()
   @IsString()
   website?: string;
-
 }

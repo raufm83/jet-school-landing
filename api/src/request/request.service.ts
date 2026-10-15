@@ -15,7 +15,7 @@ export class RequestService {
     return this.prisma.request.create({
       data: {
         name: createRequestDto.name,
-        surname: createRequestDto.surname,
+        surname: createRequestDto.surname ?? '',
         number: createRequestDto.number,
         childAge: createRequestDto.childAge,
         childLanguage: createRequestDto.childLanguage,
