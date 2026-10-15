@@ -61,4 +61,4 @@ EXPOSE 3002
 # npm run start:prod cross-env istifadə edir; production image-də yalnız
 # `npm ci --only=production` olduğu üçün cross-env yoxdur — birbaşa node işlədirik.
 ENV NODE_ENV=production
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]
