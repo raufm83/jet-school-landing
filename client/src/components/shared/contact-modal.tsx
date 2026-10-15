@@ -59,7 +59,10 @@ export default function ContactModal() {
       },
       error: (err) => {
         if (axios.isAxiosError(err) && err.response) {
-          const raw = err.response.data?.message as string | string[] | undefined;
+          const raw = err.response.data?.message as
+            | string
+            | string[]
+            | undefined;
           const apiMsg = Array.isArray(raw) ? raw[0] : raw;
           if (apiMsg === "REQUEST_IP_COOLDOWN") return t("ipCooldown");
           return apiMsg || t("sendError");
@@ -68,7 +71,7 @@ export default function ContactModal() {
         return t("unexpectedError");
       },
       classNames: { icon: "text-jsyellow" },
-    })
+    }),
   );
 
   const handleAgeChange = (value: string | number) => {
@@ -116,10 +119,15 @@ export default function ContactModal() {
           >
             <MdClose className="text-xl" />
           </button>
-          <div className="font-semibold text-2xl text-center">{t("messageSent")}</div>
+          <div className="font-semibold text-2xl text-center">
+            {t("messageSent")}
+          </div>
           <div
             className="bg-green-100 rounded-full p-4"
-            style={{ animation: "checkIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) 0.2s both" }}
+            style={{
+              animation:
+                "checkIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) 0.2s both",
+            }}
           >
             <MdOutlineCheck className="text-green-600 text-4xl" />
           </div>
@@ -167,7 +175,10 @@ export default function ContactModal() {
               "
               onInput={(e) => {
                 const target = e.target as HTMLInputElement;
-                target.value = target.value.replace(/[^a-zA-Zа-яА-ЯёЁәəıiöüşğç\s]/g, "");
+                target.value = target.value.replace(
+                  /[^a-zA-Zа-яА-ЯёЁәəıiöüşğç\s]/g,
+                  "",
+                );
               }}
               {...register("name", {
                 required: t("name.required"),
@@ -179,34 +190,9 @@ export default function ContactModal() {
               })}
             />
             {errors.name && (
-              <p className="text-red-500 text-base pl-2">{errors.name.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <input
-              type="text"
-              placeholder={t("surname.placeholder")}
-              className="
-                w-full h-12 px-4 py-3 rounded-[32px] border border-jsyellow bg-[#fef7eb]
-                focus:outline-none focus:ring-2 focus:ring-jsyellow
-                transition-shadow duration-300
-              "
-              onInput={(e) => {
-                const target = e.target as HTMLInputElement;
-                target.value = target.value.replace(/[^a-zA-Zа-яА-ЯёЁәəıiöüşğç\s]/g, "");
-              }}
-              {...register("surname", {
-                required: t("surname.required"),
-                minLength: { value: 2, message: t("surname.minLength") },
-                pattern: {
-                  value: /^[a-zA-Zа-яА-ЯёЁәəıiöüşğç\s]+$/,
-                  message: t("surname.invalid"),
-                },
-              })}
-            />
-            {errors.surname && (
-              <p className="text-red-500 text-base pl-2">{errors.surname.message}</p>
+              <p className="text-red-500 text-base pl-2">
+                {errors.name.message}
+              </p>
             )}
           </div>
 
@@ -223,12 +209,25 @@ export default function ContactModal() {
                 const char = e.key;
                 if (
                   [
-                    "Backspace", "Delete", "Tab", "Escape", "Enter",
-                    "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
-                    "Home", "End",
+                    "Backspace",
+                    "Delete",
+                    "Tab",
+                    "Escape",
+                    "Enter",
+                    "ArrowLeft",
+                    "ArrowRight",
+                    "ArrowUp",
+                    "ArrowDown",
+                    "Home",
+                    "End",
                   ].includes(char)
-                ) return;
-                if ((e.ctrlKey || e.metaKey) && ["a", "c", "v", "x", "z"].includes(char.toLowerCase())) return;
+                )
+                  return;
+                if (
+                  (e.ctrlKey || e.metaKey) &&
+                  ["a", "c", "v", "x", "z"].includes(char.toLowerCase())
+                )
+                  return;
                 if (!/[0-9+]/.test(char)) e.preventDefault();
               }}
               onInput={(e) => {
@@ -244,7 +243,9 @@ export default function ContactModal() {
               })}
             />
             {errors.number && (
-              <p className="text-red-500 text-base pl-2">{errors.number.message}</p>
+              <p className="text-red-500 text-base pl-2">
+                {errors.number.message}
+              </p>
             )}
           </div>
 
@@ -263,7 +264,9 @@ export default function ContactModal() {
             options={languageOptions}
             error={errors.childLanguage}
             placeholder={t("childLanguage.placeholder")}
-            {...register("childLanguage", { required: t("childLanguage.required") })}
+            {...register("childLanguage", {
+              required: t("childLanguage.required"),
+            })}
             onChange={handleLanguageChange}
           />
 
@@ -281,7 +284,9 @@ export default function ContactModal() {
         </form>
       )}
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         @keyframes modalIn {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
@@ -290,7 +295,9 @@ export default function ContactModal() {
           from { transform: scale(0); }
           to { transform: scale(1); }
         }
-      ` }} />
+      `,
+        }}
+      />
     </div>
   );
 }

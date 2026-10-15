@@ -11,7 +11,8 @@ function ScrollItems() {
     let ticking = false;
 
     const updateScrollState = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+      const scrollTop =
+        window.scrollY || document.documentElement.scrollTop || 0;
       const scrollHeight =
         document.documentElement.scrollHeight - window.innerHeight;
       const nextProgress =
@@ -48,25 +49,31 @@ function ScrollItems() {
   return (
     <div
       className="fixed flex gap-3 bottom-6 right-6 z-50 transition-opacity duration-300"
-      style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? "auto" : "none" }}
+      style={{
+        opacity: visible ? 1 : 0,
+        pointerEvents: visible ? "auto" : "none",
+      }}
     >
       <Link
         href={`https://wa.me/+994709836699?text=${encodeURIComponent(
-          "Salam, uşaqlar üçün olan kurslar haqqında məlumat əldə etmək istəyirəm!"
+          "Salam, uşaqlar üçün olan kurslar haqqında məlumat əldə etmək istəyirəm!",
         )}`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="WhatsApp ilə əlaqə saxla"
         title="WhatsApp ilə əlaqə saxla"
-        className="flex items-center justify-center h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-[#25D366] hover:bg-[#20b858] shadow-lg transition-all"
+        className="flex items-center justify-center h-16 w-16 lg:h-20 lg:w-20 rounded-full bg-[#25D366] hover:bg-[#20b858] shadow-lg transition-all"
       >
         <span className="sr-only">WhatsApp ilə əlaqə saxla</span>
-        <FaWhatsapp className="h-8 w-8 lg:h-9 lg:w-9 text-white" aria-hidden="true" />
+        <FaWhatsapp
+          className="h-9 w-9 lg:h-11 lg:w-11 text-white"
+          aria-hidden="true"
+        />
       </Link>
 
       <div className="relative">
         <svg
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 w-[62px] h-[62px] lg:w-[70px] lg:h-[70px]"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 w-[70px] h-[70px] lg:w-[86px] lg:h-[86px]"
           viewBox="0 0 70 70"
         >
           <circle
@@ -96,10 +103,13 @@ function ScrollItems() {
           onClick={scrollToTop}
           aria-label="Səhifənin əvvəlinə qayıt"
           title="Səhifənin əvvəlinə qayıt"
-          className="flex items-center relative z-40 justify-center h-14 w-14 lg:h-16 lg:w-16 rounded-full bg-[#FFC726] hover:bg-[#FFD147] shadow-lg transition-all"
+          className="flex items-center relative z-40 justify-center h-16 w-16 lg:h-20 lg:w-20 rounded-full bg-[#FFC726] hover:bg-[#FFD147] shadow-lg transition-all"
         >
           <span className="sr-only">Səhifənin əvvəlinə qayıt</span>
-          <FaArrowUp className="h-6 w-6 lg:h-7 lg:w-7 text-black" aria-hidden="true" />
+          <FaArrowUp
+            className="h-7 w-7 lg:h-8 lg:w-8 text-black"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </div>
