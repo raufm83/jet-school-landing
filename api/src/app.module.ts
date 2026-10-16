@@ -45,7 +45,7 @@ import { AdvantageModule } from './advantage/advantage.module';
     TeamModule,
     // ServeStaticModule - CORS headers əlavə edilib
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
+      rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',
       serveStaticOptions: {
         index: false,
