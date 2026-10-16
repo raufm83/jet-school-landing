@@ -176,10 +176,6 @@ export default async function GlossaryTermsPage({
     locale: language,
     namespace: "glossary.pagination",
   });
-  const glossaryBaseT = await getTranslations({
-    locale: language,
-    namespace: "glossary",
-  });
 
   const title = glossaryT("title");
 
@@ -223,7 +219,6 @@ export default async function GlossaryTermsPage({
         categoryText={glossaryT("categoryText")}
         language={language}
         emptyText={glossaryT("emptyText")}
-        whatsText={glossaryBaseT("whats")}
       />
 
       {meta.totalPages > 1 && (
