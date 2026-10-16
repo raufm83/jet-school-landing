@@ -111,34 +111,6 @@ const ContactFormForSingle = () => {
             
             <div>
               <input
-                type="text"
-                placeholder={t("surname.placeholder")}
-                className="w-full h-12 px-4 py-3 rounded-[32px] border [@media(min-width:3500px)]:!text-3xl border-jsyellow bg-[#fef7eb]
-                  focus:outline-none focus:ring-2 focus:ring-jsyellow
-                  shadow-sm transition-all duration-300 ease-in-out"
-                onInput={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  target.value = target.value.replace(/[^a-zA-Zа-яА-ЯёЁәəıiöüşğç\s]/g, '');
-                }}
-                {...register("surname", {
-                  required: t("surname.required"),
-                  minLength: {
-                    value: 2,
-                    message: t("surname.minLength"),
-                  },
-                  pattern: {
-                    value: /^[a-zA-Zа-яА-ЯёЁәəıiöüşğç\s]+$/,
-                    message: t("surname.invalid"),
-                  },
-                })}
-              />
-              {errors.surname && (
-                <p className="text-red-500 text-sm pl-2 mt-1">{errors.surname.message}</p>
-              )}
-            </div>
-            
-            <div>
-              <input
                 type="tel"
                 placeholder={t("number.placeholder")}
                 className="w-full h-12 px-4 py-3 rounded-[32px] border [@media(min-width:3500px)]:!text-3xl border-jsyellow bg-[#fef7eb]
