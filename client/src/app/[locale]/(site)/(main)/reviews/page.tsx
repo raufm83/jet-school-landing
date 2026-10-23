@@ -1,5 +1,5 @@
 import SectionTitle from "@/components/shared/section-title";
-import ReviewCard from "@/components/views/landing/reviews/review-card";
+import ReviewsGrid from "@/components/views/landing/reviews/reviews-grid";
 import { StudentReview } from "@/types/student-reviews";
 import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 import { cache } from "react";
@@ -131,19 +131,7 @@ export default async function ReviewsPage({
     <div id="reviews" className="container my-20 flex flex-col gap-8">
       <JsonLd data={schemaGraph} />
       <SectionTitle as="h1" title={t("homeSectionTitle")} />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 [@media(min-width:2500px)]:grid-cols-4">
-        {items.map((review, index) => (
-          <ReviewCard
-            key={review.id}
-            loadEager={index === 0}
-            imageUrl={review.imageUrl}
-            link={review.link}
-            title={(review.title ?? { az: "", ru: "" }) as { az: string; ru: string }}
-            description={(review.description ?? { az: "", ru: "" }) as { az: string; ru: string }}
-            course={review.course}
-          />
-        ))}
-      </div>
+      <ReviewsGrid items={items} />
 
       {faqItems.length > 0 && (
         <FaqSection items={faqItems} locale={locale} />
