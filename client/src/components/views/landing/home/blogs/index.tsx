@@ -2,12 +2,32 @@
 import SectionTitle from "@/components/shared/section-title";
 import Button from "@/components/ui/button";
 import { getAllHomeMediaPosts } from "@/utils/api/post";
+import { getTextContent } from "@/utils/helpers/post";
+import type { PostsResponse } from "@/types/post";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { MdArrowRightAlt } from "react-icons/md";
 import dynamic from "next/dynamic";
 
 const PostsSlider = dynamic(() => import("./slider"));
+
+/**
+ * Kart yalnız ~150 simvolluq önizləmə göstərir. Tam `content` (HTML + base64 şəkillər)
+ * client komponentə ötürülsə, HTML-ə yazılır və səhifəni meqabaytlarla şişirdir.
+ * Ona görə yalnız qısa mətn önizləməsi göndəririk.
+ */
+function slimPosts(data: PostsResponse): PostsResponse {
+  return {
+    ...data,
+    items: data.items.map((post) => ({
+      ...post,
+      content: {
+        az: String(getTextContent(post.content, "az") ?? "").slice(0, 200),
+        ru: String(getTextContent(post.content, "ru") ?? "").slice(0, 200),
+      },
+    })),
+  };
+}
 
 export default async function Blogs() {
   try {
@@ -31,7 +51,7 @@ export default async function Blogs() {
         <SectionTitle home title={t("title")} description={t("description")} />
 
         <div>
-          <PostsSlider data={posts} />
+          <PostsSlider data={slimPosts(posts)} />
         </div>
 
         <Link href="/news" aria-label={`${t("seeAll")} ${t("title")}`}>
