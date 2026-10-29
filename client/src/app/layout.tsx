@@ -3,7 +3,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import dynamic from "next/dynamic";
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import Preloader from "@/components/ui/preloader";
 
 const ContentProtection = dynamic(
@@ -44,6 +44,7 @@ export default function RootLayout({
         {/* Yalnız lazımi prefetch */}
         <link rel="dns-prefetch" href="https://img.youtube.com" />
       </head>
+      <GoogleTagManager gtmId="GTM-K3WBZ7F2" />
       <body
         className={`${manrope.className} scroll-smooth antialiased max-w-full bg-white`}
       >
