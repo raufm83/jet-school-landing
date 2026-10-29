@@ -80,8 +80,8 @@ export default async function CoursesSlider() {
               />
 
               <div className="relative z-10 flex flex-col gap-2 sm:gap-3 pb-3 sm:pb-4 min-w-0">
-                <div>
-                  <p className="text-base sm:text-lg lg:text-xl font-bold leading-tight mb-1 sm:mb-2 text-black">
+                <div className="min-h-[3.5rem] sm:min-h-[4rem] lg:min-h-[4.5rem]">
+                  <p className="text-base sm:text-lg lg:text-xl font-bold leading-tight mb-1 sm:mb-2 text-black line-clamp-2">
                     {course.title[normalizedLocale]}
                   </p>
                   <p
