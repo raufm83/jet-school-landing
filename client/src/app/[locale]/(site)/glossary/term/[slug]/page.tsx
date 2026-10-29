@@ -9,6 +9,7 @@ import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { permanentRedirect, redirect } from "next/navigation";
 import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
+import { autolinkGlossary } from "@/utils/api/glossary-links";
 
 interface PageProps {
   params: {
@@ -145,6 +146,9 @@ export default async function GlossaryTermPage({ params }: PageProps) {
 
   const termContent = term.term[language];
   const definitionContent = term.definition[language];
+  const linkedDefinition = definitionContent
+    ? await autolinkGlossary(definitionContent, language as "az" | "ru", correctSlug || slug)
+    : definitionContent;
 
   const categoryName = term.category?.name[language];
   const categorySlug = term.category?.slug[language];
@@ -188,6 +192,7 @@ export default async function GlossaryTermPage({ params }: PageProps) {
       <GlossaryTermDetail
         term={termContent}
         definition={definitionContent}
+        linkedDefinition={linkedDefinition}
         categoryName={categoryName}
         categorySlug={categorySlug}
         relatedTerms={term.relatedTermsData || []}

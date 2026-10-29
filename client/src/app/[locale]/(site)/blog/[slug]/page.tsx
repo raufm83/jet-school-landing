@@ -9,6 +9,7 @@ import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/se
 import { getPostImageUrl } from "@/utils/helpers/post";
 import SinglePostView from "@/components/views/landing/post/view";
 import JsonLd from "@/components/seo/json-ld";
+import { autolinkGlossary } from "@/utils/api/glossary-links";
 
 interface ISinglePostPageProps {
   params: {
@@ -123,10 +124,13 @@ export default async function SinglePostPage({
       }
     };
 
+    const linkedContent = await autolinkGlossary(data.content[locale], locale, undefined);
+    const linkedPost = { ...data, content: { ...data.content, [locale]: linkedContent } };
+
     return (
       <>
         <JsonLd data={schemaGraph} />
-        <SinglePostView post={data} locale={locale} t={t} relatedPosts={relatedPosts} />
+        <SinglePostView post={linkedPost} locale={locale} t={t} relatedPosts={relatedPosts} />
       </>
     );
   } catch (error: any) {

@@ -9,6 +9,7 @@ import { getContact } from "@/utils/api/contact";
 interface GlossaryTermDetailProps {
   term: string;
   definition: string;
+  linkedDefinition?: string;
   categoryName?: string;
   categorySlug?: string;
   relatedTerms?: {
@@ -30,6 +31,7 @@ interface GlossaryTermDetailProps {
 export default async function GlossaryTermDetail({
   term,
   definition,
+  linkedDefinition,
   categoryName,
   categorySlug,
   relatedTerms,
@@ -96,7 +98,7 @@ export default async function GlossaryTermDetail({
         [@media(min-width:3500px)]:gap-24
       ">
         <LazyHtmlContent
-          html={deferEmbedsInHtml(definition)}
+          html={deferEmbedsInHtml(linkedDefinition ?? definition)}
           className="
             flex-1 text-gray-600 prose max-w-none break-words
             prose-headings:text-jsblack prose-li:list-disc prose-li:ml-4

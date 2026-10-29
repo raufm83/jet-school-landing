@@ -56,13 +56,13 @@ export default function CourseCard({ course, locale }: CourseCardProps) {
           <div className="relative z-[100] isolate flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-black bg-jsyellow text-white shadow-lg shadow-jsyellow/20 sm:h-[4.5rem] sm:w-[4.5rem] md:h-12 md:w-12 [&>svg]:h-10 [&>svg]:w-10 sm:[&>svg]:h-9 sm:[&>svg]:w-9 md:[&>svg]:h-6 md:[&>svg]:w-6">
             <IconComponent className="relative z-[101]" aria-hidden />
           </div>
-          <h3 className="relative z-0 min-w-0 flex-1 text-2xl font-bold [@media(min-width:3500px)]:text-3xl text-jsblack leading-tight">
+          <h3 className="relative z-0 min-w-0 flex-1 min-h-[3.5rem] line-clamp-2 text-2xl font-bold [@media(min-width:3500px)]:text-3xl text-jsblack leading-tight">
             {course.title[locale]}
           </h3>
         </div>
 
         {tags.length > 0 && (
-          <div className="relative z-0 mt-auto mb-6 -mx-6 overflow-hidden px-6">
+          <div className="relative z-0 mb-6 -mx-6 overflow-hidden px-6">
             <div className="scrolling-tags flex w-max gap-2" style={{ animationDuration: `${tags.length * 2}s` }}>
               {[...tags, ...tags].map((tag, index) => (
                 <span
