@@ -85,7 +85,7 @@ export default async function CoursesSlider() {
                     {course.title[normalizedLocale]}
                   </p>
                   <p
-                    className="text-sm font-normal lg:text-base leading-relaxed line-clamp-2"
+                    className="text-sm font-normal lg:text-base leading-relaxed line-clamp-2 min-h-[2.75rem] lg:min-h-[3.25rem]"
                     style={{ color: course.textColor || "#1F2937" }}
                   >
                     {shortDesc}
