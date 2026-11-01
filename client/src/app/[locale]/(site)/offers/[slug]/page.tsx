@@ -161,6 +161,7 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
           return url ? [buildImageUrl(url)] : [];
         })(),
       },
+      ...((data as any).published === false ? { robots: { index: false, follow: true } } : {}),
     };
   } catch {
     permanentRedirect(`/${params.locale}/offers`);

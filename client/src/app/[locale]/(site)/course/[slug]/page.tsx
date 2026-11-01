@@ -297,11 +297,14 @@ export async function generateMetadata({ params }: ISingleCoursePageProps): Prom
         title,
         description,
       },
-      robots: {
-        index: true,
-        follow: true,
-        googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" },
-      },
+      robots:
+        data.published === false
+          ? { index: false, follow: true }
+          : {
+              index: true,
+              follow: true,
+              googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" },
+            },
     };
   } catch {
     return { title: "Error", description: "Failed to load course details", robots: { index: false } };

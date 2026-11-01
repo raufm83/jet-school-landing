@@ -406,7 +406,6 @@ export class GlossaryService {
               },
             },
           ],
-          published: true,
         },
         include: this.includeRelations,
       });

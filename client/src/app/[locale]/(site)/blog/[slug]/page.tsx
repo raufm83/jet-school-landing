@@ -199,6 +199,7 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
           return url ? [`${cdn}/${url}`] : [];
         })(),
       },
+      ...((data as any).published === false ? { robots: { index: false, follow: true } } : {}),
     };
   } catch {
     return {

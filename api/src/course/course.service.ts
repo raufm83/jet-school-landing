@@ -277,9 +277,6 @@ export class CourseService {
   async findBySlug(slug: string) {
     try {
       const courses = await this.prisma.course.findMany({
-        where: {
-          published: true,
-        },
         include: this.includeRelations,
       });
 

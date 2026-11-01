@@ -35,6 +35,7 @@ export async function generateMetadata({
           "x-default": buildHreflangUrl(baseUrl, "az", `glossary/${params.slug}`),
         },
       },
+      ...(term.published === false ? { robots: { index: false, follow: true } } : {}),
     };
   } catch (error) {
     console.error("Error generating metadata:", error);
