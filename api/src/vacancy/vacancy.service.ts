@@ -222,14 +222,9 @@ export class VacancyService {
     const trimmed = slug.trim();
     const row = await this.prisma.vacancy.findFirst({
       where: {
-        AND: [
-          this.publicSiteWhere(now),
-          {
-            OR: [
-              { slug: { is: { az: { equals: trimmed } } } },
-              { slug: { is: { ru: { equals: trimmed } } } },
-            ],
-          },
+        OR: [
+          { slug: { is: { az: { equals: trimmed } } } },
+          { slug: { is: { ru: { equals: trimmed } } } },
         ],
       },
     });

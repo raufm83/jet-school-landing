@@ -288,7 +288,7 @@ export async function GET() {
   return new NextResponse(xmlSitemap, {
     headers: {
       "Content-Type": "application/xml",
-      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+      "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
     },
   });
 }

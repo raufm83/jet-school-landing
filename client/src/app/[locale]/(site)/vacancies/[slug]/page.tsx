@@ -87,7 +87,10 @@ export async function generateMetadata({
       title,
       description,
     },
-    robots: { index: true, follow: true },
+    robots:
+      (vacancy as any).isActive === false
+        ? { index: false, follow: true }
+        : { index: true, follow: true },
   };
 }
 
@@ -119,9 +122,10 @@ export default async function VacancyDetailPage({
       locale === "ru" ? vacancy.description.ru : vacancy.description.az;
 
     const isExpired =
-      vacancy.deadline && !Number.isNaN(new Date(vacancy.deadline).getTime())
+      (vacancy as any).isActive === false ||
+      (vacancy.deadline && !Number.isNaN(new Date(vacancy.deadline).getTime())
         ? new Date(vacancy.deadline) < new Date()
-        : false;
+        : false);
 
     const deadlineText =
       vacancy.deadline && !Number.isNaN(new Date(vacancy.deadline).getTime())

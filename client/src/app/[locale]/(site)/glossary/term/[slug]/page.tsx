@@ -31,7 +31,8 @@ export async function generateMetadata({
   let term;
   try {
     const res = await fetch(
-      `${PUBLIC_API_BASE}/glossary/slug/${slug}`
+      `${PUBLIC_API_BASE}/glossary/slug/${slug}`,
+      { next: { revalidate: 45 } }
     );
     if (res.ok) {
       term = await res.json();
@@ -94,15 +95,18 @@ export async function generateMetadata({
       title,
       description,
     },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-snippet": -1,
-      },
-    },
+    robots:
+      term?.published === false
+        ? { index: false, follow: true }
+        : {
+            index: true,
+            follow: true,
+            googleBot: {
+              index: true,
+              follow: true,
+              "max-snippet": -1,
+            },
+          },
   };
 }
 

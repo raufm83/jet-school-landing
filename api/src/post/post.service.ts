@@ -813,7 +813,6 @@ export class PostService {
           ? await this.prisma.post.findFirst({
               where: {
                 OR: slugOr,
-                published: true,
               },
               include: {
                 author: {
@@ -835,7 +834,7 @@ export class PostService {
 
       if (!post && this.looksLikeMongoObjectId(raw)) {
         post = await this.prisma.post.findFirst({
-          where: { id: raw, published: true },
+          where: { id: raw },
           include: {
             author: {
               select: {
