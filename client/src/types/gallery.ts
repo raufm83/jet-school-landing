@@ -16,6 +16,7 @@ export interface GalleryImage {
   imageAlt?: { az: string; ru: string } | null;
   imageUrl: string;
   order?: number;
+  showOnHome?: boolean | null;
   createdAt: string;
 }
 
