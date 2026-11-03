@@ -26,6 +26,8 @@ export default function ReviewForm({
   isSubmitting,
   handleSubmit,
   router,
+  watch,
+  setValue,
 }: {
   mode: "create" | "edit";
   onSubmit: (data: any) => void;
@@ -34,6 +36,8 @@ export default function ReviewForm({
   isSubmitting: boolean;
   handleSubmit: any;
   router: any;
+  watch?: any;
+  setValue?: any;
 }) {
   const [courses, setCourses] = useState<CourseItem[]>([]);
   const [isLoadingCourses, setIsLoadingCourses] = useState(true);
@@ -186,7 +190,16 @@ export default function ReviewForm({
                 startContent={<MdCategory className="text-gray-400" />}
                 isDisabled={isSubmitting}
                 {...register("category")}
-                defaultSelectedKeys={["STUDENT"]}
+                disallowEmptySelection
+                {...(watch
+                  ? {
+                      selectedKeys: [watch("category") || "STUDENT"],
+                      onSelectionChange: (keys: any) => {
+                        const v = Array.from(keys as Set<string>)[0];
+                        if (v) setValue("category", v, { shouldDirty: true });
+                      },
+                    }
+                  : { defaultSelectedKeys: ["STUDENT"] })}
                 classNames={{
                   trigger:
                     "bg-white border-2 hover:border-jsyellow focus:border-jsyellow",

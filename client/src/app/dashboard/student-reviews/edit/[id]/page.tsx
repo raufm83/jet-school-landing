@@ -18,6 +18,8 @@ export default function EditReviewPage() {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ReviewFormInputs>();
 
@@ -86,6 +88,8 @@ export default function EditReviewPage() {
       isSubmitting={isSubmitting}
       handleSubmit={handleSubmit}
       router={router}
+      watch={watch}
+      setValue={setValue}
     />
   );
 }
