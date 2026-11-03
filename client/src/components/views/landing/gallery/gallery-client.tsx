@@ -29,9 +29,12 @@ export default function GalleryClient({
   const locale = useLocale();
   const t = useTranslations("gallery");
 
-  const sortedItems = [...initialGallery.items].sort(
-    (a, b) => (b.order ?? 0) - (a.order ?? 0)
-  );
+  const sortedItems = [...initialGallery.items].sort((a, b) => {
+    const aHome = a.showOnHome === true ? 1 : 0;
+    const bHome = b.showOnHome === true ? 1 : 0;
+    if (aHome !== bHome) return bHome - aHome;
+    return (b.order ?? 0) - (a.order ?? 0);
+  });
 
   const slides = sortedItems.map((image) => {
     const alt =

@@ -13,6 +13,14 @@ const PREVIEW_COUNT = 3;
 
 const fetchGalleryPreview = async () => {
   try {
+    const selectedRes = await fetch(
+      `${PUBLIC_API_BASE}/gallery?showOnHome=true&limit=${PREVIEW_COUNT}&sortBy=order&order=desc`,
+      { next: { revalidate: CONTENT_ISR_LONG_SECONDS } }
+    );
+    if (selectedRes.ok) {
+      const selected = await selectedRes.json();
+      if (selected?.items?.length > 0) return selected;
+    }
     const res = await fetch(
       `${PUBLIC_API_BASE}/gallery?limit=${PREVIEW_COUNT}&sortBy=order&order=desc`,
       { next: { revalidate: CONTENT_ISR_LONG_SECONDS } }

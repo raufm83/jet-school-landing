@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -74,6 +75,7 @@ export class GalleryService {
     limit = 10,
     order: 'asc' | 'desc' = 'asc',
     sortBy: 'order' | 'createdAt' = 'order',
+    showOnHome = false,
   ) {
     try {
       const skip = (page - 1) * limit;
@@ -82,9 +84,12 @@ export class GalleryService {
           ? { createdAt: Prisma.SortOrder[order] }
           : { order: Prisma.SortOrder[order] };
 
+      const where: Prisma.GalleryWhereInput = showOnHome ? { showOnHome: true } : {};
+
       const [total, items] = await Promise.all([
-        this.prisma.gallery.count(),
+        this.prisma.gallery.count({ where }),
         this.prisma.gallery.findMany({
+          where,
           skip,
           take: +limit,
           orderBy,
@@ -146,6 +151,20 @@ export class GalleryService {
     if (imageUrl && typeof imageUrl === 'string') {
       const path = this.getRelativeImagePath(imageUrl);
       if (path) updateData.imageUrl = path;
+    }
+
+    const rawShow = (restSafe as Record<string, unknown>).showOnHome;
+    if (rawShow !== undefined && rawShow !== null) {
+      const wantShow = rawShow === true || rawShow === 'true';
+      if (wantShow && existingGallery.showOnHome !== true) {
+        const alreadySelected = await this.prisma.gallery.count({
+          where: { showOnHome: true, id: { not: id } },
+        });
+        if (alreadySelected >= 3) {
+          throw new BadRequestException('Ana səhifədə ən çox 3 şəkil göstərilə bilər');
+        }
+      }
+      updateData.showOnHome = wantShow;
     }
 
     if (Object.keys(updateData).length === 0) {

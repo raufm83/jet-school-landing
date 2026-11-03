@@ -163,6 +163,7 @@ model Gallery {
   imageAlt  Json?    // SEO alt text: { az, ru }
   createdAt DateTime @default(now())
   order     Int      @default(0)
+  showOnHome Boolean? // ana sehifede gosterilsin (maks. 3)
 }
 
 model ContactInfo {

@@ -68,8 +68,9 @@ export class GalleryController {
     @Query('limit') limit: string = '10',
     @Query('order') order: 'asc' | 'desc' = 'asc',
     @Query('sortBy') sortBy: 'order' | 'createdAt' = 'order',
+    @Query('showOnHome') showOnHome?: string,
   ) {
-    return this.galleryService.findAll(+page, +limit, order, sortBy);
+    return this.galleryService.findAll(+page, +limit, order, sortBy, showOnHome === 'true');
   }
 
   @Get(':id')

@@ -1,5 +1,5 @@
 import { PartialType, ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
 import { CreateGalleryDto } from './create-gallery.dto';
 
 export class UpdateGalleryDto extends PartialType(CreateGalleryDto) {
@@ -7,4 +7,9 @@ export class UpdateGalleryDto extends PartialType(CreateGalleryDto) {
   @IsOptional()
   @IsNumber()
   order?: number;
+
+  @ApiProperty({ required: false, description: 'Show on home page (max 3)' })
+  @IsOptional()
+  @IsBoolean()
+  showOnHome?: boolean;
 }

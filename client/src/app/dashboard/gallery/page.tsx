@@ -2,6 +2,7 @@
 import api from "@/utils/api/axios";
 import {
   Button,
+  Checkbox,
   Image,
   Modal,
   ModalBody,
@@ -31,6 +32,7 @@ interface GalleryImage {
   imageUrl: string;
   createdAt: string;
   order: number;
+  showOnHome?: boolean | null;
 }
 
 interface GalleryResponse {
@@ -51,6 +53,7 @@ export default function GalleryPage() {
   const [loading, setLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [homeCount, setHomeCount] = useState(0);
 
 
   const fetchImages = useCallback(async () => {
@@ -62,6 +65,12 @@ export default function GalleryPage() {
       const sorted = [...data.items].sort((a, b) => b.order - a.order);
       setImages(sorted);
       setTotalImages(data.meta.total);
+      try {
+        const homeRes = await api.get<GalleryResponse>("/gallery?showOnHome=true&limit=10");
+        setHomeCount(homeRes.data.meta.total);
+      } catch {
+        // say alinmasa siyahi yene de gosterilir
+      }
     } catch (error) {
       toast.error("Qaleriya şəkilləri yüklənə bilmədi");
       console.error("Qaleriya şəkillərini yükləmə xətası:", error);
@@ -117,11 +126,23 @@ export default function GalleryPage() {
     }
   };
 
+  const handleToggleHome = async (image: GalleryImage, value: boolean) => {
+    try {
+      await api.patch(`/gallery/${image.id}/details`, { showOnHome: value });
+      toast.success(value ? "Ana səhifəyə əlavə olundu" : "Ana səhifədən çıxarıldı");
+      fetchImages();
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Dəyişiklik alınmadı");
+    }
+  };
+
   const columns = [
     { name: "SIRA", uid: "order" },
     { name: "ŞƏKİL", uid: "image" },
     { name: "BAŞLIQ", uid: "title" },
     { name: "YARADILMA TARİXİ", uid: "createdAt" },
+    { name: "ANA SƏHİFƏ", uid: "home" },
     { name: "ƏMƏLİYYATLAR", uid: "actions" },
   ];
 
@@ -189,6 +210,17 @@ export default function GalleryPage() {
             </p>
           </div>
         );
+      case "home":
+        return (
+          <Checkbox
+            isSelected={image.showOnHome === true}
+            isDisabled={homeCount >= 3 && image.showOnHome !== true}
+            onValueChange={(v) => handleToggleHome(image, v)}
+            color="warning"
+          >
+            Göstər
+          </Checkbox>
+        );
       case "actions":
         return (
           <div className="flex justify-center items-center gap-2">
@@ -230,7 +262,7 @@ export default function GalleryPage() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-2xl font-bold">Qaleriya</h1>
-            <p className="text-gray-500">Qaleriya şəkillərini idarə edin</p>
+            <p className="text-gray-500">Qaleriya şəkillərini idarə edin. Ana səhifədə göstərilən: {homeCount}/3</p>
           </div>
           <Button
             color="primary"
