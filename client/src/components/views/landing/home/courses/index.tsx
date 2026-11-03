@@ -148,14 +148,14 @@ export default async function CoursesSlider() {
               </div>
 
               <div className="absolute bottom-0 right-0 z-[60]">
-                <div className="relative w-[100px] h-[100px] sm:w-[140px] sm:h-[140px] lg:w-[160px] lg:h-[160px]">
+                <div className="relative w-[140px] h-[140px] lg:w-[160px] lg:h-[160px]">
                   <Image
                     src={buildImageUrl(course.imageUrl)}
                     alt={course.title[normalizedLocale]}
                     title={course.title[normalizedLocale]}
                     fill
                     className="object-contain transition-transform duration-300 group-hover:scale-110"
-                    sizes="(max-width: 640px) 120px, (max-width: 1024px) 140px, 160px"
+                    sizes="(max-width: 1024px) 140px, 160px"
                     quality={62}
                     placeholder="blur"
                     blurDataURL={BLUR_PLACEHOLDER_YELLOW}
