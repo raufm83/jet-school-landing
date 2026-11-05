@@ -22,7 +22,7 @@ const DYNAMIC_ROUTES: { route: string; endpoint: string }[] = [
   { route: "/blog", endpoint: "/posts/type/BLOG?page=1&limit=1" },
   { route: "/news/category/news", endpoint: "/posts/type/NEWS?page=1&limit=1" },
   { route: "/events", endpoint: "/posts/type/EVENT?page=1&limit=1" },
-  { route: "/vacancies", endpoint: "/vacancies?limit=1" },
+  // "/vacancies" burada yoxdur: Vakansiyalar linki vakansiya olmasa da həmişə görünür (səhifədə empty-state var)
   { route: "/glossary/terms", endpoint: "/glossary?limit=1" },
 ];
 
