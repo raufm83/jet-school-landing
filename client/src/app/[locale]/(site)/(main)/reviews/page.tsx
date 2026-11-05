@@ -13,6 +13,7 @@ import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/se
 import { getFaqByPage } from "@/utils/api/faq";
 import FaqSection from "@/components/views/landing/faq/faq-section";
 import { getReviewsPathSegment } from "@/i18n/routing";
+import { toBakuIsoDate } from "@/utils/schema-date";
 
 export async function generateMetadata({
   params: { locale },
@@ -106,18 +107,24 @@ export default async function ReviewsPage({
       "@type": "ItemList",
       "numberOfItems": items.length,
       "itemListElement": items.map((r, index) => {
-        const match = r.link ? /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/.exec(r.link) : null;
+        const match = r.link ? /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|live\/|watch\?v=|watch\?.+&v=))([^&?]+)/.exec(r.link) : null;
         const yId = match ? match[1] : null;
+        const rec = r as StudentReview & { createdAt?: string; updatedAt?: string };
+        const uploadDate = toBakuIsoDate(rec.createdAt ?? rec.updatedAt);
         
         return {
           "@type": "ListItem",
           "position": index + 1,
           "item": {
-            "@type": "VideoObject",
-            "name": (r.title as { az?: string; ru?: string })?.[locale] || "Rəy",
+            "@type": yId ? "VideoObject" : "CreativeWork",
+            "name":
+              (r.title as { az?: string; ru?: string })?.[locale] ||
+              (r.title as { az?: string; ru?: string })?.[locale === "az" ? "ru" : "az"] ||
+              (locale === "ru" ? "Отзыв" : "Rəy"),
+            ...(uploadDate ? (yId ? { "uploadDate": uploadDate } : { "dateCreated": uploadDate }) : {}),
             "description": (r.description as { az?: string; ru?: string })?.[locale] || "",
             ...(yId ? {
-              "thumbnailUrl": `https://img.youtube.com/vi/${yId}/maxresdefault.jpg`,
+              "thumbnailUrl": `https://img.youtube.com/vi/${yId}/hqdefault.jpg`,
               "embedUrl": `https://www.youtube.com/embed/${yId}`,
               "contentUrl": `https://www.youtube.com/watch?v=${yId}`
             } : {})
