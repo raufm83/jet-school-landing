@@ -24,7 +24,26 @@ export default function Preloader() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeInOut" } }}
         >
-          <div className="relative flex flex-col items-center justify-center w-full max-w-md px-8">
+          {/* Dekorativ pələng: sağda dayanıb, blursuz */}
+          <motion.div
+            aria-hidden="true"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
+            className="pointer-events-none absolute bottom-0 right-[3%] h-[34vh] md:h-[46vh] lg:right-[6%] lg:h-[68vh] 2xl:right-[10%]"
+          >
+            <Image
+              src="/images/hero-mascot.webp"
+              alt=""
+              width={533}
+              height={900}
+              sizes="(min-width: 1024px) 420px, 200px"
+              priority
+              className="h-full w-auto select-none opacity-95"
+            />
+          </motion.div>
+
+          <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md px-8">
             {/* Logo Animation */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}

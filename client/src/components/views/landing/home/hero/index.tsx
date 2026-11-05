@@ -7,6 +7,7 @@ import { sanitizeHeroHtml } from "@/utils/sanitizeHeroHtml";
 import HeroConsultDeferred from "./hero-consult-deferred";
 import HeroImage from "./image";
 import { Locale } from "@/i18n/request";
+import Image from "next/image";
 
 type HeroProps = {
   locale: Locale;
@@ -30,13 +31,33 @@ export default async function Hero({ locale }: HeroProps) {
     <div
       id="hero"
       className="
-        container mx-auto p-0
+        relative isolate container mx-auto p-0
         flex flex-col lg:flex-row
         items-center justify-center lg:justify-between
         gap-6 lg:gap-8 xl:gap-10 2xl:gap-12
         mt-10
       "
     >
+      {/* Dekorativ arxa fon pələngi: blur + aşağı opaklıq, yazılar üstdə qalır */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 hidden lg:block"
+      >
+        <Image
+          src="/images/hero-mascot.webp"
+          alt=""
+          width={533}
+          height={900}
+          sizes="400px"
+          loading="lazy"
+          className="absolute -left-6 bottom-0 h-[92%] w-auto max-w-none select-none opacity-[0.30] blur-[1.5px]"
+          style={{
+            WebkitMaskImage: "radial-gradient(ellipse at center, #000 55%, transparent 88%)",
+            maskImage: "radial-gradient(ellipse at center, #000 55%, transparent 88%)",
+          }}
+        />
+      </div>
+
       <div className="order-1 lg:order-2 w-full lg:w-auto lg:flex-shrink-0 flex justify-center">
         <HeroImage src={imgSrc} alt={imgAlt} />
       </div>
