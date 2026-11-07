@@ -83,7 +83,7 @@ export default async function VacanciesPage({
     /\/+$/,
     ""
   );
-  const listPath = locale === "az" ? "/vacancies" : `/${locale}/vacancies`;
+  const listPath = `/${locale}/vacancies`;
   const pageUrl = ensureTrailingSlash(`${baseUrl}${listPath}`);
 
   const [vacancies, faqItems] = await Promise.all([
@@ -92,7 +92,7 @@ export default async function VacanciesPage({
   ]);
 
   const homeLabel = locale === "az" ? "Ana Səhifə" : "Главная";
-  const base = locale === "az" ? baseUrl : `${baseUrl}/${locale}`;
+  const base = `${baseUrl}/${locale}`;
 
   const itemList = vacancies.map((v) => ({
     name: vacancyPageHeading(locale, v.title),

@@ -65,7 +65,7 @@ export const getNavLinks = (t: any, hiddenRoutes: string[] = []): NavItem[] => {
         },
         {
           title: t("vacancies"),
-          href: "/vacancies/",
+          href: "/vacancies",
         },
       ],
     },

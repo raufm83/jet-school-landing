@@ -3,7 +3,8 @@
  */
 
 /**
- * Ensures URL ends with trailing slash (before query string if present).
+ * Sayt `trailingSlash: false` ilə işləyir, ona görə bütün URL-lər slash-sız olmalıdır.
+ * Ad tarixi səbəbdən qalıb: funksiya sona slash ƏLAVƏ ETMİR, əksinə silir (query string saxlanılır).
  * Also normalizes any accidental double-slashes in the path.
  */
 export function ensureTrailingSlash(url: string): string {
@@ -11,8 +12,8 @@ export function ensureTrailingSlash(url: string): string {
   const [path, query] = url.split("?");
   // Remove double slashes from path while preserving the protocol (e.g. https://)
   const normalizedPath = path.replace(/([^:])\/\/+/g, "$1/");
-  const pathWithSlash = normalizedPath.endsWith("/") ? normalizedPath : `${normalizedPath}/`;
-  return query ? `${pathWithSlash}?${query}` : pathWithSlash;
+  const pathNoSlash = normalizedPath.replace(/\/+$/, "");
+  return query ? `${pathNoSlash}?${query}` : pathNoSlash;
 }
 
 /**
@@ -103,4 +104,23 @@ export function trimMetaTitle(title: string): string {
  */
 export function trimMetaDescription(description: string): string {
   return trimMetaText(description, 160);
+}
+
+/**
+ * hreflang/alternate dil xəritəsi: hər dil ÖZ slug-ı ilə, yalnız həmin dildə məzmun varsa.
+ * x-default həmişə az versiyadır (az yoxdursa ru).
+ */
+export function buildLocaleAlternates(
+  baseUrl: string,
+  prefix: string,
+  slugs: { az?: string | null; ru?: string | null },
+): Record<string, string> {
+  const out: Record<string, string> = {};
+  const az = typeof slugs.az === "string" ? slugs.az.trim() : "";
+  const ru = typeof slugs.ru === "string" ? slugs.ru.trim() : "";
+  if (az) out.az = buildHreflangUrl(baseUrl, "az", `${prefix}/${az}`);
+  if (ru) out.ru = buildHreflangUrl(baseUrl, "ru", `${prefix}/${ru}`);
+  const def = out.az ?? out.ru;
+  if (def) out["x-default"] = def;
+  return out;
 }

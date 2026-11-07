@@ -8,7 +8,7 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { permanentRedirect, redirect } from "next/navigation";
-import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl, buildLocaleAlternates } from "@/utils/seo";
 import { autolinkGlossary } from "@/utils/api/glossary-links";
 
 interface PageProps {
@@ -76,11 +76,10 @@ export async function generateMetadata({
     description,
     alternates: {
       canonical: canonicalUrl,
-      languages: {
-        az: buildHreflangUrl(baseUrl, "az", `glossary/term/${slug}`),
-        ru: buildHreflangUrl(baseUrl, "ru", `glossary/term/${slug}`),
-        "x-default": buildHreflangUrl(baseUrl, "az", `glossary/term/${slug}`),
-      },
+      languages: buildLocaleAlternates(baseUrl, "glossary/term", {
+        az: term?.term?.az && term?.definition?.az ? term?.slug?.az : null,
+        ru: term?.term?.ru && term?.definition?.ru ? term?.slug?.ru : null,
+      }),
     },
     openGraph: {
       title,
@@ -167,8 +166,8 @@ export default async function GlossaryTermPage({ params }: PageProps) {
   const courseTitle = language === "az" ? "IT Sahəsini öyrənməyə başla" : "Начни изучать IT уже сегодня";
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az";
-  const base = language === "az" ? baseUrl : `${baseUrl}/${language}`;
-  const termUrl = `${base}/glossary/term/${slug}`;
+  const base = `${baseUrl.replace(/\/+$/, "")}/${language}`;
+  const termUrl = `${base}/glossary/term/${correctSlug || slug}`;
 
   const shortDesc = term.metaDescription?.[language] || (definitionContent ? definitionContent.replace(/<[^>]*>/g, "").trim().substring(0, 160) : "");
   

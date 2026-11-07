@@ -5,7 +5,7 @@ import { getAllPosts, getPostDetails, getPostsByType } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { permanentRedirect, redirect } from "next/navigation";
-import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl, buildLocaleAlternates } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
 import SinglePostView from "@/components/views/landing/post/view";
 import JsonLd from "@/components/seo/json-ld";
@@ -52,7 +52,7 @@ export default async function SinglePostPage({
     if (searchParams.q) qs.set("q", searchParams.q);
     const tail = qs.toString();
     redirect(
-      tail ? `/${locale}/blog/?${tail}` : `/${locale}/blog/`
+      tail ? `/${locale}/blog?${tail}` : `/${locale}/blog`
     );
   }
 
@@ -170,11 +170,10 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
       description,
       alternates: {
         canonical: canonicalUrl,
-        languages: {
-          az: buildHreflangUrl(baseUrl, "az", `blog/${params.slug}`),
-          ru: buildHreflangUrl(baseUrl, "ru", `blog/${params.slug}`),
-          "x-default": buildHreflangUrl(baseUrl, "az", `blog/${params.slug}`),
-        },
+        languages: buildLocaleAlternates(baseUrl, "blog", {
+          az: data.title?.az && data.content?.az ? data.slug?.az : null,
+          ru: data.title?.ru && data.content?.ru ? data.slug?.ru : null,
+        }),
       },
       openGraph: {
         title,
