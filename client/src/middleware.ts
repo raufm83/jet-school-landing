@@ -279,10 +279,8 @@ const middlewares = withAuth(
     if (request.method === "GET" || request.method === "HEAD") {
       const seoTarget = await resolveSeoRedirect(pathname, request.nextUrl.search);
       if (seoTarget) {
-        return new NextResponse(null, {
-          status: 301,
-          headers: { Location: seoTarget },
-        });
+        const seoBase = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
+        return NextResponse.redirect(new URL(seoTarget, seoBase), 301);
       }
     }
 
