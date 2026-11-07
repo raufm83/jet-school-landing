@@ -19,7 +19,7 @@ import { PUBLIC_API_BASE } from "@/constants/public-api-base";
 import { StudentReview } from "@/types/student-reviews";
 import { Project } from "@/types/student-projects";
 import { CONTENT_ISR_SECONDS } from "@/constants/content-isr";
-import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl, buildLocaleAlternates } from "@/utils/seo";
 import JsonLd from "@/components/seo/json-ld";
 import { cache } from "react";
 
@@ -285,11 +285,10 @@ export async function generateMetadata({ params }: ISingleCoursePageProps): Prom
       keywords,
       alternates: {
         canonical: canonicalUrl,
-        languages: {
-          az: buildHreflangUrl(baseUrl, "az", `course/${params.slug}`),
-          ru: buildHreflangUrl(baseUrl, "ru", `course/${params.slug}`),
-          "x-default": buildHreflangUrl(baseUrl, "az", `course/${params.slug}`),
-        },
+        languages: buildLocaleAlternates(baseUrl, "course", {
+          az: data.title?.az ? data.slug?.az : null,
+          ru: data.title?.ru ? data.slug?.ru : null,
+        }),
       },
       openGraph,
       twitter: {

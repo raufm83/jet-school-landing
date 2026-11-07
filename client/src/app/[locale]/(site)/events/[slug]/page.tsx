@@ -4,7 +4,7 @@ import { getAllPosts, getPostDetails } from "@/utils/api/post";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { trimMetaTitle, trimMetaDescription, buildHreflangUrl } from "@/utils/seo";
+import { trimMetaTitle, trimMetaDescription, buildHreflangUrl, buildLocaleAlternates } from "@/utils/seo";
 import { getPostImageUrl } from "@/utils/helpers/post";
 import SinglePostView from "@/components/views/landing/post/view";
 import JsonLd from "@/components/seo/json-ld";
@@ -125,11 +125,10 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
       description,
       alternates: {
         canonical: canonicalUrl,
-        languages: {
-          az: buildHreflangUrl(baseUrl, "az", `events/${azSlug}`),
-          ru: buildHreflangUrl(baseUrl, "ru", `events/${ruSlug}`),
-          "x-default": buildHreflangUrl(baseUrl, "az", `events/${azSlug}`),
-        },
+        languages: buildLocaleAlternates(baseUrl, "events", {
+          az: data.title?.az && data.content?.az ? data.slug?.az : null,
+          ru: data.title?.ru && data.content?.ru ? data.slug?.ru : null,
+        }),
       },
       openGraph: {
         title,

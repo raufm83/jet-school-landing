@@ -7,6 +7,13 @@ import { getAllCourses } from "@/utils/api/course";
 import { PostType } from "@/types/enums";
 import { ensureTrailingSlash } from "@/utils/seo";
 
+/** Real tarix yoxdursa undefined (cari vaxt YAZILMIR) */
+function toIsoOrUndef(v?: string | number | Date | null): string | undefined {
+  if (!v) return undefined;
+  const d = new Date(v);
+  return Number.isNaN(d.getTime()) ? undefined : d.toISOString();
+}
+
 interface GlossaryCategory {
   id: string;
   name: { az: string; ru: string };
@@ -20,6 +27,7 @@ interface GlossaryTerm {
   slug: { az: string; ru: string };
   categoryId: string;
   published: boolean;
+  updatedAt?: string;
   category: { name: { az: string; ru: string } };
 }
 
@@ -112,8 +120,6 @@ export async function GET() {
     "/vacancies",
   ];
 
-  const nowISO = new Date().toISOString();
-
   const staticSitemapEntries = staticRoutes.flatMap((route) =>
     languages.map((lang) => ({
       url: `${baseUrl}/${lang}${
@@ -123,7 +129,7 @@ export async function GET() {
             ? `/${getReviewsPathSegment(lang)}`
             : route
       }`,
-      lastModified: nowISO,
+      lastModified: undefined,
       changeFrequency:
         route === "/news" || route === "/blog" || route === "/glossary"
           ? "daily"
@@ -175,10 +181,10 @@ export async function GET() {
 
     for (const lang of languages) {
       for (const post of newsResult.items || []) {
-        if (post.slug?.[lang as Locale]) {
+        if (post.slug?.[lang as Locale] && post.title?.[lang as Locale]) {
           postSitemapEntries.push({
             url: `${baseUrl}/${lang}/news/${encodeURIComponent(post.slug[lang as Locale])}`,
-            lastModified: new Date(post.updatedAt ?? post.createdAt ?? Date.now()).toISOString(),
+            lastModified: toIsoOrUndef(post.updatedAt ?? post.createdAt),
             changeFrequency: "weekly",
             priority: 0.7,
           });
@@ -186,10 +192,10 @@ export async function GET() {
       }
 
       for (const blog of blogsResult.items || []) {
-        if (blog.slug?.[lang as Locale]) {
+        if (blog.slug?.[lang as Locale] && blog.title?.[lang as Locale]) {
           blogSitemapEntries.push({
             url: `${baseUrl}/${lang}/blog/${encodeURIComponent(blog.slug[lang as Locale])}`,
-            lastModified: new Date(blog.updatedAt ?? blog.createdAt ?? Date.now()).toISOString(),
+            lastModified: toIsoOrUndef(blog.updatedAt ?? blog.createdAt),
             changeFrequency: "weekly",
             priority: 0.7,
           });
@@ -197,10 +203,10 @@ export async function GET() {
       }
 
       for (const event of eventsResult.items || []) {
-        if (event.slug?.[lang as Locale]) {
+        if (event.slug?.[lang as Locale] && event.title?.[lang as Locale]) {
           eventSitemapEntries.push({
             url: `${baseUrl}/${lang}/events/${encodeURIComponent(event.slug[lang as Locale])}`,
-            lastModified: new Date(event.updatedAt ?? event.createdAt ?? Date.now()).toISOString(),
+            lastModified: toIsoOrUndef(event.updatedAt ?? event.createdAt),
             changeFrequency: "weekly",
             priority: 0.7,
           });
@@ -211,7 +217,7 @@ export async function GET() {
         if (offer.slug?.[lang as Locale]) {
           offerSitemapEntries.push({
             url: `${baseUrl}/${lang}/offers/${encodeURIComponent(offer.slug[lang as Locale])}`,
-            lastModified: new Date(offer.updatedAt ?? offer.createdAt ?? Date.now()).toISOString(),
+            lastModified: toIsoOrUndef(offer.updatedAt ?? offer.createdAt),
             changeFrequency: "weekly",
             priority: 0.7,
           });
@@ -222,7 +228,7 @@ export async function GET() {
         if (course.slug?.[lang as Locale]) {
           courseSitemapEntries.push({
             url: `${baseUrl}/${lang}/course/${encodeURIComponent(course.slug[lang as Locale])}`,
-            lastModified: new Date(course.updatedAt ?? course.createdAt ?? Date.now()).toISOString(),
+            lastModified: toIsoOrUndef(course.updatedAt ?? course.createdAt),
             changeFrequency: "weekly",
             priority: 0.8,
           });
@@ -230,10 +236,10 @@ export async function GET() {
       }
 
       for (const category of glossaryCategories) {
-        if (category.slug?.[lang as Locale]) {
+        if (category.slug?.[lang as Locale] && category.name?.[lang as Locale]) {
           glossaryCategorySitemapEntries.push({
             url: `${baseUrl}/${lang}/glossary/category/${encodeURIComponent(category.slug[lang as Locale])}`,
-            lastModified: new Date(category.updatedAt ?? category.createdAt ?? Date.now()).toISOString(),
+            lastModified: toIsoOrUndef(category.updatedAt ?? category.createdAt),
             changeFrequency: "weekly",
             priority: 0.7,
           });
@@ -241,10 +247,10 @@ export async function GET() {
       }
 
       for (const term of glossaryTerms) {
-        if (term.published && term.slug?.[lang as Locale]) {
+        if (term.published && term.slug?.[lang as Locale] && term.term?.[lang as Locale]) {
           glossaryTermSitemapEntries.push({
             url: `${baseUrl}/${lang}/glossary/term/${encodeURIComponent(term.slug[lang as Locale])}`,
-            lastModified: nowISO,
+            lastModified: toIsoOrUndef(term.updatedAt),
             changeFrequency: "monthly",
             priority: 0.6,
           });
@@ -259,9 +265,7 @@ export async function GET() {
           url: ensureTrailingSlash(
             `${baseUrl}/${lang}/vacancies/${encodeURIComponent(slug)}`
           ),
-          lastModified: new Date(
-            v.updatedAt ?? v.createdAt ?? Date.now()
-          ).toISOString(),
+          lastModified: toIsoOrUndef(v.updatedAt ?? v.createdAt),
           changeFrequency: "weekly",
           priority: 0.65,
         });
@@ -299,7 +303,7 @@ function generateSitemapXml(entries: any[]) {
       return `
   <url>
     <loc>${escapeXml(ensureTrailingSlash(entry.url))}</loc>
-    <lastmod>${entry.lastModified}</lastmod>
+    ${entry.lastModified ? `<lastmod>${entry.lastModified}</lastmod>` : ""}
     <changefreq>${entry.changeFrequency}</changefreq>
     <priority>${entry.priority}</priority>
   </url>`;

@@ -29,7 +29,7 @@ export default function BlogSearch({
     if (q) params.set("q", q);
 
     const qs = params.toString();
-    const href = `/${locale}/blog/${qs ? `?${qs}` : ""}`;
+    const href = `/${locale}/blog${qs ? `?${qs}` : ""}`;
     router.push(href);
   };
 

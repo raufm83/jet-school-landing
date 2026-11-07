@@ -4,6 +4,7 @@ import { withAuth } from "next-auth/middleware";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import { getToken } from "next-auth/jwt";
+import { resolveSeoRedirect } from "./utils/seo-redirect";
 
 export enum Role {
   ADMIN = "ADMIN",
@@ -272,6 +273,15 @@ const middlewares = withAuth(
       }
 
       return nextDashboard(request);
+    }
+
+    /* SEO: səhv dilin slug-ı → düzgün slug-a (və ya az-a) server tərəfli 301, bir addımda */
+    if (request.method === "GET" || request.method === "HEAD") {
+      const seoTarget = await resolveSeoRedirect(pathname, request.nextUrl.search);
+      if (seoTarget) {
+        const seoBase = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
+        return NextResponse.redirect(new URL(seoTarget, seoBase), 301);
+      }
     }
 
     // SEO: JSON-LD schema üçün layout-da pathname oxumaq
