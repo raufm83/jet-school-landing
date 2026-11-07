@@ -10,7 +10,15 @@ export default function ContentProtection() {
     const isDashboard = pathname?.startsWith("/dashboard");
     if (isDashboard) return;
 
+    /** Yazı sahələrində (axtarış, forma) kopyala/yapışdır və sağ klik işləsin */
+    const isEditable = (target: EventTarget | null) =>
+      target instanceof Element &&
+      !!target.closest(
+        'input, textarea, select, [contenteditable=""], [contenteditable="true"]'
+      );
+
     const handleContextMenu = (e: MouseEvent) => {
+      if (isEditable(e.target)) return;
       e.preventDefault();
     };
 
@@ -27,6 +35,7 @@ export default function ContentProtection() {
     };
 
     const handleClipboard = (e: ClipboardEvent) => {
+      if (isEditable(e.target)) return;
       e.preventDefault();
     };
 

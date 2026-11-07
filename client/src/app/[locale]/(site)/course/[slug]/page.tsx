@@ -165,7 +165,7 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
     return (
       <BreadcrumbContextWrapper title={courseTitle}>
         <JsonLd data={schemaGraph} />
-        <div className="overflow-x-hidden w-full">
+        <div className="[overflow-x:clip] w-full">
           <div className="container mx-auto px-4 pt-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 3xl:px-28 4xl:px-32 [@media(min-width:2500px)]:!px-[111px] [@media(min-width:3500px)]:px-32">
             <Breadcrumbs dynamicTitle={courseTitle} />
           </div>
