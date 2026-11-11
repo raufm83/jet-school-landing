@@ -38,10 +38,10 @@ const fetchProjects = cache(async () => {
   }
 });
 
-const fetchReviews = cache(async () => {
+const fetchReviews = cache(async (courseId: string) => {
   try {
     const response = await fetch(
-      `${PUBLIC_API_BASE}/student-reviews?limit=20&sortBy=order&order=desc`,
+      `${PUBLIC_API_BASE}/student-reviews?limit=50&sortBy=order&order=desc&courseId=${encodeURIComponent(courseId)}`,
       { next: { revalidate: 120 } },
     );
     if (!response.ok) return { items: [] };
@@ -62,15 +62,15 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
   try {
     const locale = params.locale as Locale;
     setRequestLocale(locale);
-    const [data, t, courses, projectsData, reviewsData] = await Promise.all([
+    const [data, t, courses, projectsData] = await Promise.all([
       cachedGetCourseDetails(params.slug),
       getTranslations("singleCoursePage"),
       getAllCourses({}),
       fetchProjects(),
-      fetchReviews(),
     ]);
 
     const projects: Project[] = projectsData?.items ?? [];
+    const reviewsData = (data as any)?.id ? await fetchReviews(String((data as any).id)) : { items: [] };
     const reviews: StudentReview[] = (reviewsData?.items ?? []).filter((r: StudentReview) =>
       isDisplayablePublicReview(r)
     );
@@ -205,14 +205,14 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
                   isCoursePage
                 />
 
-                {/* 4. Layihələr */}
-                {projects.length > 0 && (
-                  <CourseProjects projects={projects} locale={locale} />
-                )}
-
-                {/* 5. Valideyn rəyləri */}
+                {/* 4. Rəylər */}
                 {reviews.length > 0 && (
                   <CourseReviews reviews={reviews} locale={locale} />
+                )}
+
+                {/* 5. Layihələr */}
+                {projects.length > 0 && (
+                  <CourseProjects projects={projects} locale={locale} />
                 )}
 
                 {/* 6. FAQ */}
