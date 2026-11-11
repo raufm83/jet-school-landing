@@ -96,6 +96,7 @@ export class StudentReviewService {
     order: 'asc' | 'desc' = 'desc',
     sortBy: 'order' | 'createdAt' = 'createdAt',
     category?: string,
+    courseId?: string,
   ) {
     try {
       const skip = (page - 1) * limit;
@@ -103,7 +104,10 @@ export class StudentReviewService {
         sortBy === 'createdAt'
           ? { createdAt: Prisma.SortOrder[order] }
           : { order: Prisma.SortOrder[order] };
-      const where = category ? { category } : {};
+      const where = {
+        ...(category && { category }),
+        ...(courseId && { courseId }),
+      };
       const [total, items] = await Promise.all([
         this.prisma.studentReview.count({ where }),
         this.prisma.studentReview.findMany({

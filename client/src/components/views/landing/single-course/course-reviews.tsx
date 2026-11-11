@@ -17,7 +17,9 @@ interface CourseReviewsProps {
 
 export default function CourseReviews({ reviews, locale }: CourseReviewsProps) {
   const t = useTranslations("singleCoursePage");
-  const [activeCategory, setActiveCategory] = React.useState<"STUDENT" | "PARENT">("STUDENT");
+  const [activeCategory, setActiveCategory] = React.useState<"STUDENT" | "PARENT">(() =>
+    (reviews ?? []).some((r) => r.category === "PARENT") ? "PARENT" : "STUDENT"
+  );
   
   if (!reviews || reviews.length === 0) return null;
 
@@ -31,26 +33,19 @@ export default function CourseReviews({ reviews, locale }: CourseReviewsProps) {
         </h2>
         
         <div className="flex bg-gray-100 rounded-full p-1 border border-gray-200">
-          <button
-            onClick={() => setActiveCategory("STUDENT")}
-            className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all ${
-              activeCategory === "STUDENT"
-                ? "bg-jsyellow text-black shadow-md"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Tələbə
-          </button>
-          <button
-            onClick={() => setActiveCategory("PARENT")}
-            className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all ${
-              activeCategory === "PARENT"
-                ? "bg-jsyellow text-black shadow-md"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Valideyn
-          </button>
+          {(["PARENT", "STUDENT"] as const).map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                activeCategory === cat
+                  ? "bg-jsyellow text-black shadow-md"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              {cat === "PARENT" ? "Valideyn" : "Tələbə"}
+            </button>
+          ))}
         </div>
       </div>
 

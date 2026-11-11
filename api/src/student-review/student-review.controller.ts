@@ -46,14 +46,16 @@ export class StudentReviewController {
   @ApiQuery({ name: 'order', required: false, enum: ['asc', 'desc'] })
   @ApiQuery({ name: 'sortBy', required: false, enum: ['order', 'createdAt'] })
   @ApiQuery({ name: 'category', required: false, enum: ['STUDENT', 'PARENT'] })
+  @ApiQuery({ name: 'courseId', required: false })
   findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('order') order: 'asc' | 'desc' = 'desc',
     @Query('sortBy') sortBy: 'order' | 'createdAt' = 'createdAt',
     @Query('category') category?: string,
+    @Query('courseId') courseId?: string,
   ) {
-    return this.service.findAll(+page, +limit, order, sortBy, category);
+    return this.service.findAll(+page, +limit, order, sortBy, category, courseId);
   }
 
   @Get(':id')
