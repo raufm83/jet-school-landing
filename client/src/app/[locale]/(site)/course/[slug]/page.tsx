@@ -97,10 +97,14 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
       return name ? { "@type": "Person", "name": name } : null;
     }).filter(Boolean);
 
-    const descLower = descriptionText?.toLowerCase() || "";
-    const isOnline = descLower.includes("onlayn") || descLower.includes("online") || descLower.includes("онлайн");
-    const isOnsite = descLower.includes("əyani") || descLower.includes("offline") || descLower.includes("офлайн") || descLower.includes("очно");
-    const dynamicCourseMode = (isOnline && isOnsite) ? "Blended" : (isOnline ? "Online" : "Onsite");
+    const isRobotics = (data.slug?.az || params.slug || "").startsWith("robototexnika");
+    const dynamicCourseMode = isRobotics ? "Onsite" : "Blended";
+    const rawCourseImage: string | undefined = data.imageUrl || undefined;
+    const courseImageUrl = rawCourseImage
+      ? (/^https?:\/\//i.test(rawCourseImage)
+          ? rawCourseImage
+          : `https://api.jetschool.az/uploads/${rawCourseImage.split("/").map(encodeURIComponent).join("/")}`)
+      : undefined;
 
     const schemaGraph = {
       "@context": "https://schema.org",
@@ -114,7 +118,7 @@ export default async function SingleCoursePage({ params }: ISingleCoursePageProp
         "url": baseUrl
       },
       "url": courseUrl,
-      "image": data.imageUrl ? data.imageUrl : undefined,
+      "image": courseImageUrl,
       "inLanguage": locale,
       "audience": {
         "@type": "EducationalAudience",

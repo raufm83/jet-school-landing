@@ -163,7 +163,7 @@ export default async function AllPostsPage({
   };
 
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const base = locale === "az" ? baseUrl : `${baseUrl}/${locale}`;
+  const base = `${baseUrl}/${locale}`;
   const typePath = params.type || "news";
   const pageUrl = `${base}/${typePath}`;
 

@@ -169,7 +169,7 @@ export default async function GlossaryCategoryPage({
   const t = translations[language as keyof typeof translations];
 
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const base = language === "az" ? baseUrl : `${baseUrl}/${language}`;
+  const base = `${baseUrl}/${language}`;
   const glossaryUrl = `${base}/glossary`;
   const categoryUrl = `${glossaryUrl}/category/${params.slug}`;
   const categoryName = category.name[language] || "";

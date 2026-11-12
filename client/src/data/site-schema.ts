@@ -83,7 +83,7 @@ export function buildOrgNode(locale: string, contact?: { email?: string; phone?:
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",
-      url: SITE_SCHEMA.contact.url,
+      url: `${SITE_SCHEMA.baseUrl}/${locale}/contact-us`,
       availableLanguage: ["Azerbaijani", "Russian"],
       ...(contact?.email?.trim() && { email: contact.email.trim() }),
       ...(contact?.phone?.trim() && { telephone: contact.phone.trim() }),
@@ -141,7 +141,7 @@ export function buildOrganizationSchema(locale: string, contact?: ContactData | 
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",
-      url: SITE_SCHEMA.contact.url,
+      url: `${SITE_SCHEMA.baseUrl}/${locale}/contact-us`,
       availableLanguage: ["Azerbaijani", "Russian"],
       ...(email && { email }),
       ...(telephone && { telephone }),
@@ -187,7 +187,7 @@ export function buildSiteSchemaFromText(params: {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",
-      url: `${canonicalBase}/contact-us`,
+      url: `${canonicalBase}/${params.locale}/contact-us`,
       availableLanguage: ["Azerbaijani", "Russian"],
     },
   };
@@ -418,6 +418,7 @@ export function buildHomePageGraph(params: {
 
 /** Haqqımızda: AboutPage + BreadcrumbList @graph. */
 export function buildAboutPageGraph(params: {
+  faqItems?: { question: string; answer: string }[];
   name: string;
   description?: string | null;
   url: string;
@@ -477,7 +478,26 @@ export function buildAboutPageGraph(params: {
   const webSiteNode = buildWebSiteNode(params.locale);
   return {
     "@context": "https://schema.org",
-    "@graph": [orgNode, webSiteNode, breadcrumbDoc, webPageDoc, aboutPageDoc],
+    "@graph": [
+      orgNode,
+      webSiteNode,
+      breadcrumbDoc,
+      webPageDoc,
+      aboutPageDoc,
+      ...(params.faqItems?.length
+        ? [{
+            "@type": "FAQPage",
+            "@id": `${url}#faq`,
+            url,
+            inLanguage: getLang(params.locale),
+            mainEntity: params.faqItems.map((f) => ({
+              "@type": "Question",
+              name: f.question,
+              acceptedAnswer: { "@type": "Answer", text: f.answer },
+            })),
+          }]
+        : []),
+    ],
   };
 }
 

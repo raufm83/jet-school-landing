@@ -102,7 +102,7 @@ export default async function GlossaryIndexPage({
   ]);
 
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const base = language === "az" ? baseUrl : `${baseUrl}/${language}`;
+  const base = `${baseUrl}/${language}`;
   const glossaryUrl = `${base}/glossary`;
 
   const pageTitle = glossaryT("title");
