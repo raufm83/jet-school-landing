@@ -183,10 +183,7 @@ export default async function GlossaryTermsPage({
     /\/+$/,
     ""
   );
-  const termsUrl =
-    language === "az"
-      ? `${baseUrl}/glossary/terms`
-      : `${baseUrl}/${language}/glossary/terms`;
+  const termsUrl = `${baseUrl}/${language}/glossary/terms`;
 
   const schemaGraph = {
     "@context": "https://schema.org",

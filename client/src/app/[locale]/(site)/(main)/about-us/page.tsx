@@ -126,7 +126,11 @@ export default async function AboutPage({
   const pageTitle = meta?.title ? trimMetaTitle(meta.title) : (locale === "az" ? "Haqqımızda" : "О нас");
   const pageDescription = meta?.description ? trimMetaDescription(meta.description) : t("introduction.description1") ?? undefined;
 
+  const faqLang = locale === "ru" ? "ru" : "az";
   const schemaGraph = buildAboutPageGraph({
+    faqItems: faqItems
+      .map((f) => ({ question: f.question?.[faqLang] ?? "", answer: f.answer?.[faqLang] ?? "" }))
+      .filter((f) => f.question && f.answer),
     name: pageTitle,
     description: pageDescription ?? null,
     url: aboutUrl,

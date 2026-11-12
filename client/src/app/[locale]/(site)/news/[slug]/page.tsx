@@ -1,3 +1,4 @@
+import { buildImageUrl } from "@/utils/imageUrl";
 import { Locale } from "@/i18n/request";
 import { PostType } from "@/types/enums";
 import { getAllPosts, getPostDetails } from "@/utils/api/post";
@@ -54,11 +55,10 @@ export default async function SinglePostPage({ params }: ISinglePostPageProps) {
     }
 
     const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-    const cdn = process.env.NEXT_PUBLIC_CDN_URL || "";
     const canonicalUrl = `${baseUrl}/${locale}/news/${params.slug}`;
     const contentText = data.content[locale].replace(/<[^>]*>/g, "");
     const imageUrlRaw = getPostImageUrl(data.imageUrl, locale as Locale);
-    const imageUrlFull = imageUrlRaw ? (cdn ? `${cdn.replace(/\/+$/, "")}/${imageUrlRaw.replace(/^\/+/, "")}` : imageUrlRaw) : undefined;
+    const imageUrlFull = imageUrlRaw ? buildImageUrl(imageUrlRaw) : undefined;
 
 
     const schemaGraph = {
@@ -145,8 +145,7 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
         url: buildHreflangUrl(baseUrl, locale, `news/${locale === "az" ? azSlug : ruSlug}`),
         images: (() => {
           const url = getPostImageUrl(data.imageUrl, locale);
-          const cdn = process.env.NEXT_PUBLIC_CDN_URL || "";
-          return url ? [{ url: `${cdn}/${url}` }] : [];
+          return url ? [{ url: buildImageUrl(url) }] : [];
         })(),
         type: "article",
         locale: locale === "az" ? "az_AZ" : "ru_RU",
@@ -158,8 +157,7 @@ export async function generateMetadata({ params }: ISinglePostPageProps): Promis
         description,
         images: (() => {
           const url = getPostImageUrl(data.imageUrl, locale);
-          const cdn = process.env.NEXT_PUBLIC_CDN_URL || "";
-          return url ? [`${cdn}/${url}`] : [];
+          return url ? [buildImageUrl(url)] : [];
         })(),
       },
       ...((data as any).published === false ? { robots: { index: false, follow: true } } : {}),

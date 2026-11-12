@@ -98,7 +98,7 @@ export default async function GlossaryTermPage({ params }: PageProps) {
   const t = translations[language as keyof typeof translations];
 
   const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://jetschool.az").replace(/\/+$/, "");
-  const base = language === "az" ? baseUrl : `${baseUrl}/${language}`;
+  const base = `${baseUrl}/${language}`;
   const glossaryUrl = `${base}/glossary`;
   const termUrl = `${glossaryUrl}/${params.slug}`;
   const homeLabel = language === "az" ? "Ana Səhifə" : "Главная";
