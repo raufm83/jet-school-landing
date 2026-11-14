@@ -3,6 +3,7 @@
 import { useState, FormEvent, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
+import GlossaryCategoryDropdown from "./glossary-category-dropdown";
 
 interface Category {
   _id: string;
@@ -82,8 +83,7 @@ export default function GlossarySearchFilter({
     updateQueryParams(searchQuery, selectedCategory);
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCategory = e.target.value;
+  const handleCategoryChange = (newCategory: string) => {
     setSelectedCategory(newCategory);
     updateQueryParams(searchQuery, newCategory);
   };
@@ -107,21 +107,18 @@ export default function GlossarySearchFilter({
       </form>
       
       <div className="w-full md:w-64">
-        <select
+        <GlossaryCategoryDropdown
           value={selectedCategory}
           onChange={handleCategoryChange}
-          className="w-full px-6 py-3.5 bg-white border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-jsyellow/50 transition-all appearance-none cursor-pointer text-sm sm:text-base"
-        >
-          <option value="">{allCategoriesText}</option>
-          {categories.map((cat) => {
-            const catId = (cat as any).id || cat._id;
-            return (
-              <option key={catId} value={catId}>
-                {cat.name?.[language] || cat.name?.az || cat.slug}
-              </option>
-            );
-          })}
-        </select>
+          ariaLabel={allCategoriesText}
+          options={[
+            { value: "", label: allCategoriesText },
+            ...categories.map((cat) => ({
+              value: (cat as any).id || cat._id,
+              label: cat.name?.[language] || cat.name?.az || cat.slug,
+            })),
+          ]}
+        />
       </div>
     </div>
   );

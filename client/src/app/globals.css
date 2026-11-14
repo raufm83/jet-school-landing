@@ -97,6 +97,18 @@
   max-width: 100%;
 }
 
+.ql-editor iframe.ql-video,
+.prose iframe.ql-video,
+.post-content iframe.ql-video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 0.75rem;
+}
+
 .prose p:empty,
 .prose p:has(> br:only-child),
 .prose p:has(> br:first-child:last-child) {
