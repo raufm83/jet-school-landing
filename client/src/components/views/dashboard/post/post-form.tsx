@@ -38,12 +38,19 @@ const ReactQuill = dynamic(() => import("react-quill"), {
   loading: () => <p>Loading editor...</p>,
 });
 
+function toYouTubeEmbed(input: string): string | null {
+  const m = input
+    .trim()
+    .match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return m ? `https://www.youtube.com/embed/${m[1]}` : null;
+}
+
 const toolbarOptions = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
   ["bold", "italic", "underline", "strike"],
   [{ list: "ordered" }, { list: "bullet" }],
   [{ color: [] }, { background: [] }],
-  ["link", "image"],
+  ["link", "image", "video"],
   ["clean"],
 ];
 
@@ -59,6 +66,7 @@ const formats = [
   "color",
   "background",
   "image",
+  "video",
 ];
 
 const MAX_POST_IMAGE_BYTES = 2 * 1024 * 1024;
@@ -143,10 +151,36 @@ export default function PostForm({
 
   const modules = useMemo(
     () => ({
-      toolbar: { container: toolbarOptions },
+      toolbar: {
+        container: toolbarOptions,
+        handlers: {
+          video: function (this: any) {
+            const url = window.prompt("YouTube linkini yapışdırın:");
+            if (!url) return;
+            const embed = toYouTubeEmbed(url);
+            if (!embed) {
+              window.alert("Düzgün YouTube linki daxil edin.");
+              return;
+            }
+            const quill = this.quill;
+            const range = quill.getSelection(true);
+            quill.insertEmbed(range.index, "video", embed, "user");
+            quill.setSelection(range.index + 1, 0);
+          },
+        },
+      },
     }),
     []
   );
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      document
+        .querySelectorAll(".ql-toolbar .ql-video")
+        .forEach((el) => el.setAttribute("title", "Video əlavə et"));
+    }, 1000);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
