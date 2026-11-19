@@ -79,6 +79,18 @@ export default function StudentReviewsPage() {
     }
   };
 
+  const handleSetOrder = async (review: StudentReview, display: number) => {
+    const newOrder = total - display;
+    if (!Number.isInteger(display) || display < 1 || display > total || newOrder === review.order) return;
+    try {
+      await api.patch(`/student-reviews/${review.id}`, { order: newOrder });
+      toast.success("Sıra yeniləndi");
+      fetchReviews();
+    } catch {
+      toast.error("Sıra yenilənə bilmədi");
+    }
+  };
+
   const handleMove = async (review: StudentReview, direction: "up" | "down") => {
     const newOrder = direction === "up" ? review.order + 1 : review.order - 1;
     if (newOrder < 0) return;
@@ -129,9 +141,19 @@ export default function StudentReviewsPage() {
                 <MdArrowUpward className="text-default-400" size={20} />
               </Button>
             </Tooltip>
-            <span className="text-tiny text-default-400">
-              Sıra: {total - review.order}
-            </span>
+            <input
+              key={`${review.id}-${review.order}`}
+              type="number"
+              min={1}
+              max={total}
+              defaultValue={total - review.order}
+              aria-label="Sıra nömrəsi"
+              className="w-14 rounded-md border border-default-300 px-1 py-0.5 text-center text-tiny"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+              }}
+              onBlur={(e) => handleSetOrder(review, Number(e.target.value))}
+            />
             <Tooltip content="Aşağı">
               <Button
                 isIconOnly
