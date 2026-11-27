@@ -12,9 +12,9 @@ import Select from "@/components/ui/select";
 import { MdClose, MdOutlineCheck } from "react-icons/md";
 
 
-const ageOptions = Array.from({ length: 8 }, (_, i) => ({
-  value: i + 8,
-  label: `${i + 8}`,
+const ageOptions = Array.from({ length: 10 }, (_, i) => ({
+    value: i + 7,
+    label: `${i + 7}`,
 }));
 
 const ContactForm = () => {
