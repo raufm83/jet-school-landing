@@ -43,6 +43,8 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     );
     const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
     const selectRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const keyboardNavigation = useRef(false);
     const highlightedOptionRef = useRef<HTMLDivElement>(null);
 
     useOnClickOutside(selectRef, () => setIsOpen(false));
@@ -61,11 +63,21 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     }, [value, options]);
 
     useEffect(() => {
-      if (highlightedOptionRef.current && isOpen) {
-        highlightedOptionRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-        });
+      if (!isOpen || !keyboardNavigation.current) return;
+      keyboardNavigation.current = false;
+
+      const list = dropdownRef.current;
+      const option = highlightedOptionRef.current;
+
+      if (!list || !option) return;
+
+      const listRect = list.getBoundingClientRect();
+      const optionRect = option.getBoundingClientRect();
+
+      if (optionRect.top < listRect.top) {
+        list.scrollTop += optionRect.top - listRect.top;
+      } else if (optionRect.bottom > listRect.bottom) {
+        list.scrollTop += optionRect.bottom - listRect.bottom;
       }
     }, [highlightedIndex, isOpen]);
 
@@ -86,7 +98,8 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       if (!isOpen && (e.key === "Enter" || e.key === " " || e.key === "ArrowDown")) {
         e.preventDefault();
         setIsOpen(true);
-        setHighlightedIndex(0);
+        keyboardNavigation.current = true;
+          setHighlightedIndex(0);
         return;
       }
       if (!isOpen) return;
@@ -97,10 +110,12 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
           break;
         case "ArrowUp":
           e.preventDefault();
+          keyboardNavigation.current = true;
           setHighlightedIndex((prev) => (prev <= 0 ? options.length - 1 : prev - 1));
           break;
         case "ArrowDown":
           e.preventDefault();
+          keyboardNavigation.current = true;
           setHighlightedIndex((prev) => (prev >= options.length - 1 ? 0 : prev + 1));
           break;
         case "Enter":
@@ -157,7 +172,8 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
               }}
             >
               <div
-                className="overflow-y-auto overflow-x-hidden"
+                ref={dropdownRef}
+                className="overflow-y-auto overflow-x-hidden overscroll-y-contain"
                 style={{ maxHeight: maxDropdownHeight }}
               >
                 {options.map((option, index) => (
@@ -176,7 +192,10 @@ const Select = React.forwardRef<HTMLDivElement, SelectProps>(
                       ${selectedOption?.value === option.value ? "bg-jsyellow/10 font-semibold text-jsblack" : ""}
                     `}
                     onClick={() => handleSelect(option)}
-                    onMouseEnter={() => setHighlightedIndex(index)}
+                    onMouseEnter={() => {
+                      keyboardNavigation.current = false;
+                      setHighlightedIndex(index);
+                    }}
                   >
                     <div className="flex items-center justify-between">
                       <span className="truncate">{option.label}</span>

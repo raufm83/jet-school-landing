@@ -43,7 +43,9 @@ export default function CourseReviews({ reviews, locale }: CourseReviewsProps) {
                   : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              {cat === "PARENT" ? "Valideyn" : "Tələbə"}
+              {locale === "ru"
+                ? (cat === "PARENT" ? "Родитель" : "Ученик")
+                : (cat === "PARENT" ? "Valideyn" : "Tələbə")}
             </button>
           ))}
         </div>

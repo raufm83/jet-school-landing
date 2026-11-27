@@ -13,8 +13,8 @@ import { MdClose, MdOutlineCheck } from "react-icons/md";
 
 
 const ageOptions = Array.from({ length: 10 }, (_, i) => ({
-  value: i + 8,
-  label: `${i + 8}`,
+    value: i + 7,
+    label: `${i + 7}`,
 }));
 
 const ContactFormForSingle = () => {
